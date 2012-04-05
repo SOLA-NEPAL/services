@@ -27,6 +27,7 @@
  */
 package org.sola.services.ejbs.admin.businesslogic;
 
+import java.util.Date;
 import java.util.List;
 import org.sola.services.ejbs.admin.businesslogic.repository.entities.Role;
 import org.sola.services.ejbs.admin.businesslogic.repository.entities.User;
@@ -35,6 +36,19 @@ import org.sola.services.ejbs.admin.businesslogic.repository.entities.GroupSumma
 import org.sola.services.ejbs.admin.businesslogic.repository.entities.Language;
 
 public interface AdminEJBLocal {
+    
+    /**
+     * Returns Nepali date 
+     * @parma date Date to convert
+     */
+    String getNepaliDate(Date date);
+    
+    /**
+     * Returns Gregorian date 
+     * @parma nepaliDate Nepali date
+     */
+    Date getGregorianDate(String nepaliDate);
+    
     /** Returns list of all users. */
     List<User> getUsers();
     

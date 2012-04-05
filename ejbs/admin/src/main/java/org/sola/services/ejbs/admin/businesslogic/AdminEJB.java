@@ -1,38 +1,37 @@
 /**
  * ******************************************************************************************
- * Copyright (C) 2012 - Food and Agriculture Organization of the United Nations (FAO).
- * All rights reserved.
+ * Copyright (C) 2012 - Food and Agriculture Organization of the United Nations
+ * (FAO). All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- *    1. Redistributions of source code must retain the above copyright notice,this list
- *       of conditions and the following disclaimer.
- *    2. Redistributions in binary form must reproduce the above copyright notice,this list
- *       of conditions and the following disclaimer in the documentation and/or other
- *       materials provided with the distribution.
- *    3. Neither the name of FAO nor the names of its contributors may be used to endorse or
- *       promote products derived from this software without specific prior written permission.
+ * 1. Redistributions of source code must retain the above copyright notice,this
+ * list of conditions and the following disclaimer. 2. Redistributions in binary
+ * form must reproduce the above copyright notice,this list of conditions and
+ * the following disclaimer in the documentation and/or other materials provided
+ * with the distribution. 3. Neither the name of FAO nor the names of its
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
- * SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,PROCUREMENT
- * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,STRICT LIABILITY,OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT,STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * *********************************************************************************************
  */
 package org.sola.services.ejbs.admin.businesslogic;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -48,11 +47,16 @@ import org.sola.services.ejbs.admin.businesslogic.repository.entities.User;
 import org.sola.services.ejbs.admin.businesslogic.repository.entities.Group;
 
 /**
- * Contains business logic methods to administer system settings, users and roles.
+ * Contains business logic methods to administer system settings, users and
+ * roles.
  */
 @Stateless
 @EJB(name = "java:global/SOLA/AdminEJBLocal", beanInterface = AdminEJBLocal.class)
 public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
+
+    public static final String DATE_PARAM = "date";
+    public static final String TO_NEPALI_DATE_FUNCTION = "select to_nepali_date from public.to_nepali_date(#{" + DATE_PARAM + "})";
+    public static final String TO_GREGORIAN_DATE_FUNCTION = "select to_english_date from public.to_english_date(#{" + DATE_PARAM + "})";
 
     @RolesAllowed(RolesConstants.ADMIN_MANAGE_SECURITY)
     @Override
@@ -71,7 +75,7 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
 
     @PermitAll
     @Override
-    public User getCurrentUser() {       
+    public User getCurrentUser() {
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, User.QUERY_WHERE_USERNAME);
         params.put(User.PARAM_USERNAME, this.getUserName());
@@ -95,7 +99,7 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     public Role getRole(String roleCode) {
         return getRepository().getEntity(Role.class, roleCode);
     }
-    
+
     @RolesAllowed(RolesConstants.ADMIN_MANAGE_SECURITY)
     @Override
     public List<Group> getGroups() {
@@ -135,16 +139,17 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
         params.put(User.PARAM_USERNAME, userName);
 
         ArrayList<HashMap> list = getRepository().executeFunction(params);
-        
-        if(list.size()>0 && list.get(0)!=null && list.get(0).size()>0){
-            return ((Integer)((Entry)list.get(0).entrySet().iterator().next()).getValue()) > 0;
-        }else{
+
+        if (list.size() > 0 && list.get(0) != null && list.get(0).size() > 0) {
+            return ((Integer) ((Entry) list.get(0).entrySet().iterator().next()).getValue()) > 0;
+        } else {
             return false;
         }
     }
-    
-    /** 
-     * Returns SHA-256 hash for the password. 
+
+    /**
+     * Returns SHA-256 hash for the password.
+     *
      * @param password Password string to hash.
      */
     private String getPasswordHash(String password) {
@@ -201,5 +206,35 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
         params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
         params.put(CommonSqlProvider.PARAM_ORDER_BY_PART, "item_order");
         return getRepository().getEntityList(Language.class, params);
+    }
+
+    @Override
+    public String getNepaliDate(Date date) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, TO_NEPALI_DATE_FUNCTION);
+        params.put(DATE_PARAM, date);
+
+        ArrayList<HashMap> list = getRepository().executeFunction(params);
+
+        if (list.size() > 0 && list.get(0) != null && list.get(0).size() > 0) {
+            return (String) ((Map.Entry) list.get(0).entrySet().iterator().next()).getValue();
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public Date getGregorianDate(String nepaliDate) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, TO_GREGORIAN_DATE_FUNCTION);
+        params.put(DATE_PARAM, nepaliDate);
+
+        ArrayList<HashMap> list = getRepository().executeFunction(params);
+
+        if (list.size() > 0 && list.get(0) != null && list.get(0).size() > 0) {
+            return (Date) ((Map.Entry) list.get(0).entrySet().iterator().next()).getValue();
+        } else {
+            return null;
+        }
     }
 }

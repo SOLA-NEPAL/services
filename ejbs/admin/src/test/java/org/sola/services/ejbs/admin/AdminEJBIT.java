@@ -30,6 +30,8 @@ package org.sola.services.ejbs.admin;
 import org.sola.services.ejbs.admin.businesslogic.repository.entities.Language;
 import org.sola.services.ejbs.admin.businesslogic.repository.entities.UserGroup;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.transaction.UserTransaction;
 import org.junit.After;
@@ -68,7 +70,22 @@ public class AdminEJBIT extends AbstractEJBTest {
     public void tearDown() throws Exception {
         logout();
     }
-
+@Test
+    public void getNepaliDate() throws Exception {
+        AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
+        String nepaliDate = instance.getNepaliDate(Calendar.getInstance().getTime());
+        assertNotNull("Can't convert to Nepli date", nepaliDate);
+        System.out.println(">>> Nepali date is " + nepaliDate);
+    }
+    
+    @Test
+    public void getGregorianDate() throws Exception {
+        AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
+        Date date = instance.getGregorianDate("2068-12-22");
+        assertNotNull("Can't convert to Gregorian date", date);
+        System.out.println(">>> Gregorian date is " + date.toString());
+    }
+    
     /**
      * Test loading languages
      */
