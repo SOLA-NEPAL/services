@@ -39,12 +39,9 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import org.sola.common.RolesConstants;
 import org.sola.services.common.ejbs.AbstractEJB;
+import org.sola.services.common.repository.CommonRepository;
 import org.sola.services.common.repository.CommonSqlProvider;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.GroupSummary;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.Language;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.Role;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.User;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.Group;
+import org.sola.services.ejbs.admin.businesslogic.repository.entities.*;
 
 /**
  * Contains business logic methods to administer system settings, users and
@@ -236,5 +233,33 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public List<NepaliMonth> getNepaliMonths() {
+        return getRepository().getEntityList(NepaliMonth.class);
+    }
+
+    @Override
+    public List<NepaliMonth> getNepaliMonths(int year) {
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, NepaliMonth.GET_BY_YEAR);
+        params.put(NepaliMonth.YEAR_PARAM, year);
+        return getRepository().getEntityList(NepaliMonth.class, params);
+    }
+
+    @RolesAllowed(RolesConstants.ADMIN_MANAGE_SETTINGS)
+    @Override
+    public NepaliMonth saveNepaliMonth(NepaliMonth nepaliMonth) {
+        return getRepository().saveEntity(nepaliMonth);
+    }
+
+    @Override
+    public NepaliMonth getNepaliMonth(int year, int month) {
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, NepaliMonth.GET_BY_YEAR_AND_MONTH);
+        params.put(NepaliMonth.YEAR_PARAM, year);
+        params.put(NepaliMonth.MONTH_PARAM, month);
+        return getRepository().getEntity(NepaliMonth.class, params);
     }
 }

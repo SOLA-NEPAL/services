@@ -1,28 +1,30 @@
 /**
  * ******************************************************************************************
- * Copyright (C) 2012 - Food and Agriculture Organization of the United Nations (FAO).
- * All rights reserved.
+ * Copyright (C) 2012 - Food and Agriculture Organization of the United Nations
+ * (FAO). All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- *    1. Redistributions of source code must retain the above copyright notice,this list
- *       of conditions and the following disclaimer.
- *    2. Redistributions in binary form must reproduce the above copyright notice,this list
- *       of conditions and the following disclaimer in the documentation and/or other
- *       materials provided with the distribution.
- *    3. Neither the name of FAO nor the names of its contributors may be used to endorse or
- *       promote products derived from this software without specific prior written permission.
+ * 1. Redistributions of source code must retain the above copyright notice,this
+ * list of conditions and the following disclaimer. 2. Redistributions in binary
+ * form must reproduce the above copyright notice,this list of conditions and
+ * the following disclaimer in the documentation and/or other materials provided
+ * with the distribution. 3. Neither the name of FAO nor the names of its
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
- * SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,PROCUREMENT
- * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,STRICT LIABILITY,OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT,STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * *********************************************************************************************
  */
 package org.sola.services.ejbs.admin;
@@ -48,6 +50,7 @@ import org.sola.services.ejbs.admin.businesslogic.repository.entities.Group;
 import org.sola.services.ejbs.admin.businesslogic.repository.entities.GroupRole;
 import org.sola.services.ejbs.admin.businesslogic.repository.entities.GroupSummary;
 import static org.junit.Assert.*;
+import org.sola.services.ejbs.admin.businesslogic.repository.entities.*;
 
 public class AdminEJBIT extends AbstractEJBTest {
 
@@ -70,14 +73,15 @@ public class AdminEJBIT extends AbstractEJBTest {
     public void tearDown() throws Exception {
         logout();
     }
-@Test
+
+    @Test
     public void getNepaliDate() throws Exception {
         AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
         String nepaliDate = instance.getNepaliDate(Calendar.getInstance().getTime());
         assertNotNull("Can't convert to Nepli date", nepaliDate);
         System.out.println(">>> Nepali date is " + nepaliDate);
     }
-    
+
     @Test
     public void getGregorianDate() throws Exception {
         AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
@@ -85,7 +89,7 @@ public class AdminEJBIT extends AbstractEJBTest {
         assertNotNull("Can't convert to Gregorian date", date);
         System.out.println(">>> Gregorian date is " + date.toString());
     }
-    
+
     /**
      * Test loading languages
      */
@@ -101,13 +105,13 @@ public class AdminEJBIT extends AbstractEJBTest {
 
             assertNotNull("List of languages is null.", result);
             System.out.println(">>> Found " + result.size() + " languages.");
-            
+
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
         }
     }
-    
+
     /**
      * Test roles loading
      */
@@ -123,13 +127,13 @@ public class AdminEJBIT extends AbstractEJBTest {
 
             assertNotNull("List of roles is null.", result);
             System.out.println(">>> Found " + result.size() + " roles.");
-            
+
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
         }
     }
-    
+
     /**
      * Test getting current user roles
      */
@@ -145,13 +149,13 @@ public class AdminEJBIT extends AbstractEJBTest {
 
             assertNotNull("List of roles for current user is null.", result);
             System.out.println(">>> Found " + result.size() + " roles for current user.");
-            
+
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
         }
     }
-    
+
     /**
      * Test if user has admin rights
      */
@@ -164,10 +168,10 @@ public class AdminEJBIT extends AbstractEJBTest {
             tx.begin();
             boolean result = instance.isUserAdmin();
             tx.commit();
-            
-            if(result){
+
+            if (result) {
                 System.out.println(">>> Current user has admin rights.");
-            }else{
+            } else {
                 System.out.println(">>> Current user doesn't have admin rights.");
             }
         } catch (Exception e) {
@@ -194,7 +198,7 @@ public class AdminEJBIT extends AbstractEJBTest {
             fail(e.getMessage());
         }
     }
-    
+
     /**
      * Test creating group
      */
@@ -208,21 +212,21 @@ public class AdminEJBIT extends AbstractEJBTest {
             // Get roles
             List<Role> roles = instance.getRoles();
             tx.commit();
-            
+
             assertNotNull("List of roles is null.", roles);
-            
+
             tx.begin();
-            
+
             List<GroupRole> groupRoles = new ArrayList<GroupRole>();
-            if(roles!=null){
-                for(Role role : roles){
+            if (roles != null) {
+                for (Role role : roles) {
                     GroupRole groupRole = new GroupRole();
                     groupRole.setRoleCode(role.getCode());
                     groupRole.setEntityAction(EntityAction.INSERT);
                     groupRoles.add(groupRole);
                 }
             }
-            
+
             Group userGroup = new Group();
             userGroup.setId(GROUP_ID);
             userGroup.setName("Test group");
@@ -232,11 +236,11 @@ public class AdminEJBIT extends AbstractEJBTest {
             userGroup.setGroupRoles(groupRoles);
 
             Group result = instance.saveGroup(userGroup);
-            
+
             tx.commit();
 
             assertNotNull("Failed to create group", result);
-            
+
             System.out.println(">>> Group has been saved!");
         } catch (Exception e) {
             tx.rollback();
@@ -258,15 +262,15 @@ public class AdminEJBIT extends AbstractEJBTest {
             tx.commit();
 
             assertNotNull("List of groups is null.", result);
-            assertFalse("List of groups is empty.", result.size()<=0);
-            
+            assertFalse("List of groups is empty.", result.size() <= 0);
+
             System.out.println(">>> Found " + result.size() + " groups.");
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
         }
     }
-    
+
     /**
      * Test groups summary loading
      */
@@ -281,15 +285,15 @@ public class AdminEJBIT extends AbstractEJBTest {
             tx.commit();
 
             assertNotNull("List of groups summary is null.", result);
-            assertFalse("List of groups summary is empty.", result.size()<=0);
-            
+            assertFalse("List of groups summary is empty.", result.size() <= 0);
+
             System.out.println(">>> Found " + result.size() + " groups summaries.");
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
         }
     }
-    
+
     /**
      * Test creating user.
      */
@@ -304,15 +308,15 @@ public class AdminEJBIT extends AbstractEJBTest {
             // Get group
             Group group = instance.getGroup(GROUP_ID);
             tx.commit();
-            
+
             assertNotNull("Failed to get group", group);
-            
+
             tx.begin();
-            
+
             UserGroup userGroup = new UserGroup();
             userGroup.setGroupId(GROUP_ID);
             userGroup.setEntityAction(EntityAction.INSERT);
-            
+
             List<UserGroup> listUserGroups = new ArrayList<UserGroup>();
             listUserGroups.add(userGroup);
 
@@ -368,15 +372,15 @@ public class AdminEJBIT extends AbstractEJBTest {
             List<User> users = instance.getUsers();
             tx.commit();
             assertNotNull("Failed to get users", users);
-            
+
             System.out.println(">>> Found " + users.size() + " users!");
-            
+
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
         }
     }
-    
+
     /**
      * Test changing group.
      */
@@ -421,7 +425,7 @@ public class AdminEJBIT extends AbstractEJBTest {
                 updatedGroup.getGroupRoles();
             }
             tx.commit();
-            
+
             assertNotNull("Failed to get modified group", updatedGroup);
             assertEquals("Group name wasn't modified", updatedGroup.getName(), group.getName());
             assertEquals("Group description wasn't modified", updatedGroup.getDescription(), group.getDescription());
@@ -429,13 +433,13 @@ public class AdminEJBIT extends AbstractEJBTest {
             assertEquals("Group roles wasn't modified", updatedGroup.getGroupRoles().size(), rolesSize);
 
             System.out.println(">>> Group has been modified!");
-            
+
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
         }
     }
-     
+
     /**
      * Test deleting group.
      */
@@ -453,21 +457,21 @@ public class AdminEJBIT extends AbstractEJBTest {
             assertNotNull("Failed to get group", group);
 
             group.setEntityAction(EntityAction.DELETE);
-            
+
             tx.begin();
             Group deltedGroup = instance.saveGroup(group);
             tx.commit();
 
             assertNull("Failed to delete group", deltedGroup);
-            
+
             System.out.println(">>> Group has been deleted!");
-            
+
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
         }
     }
-     
+
     /**
      * Test deleting user.
      */
@@ -485,15 +489,101 @@ public class AdminEJBIT extends AbstractEJBTest {
             assertNotNull("Failed to get user", user);
 
             user.setEntityAction(EntityAction.DELETE);
-            
+
             tx.begin();
             User deltedUser = instance.saveUser(user);
             tx.commit();
 
             assertNull("Failed to delete user", deltedUser);
-            
+
             System.out.println(">>> User has been deleted!");
+
+        } catch (Exception e) {
+            tx.rollback();
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testGetNepaliMonth() throws Exception {
+        System.out.println(">>> Loading all Months.");
+        try {
+            AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
+            List<NepaliMonth> result = instance.getNepaliMonths();
+
+            assertNotNull("List of Months is null.", result);
+            System.out.println(">>> Found " + result.size() + " months.");
+
+            result = instance.getNepaliMonths(2068);
+
+            assertNotNull("List of Months is null.", result);
+            System.out.println(">>> Found " + result.size() + " months in 2068.");
             
+            NepaliMonth nepMonth = instance.getNepaliMonth(2068, 1);
+
+            assertNotNull("Can't find Nepali month for 2068, 1.", nepMonth);
+            System.out.println(">>> Number of days in Nepali month 1 of 2068 = " + nepMonth.getDays());
+            
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testSaveNepaliMonth() throws Exception {
+        System.out.println(">>> Testing saving nepali month");
+        UserTransaction tx = getUserTransaction();
+        try {
+            AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
+            List<NepaliMonth> list = new ArrayList<NepaliMonth>();
+            NepaliMonth month = new NepaliMonth();
+            month.setNepYear(2076);
+            month.setNepMonth(1);
+            month.setDays(31);
+            list.add(month);
+
+            month = new NepaliMonth();
+            month.setNepYear(2076);
+            month.setNepMonth(2);
+            month.setDays(30);
+            list.add(month);
+
+            month = new NepaliMonth();
+            month.setNepYear(2076);
+            month.setNepMonth(3);
+            month.setDays(29);
+            list.add(month);
+
+            tx.begin();
+            for(NepaliMonth nepMonth : list){
+                instance.saveNepaliMonth(nepMonth);
+            }
+            tx.commit();
+
+            System.out.println(">>> Nepali month list saved");
+
+            list.get(0).setDays(28);
+
+            tx.begin();
+            instance.saveNepaliMonth(list.get(0));
+            tx.commit();
+
+            System.out.println(">>> Nepali month is updated ");
+
+            for (NepaliMonth nepaliMonth : list) {
+                nepaliMonth.setEntityAction(EntityAction.DELETE);
+            }
+
+            tx.begin();
+            for(NepaliMonth nepMonth : list){
+                instance.saveNepaliMonth(nepMonth);
+            }
+            tx.commit();
+
+            //assertNull("Failed to delete user", deltedUser);
+
+            System.out.println(">>> Nepali month was deleted!");
+
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
