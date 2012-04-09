@@ -52,8 +52,8 @@ import org.sola.services.ejbs.admin.businesslogic.repository.entities.*;
 public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
 
     public static final String DATE_PARAM = "date";
-    public static final String TO_NEPALI_DATE_FUNCTION = "select to_nepali_date from public.to_nepali_date(#{" + DATE_PARAM + "})";
-    public static final String TO_GREGORIAN_DATE_FUNCTION = "select to_english_date from public.to_english_date(#{" + DATE_PARAM + "})";
+    public static final String TO_NEPALI_DATE_FUNCTION = "select english_to_nepalidatestring from public.english_to_nepalidatestring(#{" + DATE_PARAM + "})";
+    public static final String TO_GREGORIAN_DATE_FUNCTION = "select nepali_to_englishdate from public.nepali_to_englishdate(#{" + DATE_PARAM + "})";
 
     @RolesAllowed(RolesConstants.ADMIN_MANAGE_SECURITY)
     @Override
