@@ -267,6 +267,7 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
        List<Integer> yr=new ArrayList<Integer>();
        List<NepaliMonth> list= getRepository().getEntityList(NepaliMonth.class);
        for(NepaliMonth i : list){
+           if(yr.contains(i.getNepYear())==false)
            yr.add(i.getNepYear());
        } 
        return yr;       

@@ -24,7 +24,7 @@ public class NepaliMonth extends AbstractEntity{
     @Column(name = "nep_month")
     private int nepMonth;
     @Column(name = "dayss")
-    private int days;
+    private int dayss;
     
     public static final String YEAR_PARAM="nepYear";
     public static final String MONTH_PARAM="nepMonth";
@@ -32,11 +32,11 @@ public class NepaliMonth extends AbstractEntity{
     public static final String GET_BY_YEAR_AND_MONTH="nep_year=#{"+YEAR_PARAM+"} and nep_month=#{" + MONTH_PARAM + "}";
 
     public int getDays() {
-        return days;
+        return dayss;
     }
 
-    public void setDays(int daays) {
-        this.days = daays;
+    public void setDays(int dayss) {
+        this.dayss = dayss;
     }
 
     public int getNepMonth() {
