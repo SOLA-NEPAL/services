@@ -41,19 +41,37 @@ import org.sola.services.ejbs.admin.businesslogic.repository.entities.NepaliMont
 public interface AdminEJBLocal {
 
     /**
-     * Returns List of Nepali date from database
+     * List of nepali year from database with out any parameter given
+     */
+    List<Integer> getNepaliYear();
+
+    /**
+     * Returns List of Nepali date from database with out any parameter given
      */
     List<NepaliMonth> getNepaliMonths();
-    
+
     /**
      * Returns List of Nepali date from database
+     *
      * @param year parameter to return list of month in given year
      */
     List<NepaliMonth> getNepaliMonths(int year);
-    
+
+    /**
+     * Returns the entity NepaliMonth
+     *
+     * @param year nepali year
+     * @param month nepali month
+     */
     NepaliMonth getNepaliMonth(int year, int month);
-    
+
+    /**
+     * Returns List of Nepali date from database
+     *
+     * @param year parameter to return list of month in given year
+     */
     NepaliMonth saveNepaliMonth(NepaliMonth nepaliMonth);
+
     /**
      * Returns Nepali date @parma date Date to convert
      */

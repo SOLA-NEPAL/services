@@ -589,4 +589,22 @@ public class AdminEJBIT extends AbstractEJBTest {
             fail(e.getMessage());
         }
     }
+    
+    @Test
+    public void testGetNepaliYear() throws Exception {
+        System.out.println(">>> Loading all Year.");
+        try {
+            AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
+            List<Integer> result = instance.getNepaliYear();
+
+            assertNotNull("List of Months is null.", result);
+            System.out.println(">>> Found " + result);
+           
+           
+            
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+    
 }
