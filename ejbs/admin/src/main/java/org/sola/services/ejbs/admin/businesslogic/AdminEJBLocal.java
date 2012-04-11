@@ -31,12 +31,7 @@ package org.sola.services.ejbs.admin.businesslogic;
 
 import java.util.Date;
 import java.util.List;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.Role;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.User;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.Group;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.GroupSummary;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.Language;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.NepaliMonth;
+import org.sola.services.ejbs.admin.businesslogic.repository.entities.*;
 
 public interface AdminEJBLocal {
 

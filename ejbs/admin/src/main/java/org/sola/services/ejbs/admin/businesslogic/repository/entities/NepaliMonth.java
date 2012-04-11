@@ -31,11 +31,11 @@ public class NepaliMonth extends AbstractEntity{
     public static final String GET_BY_YEAR="nep_year=#{"+YEAR_PARAM+"}";
     public static final String GET_BY_YEAR_AND_MONTH="nep_year=#{"+YEAR_PARAM+"} and nep_month=#{" + MONTH_PARAM + "}";
 
-    public int getDays() {
+    public int getDayss() {
         return dayss;
     }
 
-    public void setDays(int dayss) {
+    public void setDayss(int dayss) {
         this.dayss = dayss;
     }
 
@@ -54,4 +54,6 @@ public class NepaliMonth extends AbstractEntity{
     public void setNepYear(int nepYear) {
         this.nepYear = nepYear;
     }
+
+   
 }

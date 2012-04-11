@@ -522,7 +522,7 @@ public class AdminEJBIT extends AbstractEJBTest {
             NepaliMonth nepMonth = instance.getNepaliMonth(2068, 1);
 
             assertNotNull("Can't find Nepali month for 2068, 1.", nepMonth);
-            System.out.println(">>> Number of days in Nepali month 1 of 2068 = " + nepMonth.getDays());
+            System.out.println(">>> Number of days in Nepali month 1 of 2068 = " + nepMonth.getDayss());
             
         } catch (Exception e) {
             fail(e.getMessage());
@@ -539,19 +539,19 @@ public class AdminEJBIT extends AbstractEJBTest {
             NepaliMonth month = new NepaliMonth();
             month.setNepYear(2076);
             month.setNepMonth(1);
-            month.setDays(31);
+            month.setDayss(31);
             list.add(month);
 
             month = new NepaliMonth();
             month.setNepYear(2076);
             month.setNepMonth(2);
-            month.setDays(30);
+            month.setDayss(30);
             list.add(month);
 
             month = new NepaliMonth();
             month.setNepYear(2076);
             month.setNepMonth(3);
-            month.setDays(29);
+            month.setDayss(29);
             list.add(month);
 
             tx.begin();
@@ -562,7 +562,7 @@ public class AdminEJBIT extends AbstractEJBTest {
 
             System.out.println(">>> Nepali month list saved");
 
-            list.get(0).setDays(28);
+            list.get(0).setDayss(28);
 
             tx.begin();
             instance.saveNepaliMonth(list.get(0));
@@ -596,8 +596,9 @@ public class AdminEJBIT extends AbstractEJBTest {
         try {
             AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
             List<Integer> result = instance.getNepaliYear();
+            
 
-            assertNotNull("List of Months is null.", result);
+            assertNotNull("List of Year is null.", result);
             System.out.println(">>> Found " + result);
            
            
