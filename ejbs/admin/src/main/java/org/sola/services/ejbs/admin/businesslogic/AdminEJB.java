@@ -39,7 +39,6 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import org.sola.common.RolesConstants;
 import org.sola.services.common.ejbs.AbstractEJB;
-import org.sola.services.common.repository.CommonRepository;
 import org.sola.services.common.repository.CommonSqlProvider;
 import org.sola.services.ejbs.admin.businesslogic.repository.entities.*;
 
