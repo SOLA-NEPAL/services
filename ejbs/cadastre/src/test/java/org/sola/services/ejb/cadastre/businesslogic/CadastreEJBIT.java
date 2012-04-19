@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.sola.services.common.test.AbstractEJBTest;
 import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
@@ -61,6 +62,7 @@ public class CadastreEJBIT extends AbstractEJBTest {
      * Test of createApplication method, of class ApplicationEJB.
      */
     @Test
+    @Ignore
     public void testDev() throws Exception {
         if (skipIntegrationTest()) {
             return;
