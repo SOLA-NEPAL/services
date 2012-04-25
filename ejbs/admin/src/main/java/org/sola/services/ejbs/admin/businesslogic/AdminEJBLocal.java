@@ -35,6 +35,8 @@ import org.sola.services.ejbs.admin.businesslogic.repository.entities.*;
 
 public interface AdminEJBLocal {
 
+    LandOwner saveLandOwner(LandOwner owner);
+
     /**
      * List of nepali year from database with out any parameter given
      */

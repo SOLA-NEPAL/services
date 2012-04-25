@@ -74,7 +74,7 @@
                         <ejbModule>
                             <groupId>${project.groupId}.ejbs</groupId>
                             <artifactId>sola-transaction</artifactId>
-                        </ejbModule>
+                        </ejbModule>                        
                         <webModule>
                             <groupId>${project.groupId}.boundary</groupId>
                             <artifactId>sola-web-services</artifactId>
@@ -201,6 +201,6 @@
             <artifactId>sola-transaction</artifactId>
             <version>${project.version}</version>
             <type>ejb</type>
-        </dependency>
+        </dependency>            
     </dependencies>
 </project>

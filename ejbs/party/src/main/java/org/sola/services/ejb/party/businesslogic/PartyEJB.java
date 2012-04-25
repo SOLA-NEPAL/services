@@ -31,6 +31,7 @@
  */
 package org.sola.services.ejb.party.businesslogic;
 
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,17 +41,10 @@ import javax.ejb.Stateless;
 import org.sola.common.RolesConstants;
 import org.sola.common.SOLAAccessException;
 import org.sola.services.common.ejbs.AbstractEJB;
-import org.sola.services.common.faults.SOLAAccessFault;
 import org.sola.services.common.repository.CommonSqlProvider;
 import org.sola.services.ejb.address.businesslogic.AddressEJBLocal;
 import org.sola.services.ejb.address.repository.entities.Address;
-import org.sola.services.ejb.party.repository.entities.CommunicationType;
-import org.sola.services.ejb.party.repository.entities.GenderType;
-import org.sola.services.ejb.party.repository.entities.IdType;
-import org.sola.services.ejb.party.repository.entities.Party;
-import org.sola.services.ejb.party.repository.entities.PartyRole;
-import org.sola.services.ejb.party.repository.entities.PartyType;
-import org.sola.services.ejb.party.repository.entities.PartyRoleType;
+import org.sola.services.ejb.party.repository.entities.*;
 
 /**
  *
@@ -122,5 +116,7 @@ public class PartyEJB extends AbstractEJB implements PartyEJBLocal {
     @Override
     public List<PartyRoleType> getPartyRoles(String languageCode) {
         return getRepository().getCodeList(PartyRoleType.class, languageCode);
-    }
+    }    
+    
+   
 }

@@ -74,6 +74,7 @@ public class AdminEJBIT extends AbstractEJBTest {
         logout();
     }
 
+    @Ignore
     @Test
     public void getNepaliDate() throws Exception {
         AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
@@ -82,6 +83,7 @@ public class AdminEJBIT extends AbstractEJBTest {
         System.out.println(">>> Nepali date is " + nepaliDate);
     }
 
+    @Ignore
     @Test
     public void getGregorianDate() throws Exception {
         AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
@@ -93,6 +95,7 @@ public class AdminEJBIT extends AbstractEJBTest {
     /**
      * Test loading languages
      */
+    @Ignore
     @Test
     public void testLoadLanguages() throws Exception {
         System.out.println(">>> Loading all languages.");
@@ -115,6 +118,7 @@ public class AdminEJBIT extends AbstractEJBTest {
     /**
      * Test roles loading
      */
+    @Ignore
     @Test
     public void testLoadAllRoles() throws Exception {
         System.out.println(">>> Loading all roles");
@@ -137,6 +141,7 @@ public class AdminEJBIT extends AbstractEJBTest {
     /**
      * Test getting current user roles
      */
+    @Ignore
     @Test
     public void testGetCurrentUserRoles() throws Exception {
         System.out.println(">>> Loading roles for current user.");
@@ -159,6 +164,7 @@ public class AdminEJBIT extends AbstractEJBTest {
     /**
      * Test if user has admin rights
      */
+    @Ignore
     @Test
     public void testIsUserAdmin() throws Exception {
         System.out.println(">>> Checking if user has admin rights.");
@@ -202,6 +208,7 @@ public class AdminEJBIT extends AbstractEJBTest {
     /**
      * Test creating group
      */
+    @Ignore
     @Test
     public void testCraeteGroup() throws Exception {
         System.out.println(">>> Create group");
@@ -251,6 +258,7 @@ public class AdminEJBIT extends AbstractEJBTest {
     /**
      * Test groups loading
      */
+    @Ignore
     @Test
     public void testLoadAllGroups() throws Exception {
         System.out.println(">>> Loading all groups");
@@ -274,6 +282,7 @@ public class AdminEJBIT extends AbstractEJBTest {
     /**
      * Test groups summary loading
      */
+    @Ignore
     @Test
     public void testLoadAllGroupsSummary() throws Exception {
         System.out.println(">>> Loading all groups summary");
@@ -297,6 +306,7 @@ public class AdminEJBIT extends AbstractEJBTest {
     /**
      * Test creating user.
      */
+    @Ignore
     @Test
     public void testCreateUser() throws Exception {
         System.out.println(">>> Create new user.");
@@ -362,6 +372,7 @@ public class AdminEJBIT extends AbstractEJBTest {
     /**
      * Test get all users.
      */
+    @Ignore
     @Test
     public void testGetUsers() throws Exception {
         System.out.println(">>> Getting all users.");
@@ -384,6 +395,7 @@ public class AdminEJBIT extends AbstractEJBTest {
     /**
      * Test changing group.
      */
+    @Ignore
     @Test
     public void testModifyGroup() throws Exception {
         System.out.println(">>> Modifying group");
@@ -443,6 +455,7 @@ public class AdminEJBIT extends AbstractEJBTest {
     /**
      * Test deleting group.
      */
+    @Ignore
     @Test
     public void testDeleteGroup() throws Exception {
         System.out.println(">>> Deleting group");
@@ -475,6 +488,7 @@ public class AdminEJBIT extends AbstractEJBTest {
     /**
      * Test deleting user.
      */
+    @Ignore
     @Test
     public void testDeleteUser() throws Exception {
         System.out.println(">>> Deleting user");
@@ -504,6 +518,7 @@ public class AdminEJBIT extends AbstractEJBTest {
         }
     }
 
+    @Ignore
     @Test
     public void testGetNepaliMonth() throws Exception {
         System.out.println(">>> Loading all Months.");
@@ -518,17 +533,18 @@ public class AdminEJBIT extends AbstractEJBTest {
 
             assertNotNull("List of Months is null.", result);
             System.out.println(">>> Found " + result.size() + " months in 2068.");
-            
+
             NepaliMonth nepMonth = instance.getNepaliMonth(2068, 1);
 
             assertNotNull("Can't find Nepali month for 2068, 1.", nepMonth);
             System.out.println(">>> Number of days in Nepali month 1 of 2068 = " + nepMonth.getDayss());
-            
+
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
 
+    @Ignore
     @Test
     public void testSaveNepaliMonth() throws Exception {
         System.out.println(">>> Testing saving nepali month");
@@ -555,7 +571,7 @@ public class AdminEJBIT extends AbstractEJBTest {
             list.add(month);
 
             tx.begin();
-            for(NepaliMonth nepMonth : list){
+            for (NepaliMonth nepMonth : list) {
                 instance.saveNepaliMonth(nepMonth);
             }
             tx.commit();
@@ -575,7 +591,7 @@ public class AdminEJBIT extends AbstractEJBTest {
             }
 
             tx.begin();
-            for(NepaliMonth nepMonth : list){
+            for (NepaliMonth nepMonth : list) {
                 instance.saveNepaliMonth(nepMonth);
             }
             tx.commit();
@@ -589,23 +605,52 @@ public class AdminEJBIT extends AbstractEJBTest {
             fail(e.getMessage());
         }
     }
-    
+
+    @Ignore
     @Test
     public void testGetNepaliYear() throws Exception {
         System.out.println(">>> Loading all Year.");
         try {
             AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
             List<Integer> result = instance.getNepaliYear();
-            
+
 
             assertNotNull("List of Year is null.", result);
             System.out.println(">>> Found " + result);
-           
-           
-            
+
+
+
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
-    
+
+    @Test
+    public void testSaveLandOwner() throws Exception {
+        System.out.println(">>> Testing saving land owner");
+        UserTransaction tx = getUserTransaction();
+        try {
+            AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
+            List<LandOwner> list = new ArrayList<LandOwner>();
+            LandOwner owner = new LandOwner();
+            owner.setFirstName("Kumar");
+            owner.setLastName("Khadka");
+            list.add(owner);
+
+            owner = new LandOwner();
+            owner.setFirstName("KK");
+            owner.setLastName("Khadka");
+            list.add(owner);
+
+            tx.begin();
+            for (LandOwner onn : list) {
+                instance.saveLandOwner(onn);
+            }
+            tx.commit();
+
+        } catch (Exception e) {
+            tx.rollback();
+            fail(e.getMessage());
+        }
+    }
 }

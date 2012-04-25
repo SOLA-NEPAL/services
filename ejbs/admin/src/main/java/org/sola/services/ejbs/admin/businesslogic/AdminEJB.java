@@ -271,5 +271,10 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
            yr.add(i.getNepYear());
        } 
        return yr;       
-    }
+    }    
+   @Override    
+    @RolesAllowed(RolesConstants.ADMIN_MANAGE_SETTINGS)
+    public LandOwner saveLandOwner(LandOwner owner) {
+        return getRepository().saveEntity(owner);
+    }   
 }
