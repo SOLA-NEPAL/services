@@ -30,13 +30,7 @@ package org.sola.services.ejb.cadastre.businesslogic;
 import java.util.List;
 import javax.ejb.Local;
 import org.sola.services.common.ejbs.AbstractEJBLocal;
-import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
-import org.sola.services.ejb.cadastre.repository.entities.CadastreObjectNode;
-import org.sola.services.ejb.cadastre.repository.entities.CadastreObjectNodeTarget;
-import org.sola.services.ejb.cadastre.repository.entities.CadastreObjectTarget;
-import org.sola.services.ejb.cadastre.repository.entities.CadastreObjectTargetRedefinition;
-import org.sola.services.ejb.cadastre.repository.entities.CadastreObjectType;
-import org.sola.services.ejb.cadastre.repository.entities.SurveyPoint;
+import org.sola.services.ejb.cadastre.repository.entities.*;
 
 /**
  * Local interface for handling cadastre schema operations.
@@ -79,4 +73,13 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
             String transactionId);
 
     void approveCadastreRedefinition(String transactionId);
+    
+    //For segment selection.
+    Segment getSegmentByPoint(double x, double y, int srid);
+    
+    Segment saveSegment(Segment seg);
+    
+    List<Segment> getSegmentObjects(List<String> segObjIds);
+    
+    List<Segment> getSegmentsByTransaction(String transactionId);
 }
