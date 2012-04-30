@@ -34,14 +34,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import org.sola.services.common.ejbs.AbstractEJB;
 import org.sola.services.common.repository.CommonSqlProvider;
-import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
-import org.sola.services.ejb.cadastre.repository.entities.CadastreObjectNode;
-import org.sola.services.ejb.cadastre.repository.entities.CadastreObjectNodeTarget;
-import org.sola.services.ejb.cadastre.repository.entities.CadastreObjectStatusChanger;
-import org.sola.services.ejb.cadastre.repository.entities.CadastreObjectType; // NOTE namespace change
-import org.sola.services.ejb.cadastre.repository.entities.CadastreObjectTarget;
-import org.sola.services.ejb.cadastre.repository.entities.CadastreObjectTargetRedefinition;
-import org.sola.services.ejb.cadastre.repository.entities.SurveyPoint;
+import org.sola.services.ejb.cadastre.repository.entities.*;
 
 /**
  * Implementation of {
@@ -242,6 +235,34 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
             this.saveEntity(cadastreObject);
         }
     }
+
+    @Override
+    public Segment getSegmentByPoint(double x, double y, int srid) {
+        HashMap params = new HashMap();
+        params.put("x", x);
+        params.put("y", y);
+        params.put("srid", srid);
+        return getRepository().getEntity(
+                Segment.class, Segment.QUERY_WHERE_SEARCHBYPOINT, params);
+    }
+
+    @Override
+    public Segment saveSegment(Segment seg) {
+        return getRepository().saveEntity(seg);
+    }
+
+    @Override
+    public List<Segment> getSegmentObjects(List<String> segObjIds) {
+        return getRepository().getEntityListByIds(Segment.class, segObjIds);
+    }
     
-    
+    @Override
+    public List<Segment> getSegmentsByTransaction(String transactionId) {
+        Map params = new HashMap<String, Object>();
+        params.put(
+                CommonSqlProvider.PARAM_WHERE_PART,
+                Segment.QUERY_WHERE_SEARCHBYTRANSACTION);
+        params.put("transaction_id", transactionId);
+        return getRepository().getEntityList(Segment.class, params);
+    }
 }

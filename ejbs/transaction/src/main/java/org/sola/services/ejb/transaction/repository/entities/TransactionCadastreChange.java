@@ -38,6 +38,7 @@ import org.sola.services.common.repository.ExternalEJB;
 import org.sola.services.ejb.cadastre.businesslogic.CadastreEJBLocal;
 import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
 import org.sola.services.ejb.cadastre.repository.entities.CadastreObjectTarget;
+import org.sola.services.ejb.cadastre.repository.entities.Segment;
 import org.sola.services.ejb.cadastre.repository.entities.SurveyPoint;
 
 /**
@@ -53,6 +54,13 @@ public class TransactionCadastreChange extends Transaction {
             loadMethod = "getCadastreObjectsByTransaction", 
             saveMethod="saveCadastreObject")
     List<CadastreObject> CadastreObjectList;
+    
+//    @ChildEntityList(parentIdField = "transactionId")
+//    @ExternalEJB(
+//            ejbLocalClass = CadastreEJBLocal.class, 
+//            loadMethod = "getSegmentsByTransaction", 
+//            saveMethod="SaveSegment")
+//    List<Segment> segmentList;
 
     @ChildEntityList(parentIdField = "transactionId")
     @ExternalEJB(
@@ -70,7 +78,14 @@ public class TransactionCadastreChange extends Transaction {
 
     @ChildEntityList(parentIdField = "transactionId")
     private List<TransactionSource> transactionSourceList;
-
+    
+//    public List<Segment> getSegmentList() {
+//        return segmentList;
+//    }
+//
+//    public void setSegmentList(List<Segment> segmentList) {
+//        this.segmentList = segmentList;
+//    }
     public List<CadastreObject> getCadastreObjectList() {
         return CadastreObjectList;
     }
