@@ -61,6 +61,9 @@ public class User extends AbstractVersionedEntity {
     
     @ChildEntityList(parentIdField = "userId")
     private List<UserGroup> userGroups;
+    
+    @ChildEntityList(parentIdField="userID")
+    private List<UserNepalModification> userNepalModification;
 
     public User() {
         super();
@@ -124,4 +127,13 @@ public class User extends AbstractVersionedEntity {
     public void setUserGroups(List<UserGroup> userGroups) {
         this.userGroups = userGroups;
     }
+
+    public List<UserNepalModification> getUserNepalModification() {
+        return userNepalModification;
+    }
+
+    public void setUserNepalModification(List<UserNepalModification> userNepalModification) {
+        this.userNepalModification = userNepalModification;
+    }
+    
 }

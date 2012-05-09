@@ -29,14 +29,13 @@
  */
 package org.sola.services.ejbs.admin;
 
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.Language;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.UserGroup;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.transaction.UserTransaction;
 import org.junit.After;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -44,12 +43,6 @@ import org.sola.services.common.EntityAction;
 import org.sola.services.common.test.AbstractEJBTest;
 import org.sola.services.ejbs.admin.businesslogic.AdminEJB;
 import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.Role;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.User;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.Group;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.GroupRole;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.GroupSummary;
-import static org.junit.Assert.*;
 import org.sola.services.ejbs.admin.businesslogic.repository.entities.*;
 
 public class AdminEJBIT extends AbstractEJBTest {
@@ -59,10 +52,12 @@ public class AdminEJBIT extends AbstractEJBTest {
     }
     private static final String USER_ID = "tester-user-id";
     private static final String USER_NAME = "tester-user-name";
-    private static final String GROUP_ID = "tester-group-id";
+    private static final String GROUP_ID = "Nepal-LMO" ;//" tester-group-id";
     private static final String LANG = "en";
     private static final String LOGIN_USER = "test";
     private static final String LOGIN_PASS = "test";
+    private static final String DISTRIC_CODE = "KASKI-TEMP";
+    private static final String LMO_CODE = "KASKI-TEMP";
 
     @Before
     public void setUp() throws Exception {
@@ -93,8 +88,92 @@ public class AdminEJBIT extends AbstractEJBTest {
     }
 
     /**
+     * Test creating user.
+     */
+    
+    @Ignore
+    @Test
+    public void testCreateUser() throws Exception {
+        System.out.println(">>> Create new user.");
+        UserTransaction tx = getUserTransaction();
+        try {
+            AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
+            tx.begin();
+
+            // Get group
+            Group group = instance.getGroup(GROUP_ID);
+            tx.commit();
+
+            assertNotNull("Failed to get group", group);
+
+            tx.begin();
+
+            UserGroup userGroup = new UserGroup();
+            userGroup.setGroupId(GROUP_ID);
+            userGroup.setEntityAction(EntityAction.INSERT);
+            
+            
+            
+
+            List<UserGroup> listUserGroups = new ArrayList<UserGroup>();
+            listUserGroups.add(userGroup);
+            
+            
+            UserNepalModification userNep=new UserNepalModification();
+            userNep.setDistrictCode(DISTRIC_CODE);
+            userNep.setLmoCode(LMO_CODE);
+             userNep.setEntityAction(EntityAction.INSERT);
+            
+            
+            List<UserNepalModification> listUserNepal = new ArrayList<UserNepalModification>();
+            listUserNepal.add(userNep);
+            
+
+            User user = new User();
+            user.setId(USER_ID);
+            user.setActive(true);
+            user.setDescription("Test user");
+            user.setEntityAction(EntityAction.INSERT);
+            user.setFirstName("First name test user");
+            user.setLastName("Last name for user");
+            user.setLoaded(false);
+            user.setUserName(USER_NAME);
+            user.setUserGroups(listUserGroups);
+            user.setUserNepalModification(listUserNepal);
+
+            User savedUser = instance.saveUser(user);
+            tx.commit();
+
+            assertNotNull("Failed to create user", savedUser);
+            System.out.println(">>> User has been created!");
+
+            // Re-read user
+            tx.begin();
+            savedUser = instance.getUser(USER_NAME);
+            savedUser.getUserGroups();
+            tx.commit();
+
+            // Check user
+            assertEquals("User id is wrong", savedUser.getId(), user.getId());
+            assertEquals("User active flag is wrong", savedUser.isActive(), user.isActive());
+            assertEquals("User description is wrong", savedUser.getDescription(), user.getDescription());
+            assertEquals("User first name is wrong", savedUser.getFirstName(), user.getFirstName());
+            assertEquals("User name is wrong", savedUser.getUserName(), user.getUserName());
+            assertNotNull("User groups is null", savedUser.getUserGroups());
+            assertEquals("User number of groups is wrong", savedUser.getUserGroups().size(), user.getUserGroups().size());
+
+            System.out.println(">>> User was saved with correct values.");
+        } catch (Exception e) {
+            tx.rollback();
+            fail(e.getMessage());
+        }
+    }
+    
+    
+    /**
      * Test loading languages
      */
+    
     @Ignore
     @Test
     public void testLoadLanguages() throws Exception {
@@ -303,71 +382,8 @@ public class AdminEJBIT extends AbstractEJBTest {
         }
     }
 
-    /**
-     * Test creating user.
-     */
-    @Ignore
-    @Test
-    public void testCreateUser() throws Exception {
-        System.out.println(">>> Create new user.");
-        UserTransaction tx = getUserTransaction();
-        try {
-            AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
-            tx.begin();
-
-            // Get group
-            Group group = instance.getGroup(GROUP_ID);
-            tx.commit();
-
-            assertNotNull("Failed to get group", group);
-
-            tx.begin();
-
-            UserGroup userGroup = new UserGroup();
-            userGroup.setGroupId(GROUP_ID);
-            userGroup.setEntityAction(EntityAction.INSERT);
-
-            List<UserGroup> listUserGroups = new ArrayList<UserGroup>();
-            listUserGroups.add(userGroup);
-
-            User user = new User();
-            user.setId(USER_ID);
-            user.setActive(true);
-            user.setDescription("Test user");
-            user.setEntityAction(EntityAction.INSERT);
-            user.setFirstName("First name test user");
-            user.setLastName("Last name for user");
-            user.setLoaded(false);
-            user.setUserName(USER_NAME);
-            user.setUserGroups(listUserGroups);
-
-            User savedUser = instance.saveUser(user);
-            tx.commit();
-
-            assertNotNull("Failed to create user", savedUser);
-            System.out.println(">>> User has been created!");
-
-            // Re-read user
-            tx.begin();
-            savedUser = instance.getUser(USER_NAME);
-            savedUser.getUserGroups();
-            tx.commit();
-
-            // Check user
-            assertEquals("User id is wrong", savedUser.getId(), user.getId());
-            assertEquals("User active flag is wrong", savedUser.isActive(), user.isActive());
-            assertEquals("User description is wrong", savedUser.getDescription(), user.getDescription());
-            assertEquals("User first name is wrong", savedUser.getFirstName(), user.getFirstName());
-            assertEquals("User name is wrong", savedUser.getUserName(), user.getUserName());
-            assertNotNull("User groups is null", savedUser.getUserGroups());
-            assertEquals("User number of groups is wrong", savedUser.getUserGroups().size(), user.getUserGroups().size());
-
-            System.out.println(">>> User was saved with correct values.");
-        } catch (Exception e) {
-            tx.rollback();
-            fail(e.getMessage());
-        }
-    }
+    
+   
 
     /**
      * Test get all users.
@@ -518,7 +534,7 @@ public class AdminEJBIT extends AbstractEJBTest {
         }
     }
 
-    @Ignore
+   // @Ignore
     @Test
     public void testGetNepaliMonth() throws Exception {
         System.out.println(">>> Loading all Months.");
@@ -624,7 +640,8 @@ public class AdminEJBIT extends AbstractEJBTest {
             fail(e.getMessage());
         }
     }
-
+    
+    @Ignore
     @Test
     public void testSaveLandOwner() throws Exception {
         System.out.println(">>> Testing saving land owner");
@@ -650,6 +667,81 @@ public class AdminEJBIT extends AbstractEJBTest {
 
         } catch (Exception e) {
             tx.rollback();
+            fail(e.getMessage());
+        }
+    }
+    
+    
+    @Ignore
+    @Test
+    public void testGetLMOCodes() throws Exception {
+        System.out.println(">>> Loading LMO Codes.");
+        try {
+            AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
+            List<Integer> result = instance.getLMOCode();
+
+
+            assertNotNull("List of LMO codes.", result);
+            System.out.println(">>> Found " + result);
+
+
+
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+    
+    @Ignore
+    @Test
+    public void testGetLMONames() throws Exception {
+        System.out.println(">>> Loading LMO Names.");
+        try {
+            AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
+            List<String> result = instance.getLMONames();
+
+
+            assertNotNull("List of LMO Names.", result);
+            System.out.println(">>> Found " + result);
+
+
+
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+    
+    @Ignore
+    @Test
+    public void testGetDistrictNames() throws Exception {
+        System.out.println(">>> Loading District Names.");
+        try {
+            AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
+            List<String> result = instance.getDistrictNames();
+
+            assertNotNull("List of District Names.", result);
+            System.out.println(">>> Found " + result);
+
+
+
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+    
+    @Ignore
+    @Test
+    public void testGetDistrictCodes() throws Exception {
+        System.out.println(">>> Loading District Codes.");
+        try {
+            AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
+            List<Integer> result = instance.getDistrictCodes();
+
+
+            assertNotNull("List of District Codes.", result);
+            System.out.println(">>> Found " + result);
+
+
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }

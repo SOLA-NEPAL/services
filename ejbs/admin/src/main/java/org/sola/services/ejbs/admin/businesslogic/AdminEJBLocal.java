@@ -158,4 +158,23 @@ public interface AdminEJBLocal {
      * Returns list of available languages.
      */
     List<Language> getLanguages(String lang);
+    /**
+     * Returns list of LMO Codes.
+     */
+    List<Integer> getLMOCode();
+    
+     /**
+     * Returns list of LMO Names.
+     */
+    List<String> getLMONames();
+    
+    /**
+     * Returns list of District Names.
+     */
+    List<String> getDistrictNames();
+
+    /**
+     * Returns list of District codes.
+     */
+    List<Integer> getDistrictCodes();
 }

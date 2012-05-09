@@ -271,10 +271,56 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
            yr.add(i.getNepYear());
        } 
        return yr;       
-    }    
+    }
+    
    @Override    
     @RolesAllowed(RolesConstants.ADMIN_MANAGE_SETTINGS)
     public LandOwner saveLandOwner(LandOwner owner) {
         return getRepository().saveEntity(owner);
     }   
+   
+   
+    @Override
+    public List<Integer> getLMOCode() {       
+       List<Integer> lmoCode=new ArrayList<Integer>();
+       List<LMO> list= getRepository().getEntityList(LMO.class);
+       for(LMO i : list){
+           //if(yr.contains(i.getLmoCode())==false)
+           lmoCode.add(i.getLmoCode());
+       } 
+       return lmoCode;       
+    }
+
+    @Override
+    public List<String> getLMONames() {
+       List<String> lmoName=new ArrayList<String>();
+       List<LMO> list= getRepository().getEntityList(LMO.class);
+       for(LMO i : list){
+           //if(yr.contains(i.getOfficeName())==false)
+           lmoName.add(i.getOfficeName());
+       } 
+       return lmoName; 
+    }
+
+    @Override
+    public List<String> getDistrictNames() {
+       List<String> districtName=new ArrayList<String>();
+       List<District> list= getRepository().getEntityList(District.class);
+       for(District i : list){
+           //if(yr.contains(i.getOfficeName())==false)
+           districtName.add(i.getDistrictName());
+       } 
+       return districtName; 
+    }
+
+    @Override
+    public List<Integer> getDistrictCodes() {
+       List<Integer> districtCode=new ArrayList<Integer>();
+       List<District> list= getRepository().getEntityList(District.class);
+       for(District i : list){
+           //if(yr.contains(i.getOfficeName())==false)
+           districtCode.add(i.getDistrictCode());
+       } 
+       return districtCode; 
+    }
 }

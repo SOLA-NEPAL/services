@@ -61,5 +61,19 @@ public interface PartyEJBLocal extends AbstractEJBLocal {
 
     List<GenderType> getGenderTypes(String languageCode);
 
-    List<Party> getAgents();   
+    List<Party> getAgents();    
+    
+   // List<String> getVdc();
+    List<Vdc> getVdcList();
+    
+//    int getVdcs(String vdcName);
+    
+    Moth saveMoth(Moth moth);
+    Moth getMoth(String id);
+    
+    List<Moth> getMoths(int vdcSid,String mothLuj);
+    
+    //int getVdcSid(String vdcName);
+   
+   
 }
