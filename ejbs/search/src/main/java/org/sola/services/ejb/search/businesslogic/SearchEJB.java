@@ -194,9 +194,13 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
     }
 
     @Override
-    public PropertyVerifier getPropertyVerifier(String firstPart, String lastPart) {
+    public PropertyVerifier getPropertyVerifier(String applicationNumber, String firstPart, String lastPart) {
+        if(applicationNumber==null){
+            applicationNumber = "";
+        }
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_QUERY, PropertyVerifier.QUERY_VERIFY_SQL);
+        params.put(PropertyVerifier.QUERY_PARAM_APPLICATION_NUMBER, applicationNumber);
         params.put(PropertyVerifier.QUERY_PARAM_FIRST_PART, firstPart);
         params.put(PropertyVerifier.QUERY_PARAM_LAST_PART, lastPart);
         return getRepository().getEntity(PropertyVerifier.class, params);
@@ -487,7 +491,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         String wherePart = null;
         String selectPart = null;
         String fromPart = null;
-        Integer numberOfMaxRecordsReturned = 10;
+        Integer numberOfMaxRecordsReturned = 30;
 
         if (searchBy.equals(CadastreObjectSearchResult.SEARCH_BY_NUMBER)) {
             wherePart = CadastreObjectSearchResult.QUERY_WHERE_SEARCHBY_NUMBER;

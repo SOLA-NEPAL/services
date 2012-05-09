@@ -59,14 +59,14 @@ public class ApplicationSearchResult extends AbstractReadOnlyEntity {
             + "LEFT JOIN party.party p ON a.contact_person_id = p.id "
             + "LEFT JOIN party.party p2 ON a.agent_id = p2.id ";
     public static final String QUERY_WHERE_GET_ASSIGNED = "u.username = #{" + QUERY_PARAM_USER_NAME + "} "
-            + " AND a.status_code != 'completed'";
-    public static final String QUERY_WHERE_GET_ASSIGNED_ALL = "u.username IS NOT NULL AND a.status_code != 'completed'";
+            + " AND a.status_code in ('lodged', 'approved')";
+    public static final String QUERY_WHERE_GET_ASSIGNED_ALL = "u.username IS NOT NULL AND a.status_code in ('lodged', 'approved')";
     public static final String QUERY_WHERE_GET_UNASSIGNED = "u.username IS NULL "
-            + " AND a.status_code != 'completed'";
+            + " AND a.status_code in ('lodged', 'approved')";
     public static final String QUERY_WHERE_SEARCH_APPLICATIONS =
             "a.lodging_datetime BETWEEN #{" + QUERY_PARAM_FROM_LODGE_DATE + "} AND #{" + QUERY_PARAM_TO_LODGE_DATE + "} "
             + "AND lower(a.nr) LIKE lower(#{" + QUERY_PARAM_APP_NR + "}) "
-            + "AND lower(p2.name) LIKE lower(#{" + QUERY_PARAM_AGENT_NAME + "}) "
+            + "AND lower(COALESCE(p2.name, '')) LIKE lower(#{" + QUERY_PARAM_AGENT_NAME + "}) "
             + "AND ((lower (COALESCE(p.name, '') || ' ' || COALESCE(p.last_name, '')) LIKE lower(#{" + QUERY_PARAM_CONTACT_NAME + "})) "
             + "    OR (lower (COALESCE(p.name, '')) LIKE lower(#{" + QUERY_PARAM_CONTACT_NAME + "})) "
             + "    OR (lower (COALESCE(p.last_name, '')) LIKE lower(#{" + QUERY_PARAM_CONTACT_NAME + "}))) ";
