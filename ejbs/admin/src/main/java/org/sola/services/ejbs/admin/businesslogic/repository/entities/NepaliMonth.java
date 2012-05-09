@@ -14,7 +14,7 @@ import org.sola.services.common.repository.entities.AbstractEntity;
  *
  * @author KumarKhadka
  */
-@Table(name = "tblcalendar", schema = "system")
+@Table(name = "np_calendar", schema = "nep_system")
 @DefaultSorter(sortString = "nep_year,nep_month")
 public class NepaliMonth extends AbstractEntity{
     @Id
@@ -23,20 +23,20 @@ public class NepaliMonth extends AbstractEntity{
     @Id
     @Column(name = "nep_month")
     private int nepMonth;
-    @Column(name = "days")
-    private int days;
+    @Column(name = "dayss")
+    private int dayss;
     
     public static final String YEAR_PARAM="nepYear";
     public static final String MONTH_PARAM="nepMonth";
     public static final String GET_BY_YEAR="nep_year=#{"+YEAR_PARAM+"}";
     public static final String GET_BY_YEAR_AND_MONTH="nep_year=#{"+YEAR_PARAM+"} and nep_month=#{" + MONTH_PARAM + "}";
 
-    public int getDays() {
-        return days;
+    public int getDayss() {
+        return dayss;
     }
 
-    public void setDays(int daays) {
-        this.days = daays;
+    public void setDayss(int dayss) {
+        this.dayss = dayss;
     }
 
     public int getNepMonth() {
@@ -54,4 +54,6 @@ public class NepaliMonth extends AbstractEntity{
     public void setNepYear(int nepYear) {
         this.nepYear = nepYear;
     }
+
+   
 }

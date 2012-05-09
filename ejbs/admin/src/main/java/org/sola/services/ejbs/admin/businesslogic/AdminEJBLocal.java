@@ -31,29 +31,44 @@ package org.sola.services.ejbs.admin.businesslogic;
 
 import java.util.Date;
 import java.util.List;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.Role;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.User;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.Group;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.GroupSummary;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.Language;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.NepaliMonth;
+import org.sola.services.ejbs.admin.businesslogic.repository.entities.*;
 
 public interface AdminEJBLocal {
 
+    LandOwner saveLandOwner(LandOwner owner);
+
     /**
-     * Returns List of Nepali date from database
+     * List of nepali year from database with out any parameter given
+     */
+    List<Integer> getNepaliYear();
+
+    /**
+     * Returns List of Nepali date from database with out any parameter given
      */
     List<NepaliMonth> getNepaliMonths();
-    
+
     /**
      * Returns List of Nepali date from database
+     *
      * @param year parameter to return list of month in given year
      */
     List<NepaliMonth> getNepaliMonths(int year);
-    
+
+    /**
+     * Returns the entity NepaliMonth
+     *
+     * @param year nepali year
+     * @param month nepali month
+     */
     NepaliMonth getNepaliMonth(int year, int month);
-    
+
+    /**
+     * Returns List of Nepali date from database
+     *
+     * @param year parameter to return list of month in given year
+     */
     NepaliMonth saveNepaliMonth(NepaliMonth nepaliMonth);
+
     /**
      * Returns Nepali date @parma date Date to convert
      */
@@ -143,4 +158,23 @@ public interface AdminEJBLocal {
      * Returns list of available languages.
      */
     List<Language> getLanguages(String lang);
+    /**
+     * Returns list of LMO Codes.
+     */
+    List<Integer> getLMOCode();
+    
+     /**
+     * Returns list of LMO Names.
+     */
+    List<String> getLMONames();
+    
+    /**
+     * Returns list of District Names.
+     */
+    List<String> getDistrictNames();
+
+    /**
+     * Returns list of District codes.
+     */
+    List<Integer> getDistrictCodes();
 }
