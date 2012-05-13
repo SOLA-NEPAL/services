@@ -209,7 +209,6 @@ public class PartyEJBIT extends AbstractEJBTest {
             moth.setFinancialYear(69);
             moth.setLmocd(1);
             list.add(moth);
-
             tx.begin();
             for (Moth mh : list) {
                 instance.saveMoth(mh);
@@ -230,12 +229,12 @@ public class PartyEJBIT extends AbstractEJBTest {
         try {
             PartyEJBLocal instance = (PartyEJBLocal) getEJBInstance(PartyEJB.class.getSimpleName());
             tx.begin();
-            List<Moth> result = instance.getMoths(1, "Moth");
+            List<Moth> result = instance.getMoths(3, "Moth");
             System.out.println(">>> Found " + result.size() + " moths.");
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
         }
-    }
+    }    
 }

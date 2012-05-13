@@ -145,7 +145,14 @@ public class PartyEJB extends AbstractEJB implements PartyEJBLocal {
         params.put(CommonSqlProvider.PARAM_WHERE_PART, Moth.GET_BY_VDC_AND_MOTHLUJ);
         params.put(Moth.VDC_PARAM, vdcSid);        
         params.put(Moth.MOTH_LUJ_PARAM, mothLuj);       
-        return getRepository().getEntityList(Moth.class, params);
+        List<Moth> mth=getRepository().getEntityList(Moth.class, params);
+        if(mth.isEmpty()){
+            return null;
+        }
+        else{
+            return mth;
+        }
+            
     }    
     
     @Override
