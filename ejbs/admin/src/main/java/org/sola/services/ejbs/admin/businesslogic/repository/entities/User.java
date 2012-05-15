@@ -58,6 +58,8 @@ public class User extends AbstractVersionedEntity {
     private boolean active;
     @Column(name = "description")
     private String description;
+    @Column(name="department_id")
+    private int departmentId;
     
     @ChildEntityList(parentIdField = "userId")
     private List<UserGroup> userGroups;
@@ -135,5 +137,12 @@ public class User extends AbstractVersionedEntity {
     public void setUserNepalModification(List<UserNepalModification> userNepalModification) {
         this.userNepalModification = userNepalModification;
     }
-    
+
+    public int getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(int departmentId) {
+        this.departmentId = departmentId;
+    }
 }
