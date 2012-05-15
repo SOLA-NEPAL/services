@@ -370,7 +370,7 @@ public class GenericTranslatorTest {
         assertEquals(party.getPreferredCommunicationCode(), partyTO.getPreferredCommunicationCode());
         assertEquals(party.getRowVersion(), partyTO.getRowVersion());
         assertEquals(party.getTypeCode(), partyTO.getTypeCode());
-
+        
         if (hasAddress) {
             assertNotNull(partyTO.getAddress());
             assertEquals(party.getAddressId(), partyTO.getAddress().getId());
