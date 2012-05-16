@@ -59,13 +59,10 @@ public class User extends AbstractVersionedEntity {
     @Column(name = "description")
     private String description;
     @Column(name="department_id")
-    private int departmentId;
+    private String departmentId;
     
     @ChildEntityList(parentIdField = "userId")
     private List<UserGroup> userGroups;
-    
-    @ChildEntityList(parentIdField="userID")
-    private List<UserNepalModification> userNepalModification;
 
     public User() {
         super();
@@ -130,19 +127,11 @@ public class User extends AbstractVersionedEntity {
         this.userGroups = userGroups;
     }
 
-    public List<UserNepalModification> getUserNepalModification() {
-        return userNepalModification;
-    }
-
-    public void setUserNepalModification(List<UserNepalModification> userNepalModification) {
-        this.userNepalModification = userNepalModification;
-    }
-
-    public int getDepartmentId() {
+    public String getDepartmentId() {
         return departmentId;
     }
 
-    public void setDepartmentId(int departmentId) {
+    public void setDepartmentId(String departmentId) {
         this.departmentId = departmentId;
     }
 }
