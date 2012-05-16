@@ -66,7 +66,7 @@ public interface PartyEJBLocal extends AbstractEJBLocal {
     // List<String> getVdc();
     List<Vdc> getVdcList();
 
-//    int getVdcs(String vdcName);
+    //    int getVdcs(String vdcName);
     Moth saveMoth(Moth moth);
 
     Moth getMoth(String id);

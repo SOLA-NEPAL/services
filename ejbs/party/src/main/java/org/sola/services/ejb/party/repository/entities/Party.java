@@ -90,8 +90,7 @@ public class Party extends AbstractVersionedEntity {
     private String typeCode;
     @Column(name = "gender_code")
     private String genderCode;
-    @ExternalEJB(ejbLocalClass = AddressEJBLocal.class,
-    loadMethod = "getAddress", saveMethod = "saveAddress")
+    @ExternalEJB(ejbLocalClass = AddressEJBLocal.class,loadMethod = "getAddress", saveMethod = "saveAddress")
     @ChildEntity(childIdField = "addressId")
     private Address address;
     @ChildEntityList(parentIdField = "partyId")
