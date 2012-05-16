@@ -111,22 +111,9 @@ public class AdminEJBIT extends AbstractEJBTest {
             UserGroup userGroup = new UserGroup();
             userGroup.setGroupId(GROUP_ID);
             userGroup.setEntityAction(EntityAction.INSERT);
-            
-            
-            
 
             List<UserGroup> listUserGroups = new ArrayList<UserGroup>();
             listUserGroups.add(userGroup);
-            
-            
-//            UserNepalModification userNep=new UserNepalModification();
-//            userNep.setDistrictCode(DISTRIC_CODE);
-//            userNep.setLmoCode(LMO_CODE);
-//             userNep.setEntityAction(EntityAction.INSERT);
-//            
-//            
-//            List<UserNepalModification> listUserNepal = new ArrayList<UserNepalModification>();
-//            listUserNepal.add(userNep);
             
 
             User user = new User();
@@ -139,7 +126,7 @@ public class AdminEJBIT extends AbstractEJBTest {
             user.setLoaded(false);
             user.setUserName(USER_NAME);
             user.setUserGroups(listUserGroups);
-//            user.setUserNepalModification(listUserNepal);
+
 
             User savedUser = instance.saveUser(user);
             tx.commit();
