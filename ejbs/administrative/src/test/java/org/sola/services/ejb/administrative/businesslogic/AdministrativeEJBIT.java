@@ -45,11 +45,7 @@ import static org.junit.Assert.*;
 import org.junit.Ignore;
 import org.sola.services.common.EntityAction;
 import org.sola.services.common.test.AbstractEJBTest;
-import org.sola.services.ejb.administrative.repository.entities.BaUnit;
-import org.sola.services.ejb.administrative.repository.entities.BaUnitNotation;
-import org.sola.services.ejb.administrative.repository.entities.Rrr;
-//import org.sola.services.ejb.administrative.repository.RrrDetails;
-import org.sola.services.ejb.administrative.repository.entities.RrrShare;
+import org.sola.services.ejb.administrative.repository.entities.*;
 //import org.sola.services.ejb.administrative.repository.RrrShareDetails;
 //import org.sola.services.ejb.administrative.repository.RrrSource;
 import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
@@ -352,4 +348,49 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             }
         }
     }
+    
+    @Ignore
+    @Test
+    public void testSaveMoth() throws Exception {
+        System.out.println(">>> Testing saving moth");
+        UserTransaction tx = getUserTransaction();
+        try {
+            AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
+            List<Moth> list = new ArrayList<Moth>();
+            Moth moth = new Moth();
+            moth.setMothlujNumber("a1");
+            moth.setVdcSid("1");
+            moth.setWardNo(5);
+            moth.setMothLuj("Moth");
+            moth.setFinancialYear(69);
+            moth.setLmocd(1);
+            list.add(moth);
+            tx.begin();
+            for (Moth mh : list) {
+                instance.saveMoth(mh);
+            }
+            tx.commit();
+
+        } catch (Exception e) {
+            tx.rollback();
+            fail(e.getMessage());
+        }
+    }
+
+    @Ignore
+    @Test
+    public void getMoths() throws Exception {
+        System.out.println(">>> Testing getting moth");
+        UserTransaction tx = getUserTransaction();
+        try {
+            AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
+            tx.begin();
+            List<Moth> result = instance.getMoths("3", "Moth");
+            System.out.println(">>> Found " + result.size() + " moths.");
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            fail(e.getMessage());
+        }
+    }    
 }

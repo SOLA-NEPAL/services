@@ -41,20 +41,7 @@ import org.sola.services.common.LocalInfo;
 import org.sola.services.common.br.ValidationResult;
 import org.sola.services.common.ejbs.AbstractEJB;
 import org.sola.services.common.repository.CommonSqlProvider;
-import org.sola.services.ejb.administrative.repository.entities.BaUnit;
-import org.sola.services.ejb.administrative.repository.entities.BaUnitNotation;
-import org.sola.services.ejb.administrative.repository.entities.BaUnitNotationStatusChanger;
-import org.sola.services.ejb.administrative.repository.entities.BaUnitRelType;
-import org.sola.services.ejb.administrative.repository.entities.BaUnitStatusChanger;
-import org.sola.services.ejb.administrative.repository.entities.BaUnitTarget;
-import org.sola.services.ejb.administrative.repository.entities.BaUnitType;
-import org.sola.services.ejb.administrative.repository.entities.ChangeStatusType;
-import org.sola.services.ejb.administrative.repository.entities.MortgageType;
-import org.sola.services.ejb.administrative.repository.entities.Rrr;
-import org.sola.services.ejb.administrative.repository.entities.RrrGroupType;
-import org.sola.services.ejb.administrative.repository.entities.RrrStatusChanger;
-import org.sola.services.ejb.administrative.repository.entities.RrrType;
-import org.sola.services.ejb.administrative.repository.entities.SourceBaUnitRelationType;
+import org.sola.services.ejb.administrative.repository.entities.*;
 import org.sola.services.ejb.cadastre.businesslogic.CadastreEJBLocal;
 import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
 import org.sola.services.ejb.source.businesslogic.SourceEJBLocal;
@@ -309,4 +296,29 @@ public class AdministrativeEJB extends AbstractEJB
         
         return getBaUnitById(baUnitId);
     }
+    
+    @Override
+    public Moth saveMoth(Moth moth){
+        return getRepository().saveEntity(moth);
+    }  
+    
+    @Override
+    public Moth getMoth(String id) {
+        return getRepository().getEntity(Moth.class, id);
+    }
+    
+    @Override
+    public List<Moth> getMoths(String vdcSid,String mothLuj){
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Moth.GET_BY_VDC_AND_MOTHLUJ);
+        params.put(Moth.VDC_PARAM, vdcSid);        
+        params.put(Moth.MOTH_LUJ_PARAM, mothLuj);       
+        List<Moth> mth=getRepository().getEntityList(Moth.class, params);
+        if(mth.isEmpty()){
+            return null;
+        }
+        else{
+            return mth;
+        }
+    }  
 }

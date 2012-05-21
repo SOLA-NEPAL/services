@@ -111,24 +111,10 @@ public class AdminEJBIT extends AbstractEJBTest {
             UserGroup userGroup = new UserGroup();
             userGroup.setGroupId(GROUP_ID);
             userGroup.setEntityAction(EntityAction.INSERT);
-            
-            
-            
 
             List<UserGroup> listUserGroups = new ArrayList<UserGroup>();
             listUserGroups.add(userGroup);
             
-            
-            UserNepalModification userNep=new UserNepalModification();
-            userNep.setDistrictCode(DISTRIC_CODE);
-            userNep.setLmoCode(LMO_CODE);
-             userNep.setEntityAction(EntityAction.INSERT);
-            
-            
-            List<UserNepalModification> listUserNepal = new ArrayList<UserNepalModification>();
-            listUserNepal.add(userNep);
-            
-
             User user = new User();
             user.setId(USER_ID);
             user.setActive(true);
@@ -139,7 +125,6 @@ public class AdminEJBIT extends AbstractEJBTest {
             user.setLoaded(false);
             user.setUserName(USER_NAME);
             user.setUserGroups(listUserGroups);
-            user.setUserNepalModification(listUserNepal);
 
             User savedUser = instance.saveUser(user);
             tx.commit();
@@ -674,18 +659,14 @@ public class AdminEJBIT extends AbstractEJBTest {
     
     @Ignore
     @Test
-    public void testGetLMOCodes() throws Exception {
-        System.out.println(">>> Loading LMO Codes.");
+    public void testGetOffices() throws Exception {
+        System.out.println(">>> Loading offices.");
         try {
             AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
-            List<Integer> result = instance.getLMOCode();
+            List<Office> result = instance.getCodeEntityList(Office.class);
 
-
-            assertNotNull("List of LMO codes.", result);
-            System.out.println(">>> Found " + result);
-
-
-
+            assertNotNull("Can't find offices.", result);
+            System.out.println(">>> Found " + result.size() + " offices");
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -693,53 +674,14 @@ public class AdminEJBIT extends AbstractEJBTest {
     
     @Ignore
     @Test
-    public void testGetLMONames() throws Exception {
-        System.out.println(">>> Loading LMO Names.");
+    public void testGetDistricts() throws Exception {
+        System.out.println(">>> Loading Districts.");
         try {
             AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
-            List<String> result = instance.getLMONames();
+            List<District> result = instance.getCodeEntityList(District.class);
 
-
-            assertNotNull("List of LMO Names.", result);
-            System.out.println(">>> Found " + result);
-
-
-
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
-    
-    @Ignore
-    @Test
-    public void testGetDistrictNames() throws Exception {
-        System.out.println(">>> Loading District Names.");
-        try {
-            AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
-            List<String> result = instance.getDistrictNames();
-
-            assertNotNull("List of District Names.", result);
-            System.out.println(">>> Found " + result);
-
-
-
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
-    
-    @Ignore
-    @Test
-    public void testGetDistrictCodes() throws Exception {
-        System.out.println(">>> Loading District Codes.");
-        try {
-            AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
-            List<Integer> result = instance.getDistrictCodes();
-
-
-            assertNotNull("List of District Codes.", result);
-            System.out.println(">>> Found " + result);
-
+            assertNotNull("Can't find any dDistrict.", result);
+            System.out.println(">>> Found " + result.size() + " districts");
 
         } catch (Exception e) {
             fail(e.getMessage());

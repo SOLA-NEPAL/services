@@ -2,19 +2,19 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.sola.services.ejb.party.repository.entities;
+package org.sola.services.ejb.administrative.repository.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import org.sola.services.common.repository.entities.AbstractEntity;
+import org.sola.services.common.repository.entities.AbstractVersionedEntity;
 
 /**
  *
  * @author KumarKhadka
  */
-@Table(name = "moth", schema = "nep_system")
-public class Moth extends AbstractEntity {
+@Table(name = "moth", schema = "system")
+public class Moth extends AbstractVersionedEntity {
 
     public static final String VDC_PARAM = "vdcSid";
     public static final String MOTH_LUJ_PARAM = "mothLuj";
@@ -25,7 +25,7 @@ public class Moth extends AbstractEntity {
     @Column(name = "mothluj_no")
     private String mothlujNumber;
     @Column(name = "vdc_sid")
-    private int vdcSid;
+    private String vdcSid;
     @Column(name = "ward_no")
     private int wardNo;
     @Column(name = "moth_luj")
@@ -76,11 +76,11 @@ public class Moth extends AbstractEntity {
         this.mothlujNumber = mothlujNumber;
     }
 
-    public int getVdcSid() {
+    public String getVdcSid() {
         return vdcSid;
     }
 
-    public void setVdcSid(int vdcSid) {
+    public void setVdcSid(String vdcSid) {
         this.vdcSid = vdcSid;
     }
 
