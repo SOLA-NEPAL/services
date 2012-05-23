@@ -287,7 +287,7 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     @Override
     public List<Department> getDepartments(String officeCode, String lang) {
         HashMap params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_WHERE_PART, Department.WHERE_BY_OFFICE_ID);
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Department.WHERE_BY_OFFICE_CODE);
         params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
         params.put(Department.PARAM_OFFICE_CODE, officeCode);
         return getRepository().getEntityList(Department.class, params);
@@ -300,5 +300,25 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
         params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
         params.put(VDC.PARAM_DISTRICT_CODE, districtCode);
         return getRepository().getEntityList(VDC.class, params);
+    }
+
+    @Override
+    public boolean checkUserFromDepartment(String userId, String departmentCode) {
+        User user = getRepository().getEntity(User.class, userId);
+        if(user!=null){
+            return user.getDepartmentCode().equals(departmentCode);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean checkUserFromOffice(String userId, String officeCode) {
+        User user = getRepository().getEntity(User.class, userId);
+        if(user!=null){
+            return user.getDepartment().getOfficeCode().equals(officeCode);
+        } else {
+            return false;
+        }
     }
 }

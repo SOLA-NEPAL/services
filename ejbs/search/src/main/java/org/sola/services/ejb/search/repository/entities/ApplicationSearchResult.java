@@ -58,9 +58,17 @@ public class ApplicationSearchResult extends AbstractReadOnlyEntity {
             + "LEFT JOIN system.appuser u ON a.assignee_id = u.id "
             + "LEFT JOIN party.party p ON a.contact_person_id = p.id "
             + "LEFT JOIN party.party p2 ON a.agent_id = p2.id ";
-    public static final String QUERY_WHERE_GET_ASSIGNED = "u.username = #{" + QUERY_PARAM_USER_NAME + "} "
-            + " AND a.status_code in ('lodged', 'approved')";
-    public static final String QUERY_WHERE_GET_ASSIGNED_ALL = "u.username IS NOT NULL AND a.status_code in ('lodged', 'approved')";
+    
+    public static final String QUERY_WHERE_GET_ASSIGNED = "u.username = #{" 
+            + QUERY_PARAM_USER_NAME + "} AND a.status_code in ('lodged', 'approved')";
+    
+    public static final String QUERY_WHERE_GET_ASSIGNED_ALL = "u.username IS NOT "
+            +"NULL AND a.status_code in ('lodged', 'approved')";
+    
+    public static final String QUERY_WHERE_GET_ASSIGNED_DEPARTMENT = "u.department_code = "
+            + "(select department_code from system.appuser where username= #{" 
+            + QUERY_PARAM_USER_NAME + "} limit 1) AND a.status_code in ('lodged', 'approved')";
+    
     public static final String QUERY_WHERE_GET_UNASSIGNED = "u.username IS NULL "
             + " AND a.status_code in ('lodged', 'approved')";
     public static final String QUERY_WHERE_SEARCH_APPLICATIONS =
@@ -110,7 +118,9 @@ public class ApplicationSearchResult extends AbstractReadOnlyEntity {
     private String serviceList;
     @Column(name = "fee_paid")
     private Boolean feePaid;
-
+    @Column(name="a.rowversion")
+    private int rowVersion;
+    
     public ApplicationSearchResult() {
         super();
     }
@@ -225,5 +235,13 @@ public class ApplicationSearchResult extends AbstractReadOnlyEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public int getRowVersion() {
+        return rowVersion;
+    }
+
+    public void setRowVersion(int rowVersion) {
+        this.rowVersion = rowVersion;
     }
 }

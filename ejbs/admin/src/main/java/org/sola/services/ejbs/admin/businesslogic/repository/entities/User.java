@@ -59,10 +59,10 @@ public class User extends AbstractVersionedEntity {
     private boolean active;
     @Column(name = "description")
     private String description;
-    @Column(name="department_id")
-    private String departmentId;
+    @Column(name="department_code")
+    private String departmentCode;
     
-    @ChildEntity(childIdField="departmentId", readOnly=true)
+    @ChildEntity(childIdField="departmentCode", readOnly=true)
     private Department department;
     
     @ChildEntityList(parentIdField = "userId")
@@ -131,12 +131,12 @@ public class User extends AbstractVersionedEntity {
         this.userGroups = userGroups;
     }
 
-    public String getDepartmentId() {
-        return departmentId;
+    public String getDepartmentCode() {
+        return departmentCode;
     }
 
-    public void setDepartmentId(String departmentId) {
-        this.departmentId = departmentId;
+    public void setDepartmentCode(String departmentCode) {
+        this.departmentCode = departmentCode;
     }
 
     public Department getDepartment() {

@@ -60,15 +60,7 @@ import org.sola.services.common.ejbs.AbstractEJB;
 import org.sola.common.RolesConstants;
 import org.sola.services.common.faults.SOLAValidationException;
 import org.sola.services.common.repository.CommonSqlProvider;
-import org.sola.services.ejb.application.repository.entities.LodgementTiming;
-import org.sola.services.ejb.application.repository.entities.LodgementView;
-import org.sola.services.ejb.application.repository.entities.LodgementViewParams;
-import org.sola.services.ejb.application.repository.entities.RequestTypeRequiresSourceType;
-import org.sola.services.ejb.application.repository.entities.TypeAction;
-import org.sola.services.ejb.application.repository.entities.ServiceActionTaker;
-import org.sola.services.ejb.application.repository.entities.ServiceActionType;
-import org.sola.services.ejb.application.repository.entities.ServiceBasic;
-import org.sola.services.ejb.application.repository.entities.ServiceStatusType;
+import org.sola.services.ejb.application.repository.entities.*;
 import org.sola.services.ejb.cadastre.businesslogic.CadastreEJBLocal;
 import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
 import org.sola.services.ejb.source.businesslogic.SourceEJBLocal;
@@ -78,6 +70,8 @@ import org.sola.services.ejb.system.repository.entities.BrValidation;
 import org.sola.services.ejb.transaction.businesslogic.TransactionEJBLocal;
 import org.sola.services.ejb.transaction.repository.entities.RegistrationStatusType;
 import org.sola.services.ejb.transaction.repository.entities.TransactionBasic;
+import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
+import org.sola.services.ejbs.admin.businesslogic.repository.entities.User;
 
 /**
  * Provides methods for managing application objects. <p>
@@ -99,6 +93,8 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
     private AdministrativeEJBLocal administrativeEJB;
     @EJB
     private CadastreEJBLocal cadastreEJB;
+    @EJB
+    private AdminEJBLocal adminEJB;
 
     @Override
     protected void postConstruct() {
@@ -147,6 +143,9 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
         if (application == null) {
             return application;
         }
+
+        application.setAssignedDatetime(DateUtility.now());
+        application.setAssigneeId(adminEJB.getCurrentUser().getId());
 
         if (application.getLodgingDatetime() == null) {
             application.setLodgingDatetime(DateUtility.now());
@@ -522,33 +521,137 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
     }
 
     @Override
-    @RolesAllowed({RolesConstants.APPLICATION_ASSIGN_TO_OTHERS, RolesConstants.APPLICATION_ASSIGN_TO_YOURSELF})
-    public List<ValidationResult> applicationActionAssign(
-            String applicationId, String userId, String languageCode, int rowVersion) {
+    @RolesAllowed({RolesConstants.APPLICATION_ASSIGN_TO_ALL, RolesConstants.APPLICATION_ASSIGN_TO_DEPARTMENT})
+    public List<ValidationResult> applicationActionAssign(String applicationId,
+            String userId, String languageCode, int rowVersion) {
+
+        // Check candidate assignee
+        checkUser(userId);
+
+        ApplicationActionTaker application = getRepository().getEntity(ApplicationActionTaker.class, applicationId);
+
+        if (application == null) {
+            throw new SOLAException(ServiceMessage.EJB_APPLICATION_APPLICATION_NOT_FOUND);
+        }
+
+        if (application.getAssigneeId() != null) {
+            // Check current assignee
+            checkUser(application.getAssigneeId());
+        }
+
+        application.setAssigneeId(userId);
+        application.setAssignedDatetime(Calendar.getInstance().getTime());
+
+        return this.takeActionAgainstApplication(application, ApplicationActionType.ASSIGN, languageCode, rowVersion);
+    }
+
+    private void checkUser(String userId) {
+        User user = adminEJB.getCurrentUser();
+
+        if (isInRole(RolesConstants.APPLICATION_ASSIGN_TO_ALL)) {
+            // Check assignee to be from the same office as current user
+            if (!adminEJB.checkUserFromOffice(userId, user.getDepartment().getOfficeCode())) {
+                throw new SOLAException(ServiceMessage.EJB_APPLICATION_USER_DOESNT_BELONG_TO_OFFICE);
+            }
+        } else if (isInRole(RolesConstants.APPLICATION_ASSIGN_TO_DEPARTMENT)) {
+            // Check assignee to be from the same department as current user
+            if (!adminEJB.checkUserFromDepartment(userId, user.getDepartmentCode())) {
+                throw new SOLAException(ServiceMessage.EJB_APPLICATION_USER_DOESNT_BELONG_TO_DEPARTMENT);
+            }
+        } else {
+            throw new SOLAException(ServiceMessage.GENERAL_NO_ACCESS_RIGHTS);
+        }
+    }
+
+    @Override
+    @RolesAllowed({RolesConstants.APPLICATION_ASSIGN_TO_ALL, RolesConstants.APPLICATION_ASSIGN_TO_DEPARTMENT})
+    public List<ValidationResult> applicationActionAssignBulk(List<ActionedApplication> actionedApplications,
+            String userId, String languageCode) {
+
+        if (actionedApplications == null || actionedApplications.size() < 1) {
+            return null;
+        }
+
+        // Check candidate assignee
+        checkUser(userId);
+
+        List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
+
+        for (ActionedApplication actionedApplication : actionedApplications) {
+            ApplicationActionTaker application =
+                    getRepository().getEntity(ApplicationActionTaker.class, actionedApplication.getApplicationId());
+            if (application == null) {
+                throw new SOLAException(ServiceMessage.EJB_APPLICATION_APPLICATION_NOT_FOUND);
+            }
+
+            if (application.getAssigneeId() != null) {
+                // Check current assignee
+                checkUser(application.getAssigneeId());
+            }
+
+            application.setAssigneeId(userId);
+            application.setAssignedDatetime(Calendar.getInstance().getTime());
+            validationResults.addAll(this.takeActionAgainstApplication(application,
+                    ApplicationActionType.ASSIGN, languageCode, actionedApplication.getRowVerion()));
+        }
+        return validationResults;
+    }
+
+    @Override
+    @RolesAllowed({RolesConstants.APPLICATION_ASSIGN_TO_ALL, RolesConstants.APPLICATION_ASSIGN_TO_DEPARTMENT})
+    public List<ValidationResult> applicationActionTransfer(String applicationId,
+            String userId, String languageCode, int rowVersion) {
+
         ApplicationActionTaker application =
                 getRepository().getEntity(ApplicationActionTaker.class, applicationId);
         if (application == null) {
             throw new SOLAException(ServiceMessage.EJB_APPLICATION_APPLICATION_NOT_FOUND);
         }
+
         application.setAssigneeId(userId);
         application.setAssignedDatetime(Calendar.getInstance().getTime());
-        return this.takeActionAgainstApplication(
-                application, ApplicationActionType.ASSIGN, languageCode, rowVersion);
+        return this.takeActionAgainstApplication(application,
+                ApplicationActionType.TRANSFER, languageCode, rowVersion);
+    }
+
+    @Override
+    @RolesAllowed({RolesConstants.APPLICATION_ASSIGN_TO_ALL, RolesConstants.APPLICATION_ASSIGN_TO_DEPARTMENT})
+    public List<ValidationResult> applicationActionTransferBulk(List<ActionedApplication> actionedApplications,
+            String userId, String languageCode) {
+
+        if (actionedApplications == null || actionedApplications.size() < 1) {
+            return null;
+        }
+
+        List<ValidationResult> validationResults = new ArrayList<ValidationResult>();
+
+        for (ActionedApplication actionedApplication : actionedApplications) {
+            validationResults.addAll(applicationActionTransfer(
+                    actionedApplication.getApplicationId(), userId, languageCode,
+                    actionedApplication.getRowVerion()));
+        }
+        return validationResults;
     }
 
     @Override
     @RolesAllowed({RolesConstants.APPLICATION_UNASSIGN_FROM_OTHERS, RolesConstants.APPLICATION_UNASSIGN_FROM_YOURSELF})
+    @Deprecated
+    /**
+     * This method will be removed, since it is not used in the push model of
+     * assigning and transferring applications.
+     */
     public List<ValidationResult> applicationActionUnassign(
             String applicationId, String languageCode, int rowVersion) {
-        ApplicationActionTaker application =
-                getRepository().getEntity(ApplicationActionTaker.class, applicationId);
-        if (application == null) {
-            throw new SOLAException(ServiceMessage.EJB_APPLICATION_APPLICATION_NOT_FOUND);
-        }
-        application.setAssigneeId(null);
-        application.setAssignedDatetime(null);
-        return this.takeActionAgainstApplication(
-                application, ApplicationActionType.UNASSIGN, languageCode, rowVersion);
+        return new ArrayList<ValidationResult>();
+//        ApplicationActionTaker application =
+//                getRepository().getEntity(ApplicationActionTaker.class, applicationId);
+//        if (application == null) {
+//            throw new SOLAException(ServiceMessage.EJB_APPLICATION_APPLICATION_NOT_FOUND);
+//        }
+//        application.setAssigneeId(null);
+//        application.setAssignedDatetime(null);
+//        return this.takeActionAgainstApplication(
+//                application, ApplicationActionType.UNASSIGN, languageCode, rowVersion);
     }
 
     @Override
@@ -674,12 +777,12 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
             String languageCode, int rowVersion) {
 
         List<BrValidation> brValidationList =
-                this.systemEJB.getBrForValidatingApplication(actionCode);
+                systemEJB.getBrForValidatingApplication(actionCode);
 
         HashMap<String, Serializable> params = new HashMap<String, Serializable>();
         params.put("id", application.getId());
         //Run the validation
-        List<ValidationResult> resultList = this.systemEJB.checkRulesGetValidation(
+        List<ValidationResult> resultList = systemEJB.checkRulesGetValidation(
                 brValidationList, languageCode, params);
 
         boolean validationSucceeded = systemEJB.validationSucceeded(resultList);

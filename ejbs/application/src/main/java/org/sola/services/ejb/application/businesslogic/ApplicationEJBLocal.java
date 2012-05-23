@@ -36,19 +36,7 @@ import java.util.List;
 import javax.ejb.Local;
 import org.sola.services.common.br.ValidationResult;
 import org.sola.services.common.ejbs.AbstractEJBLocal;
-import org.sola.services.ejb.application.repository.entities.Application;
-import org.sola.services.ejb.application.repository.entities.ApplicationActionType;
-import org.sola.services.ejb.application.repository.entities.ApplicationLog;
-import org.sola.services.ejb.application.repository.entities.ApplicationStatusType;
-import org.sola.services.ejb.application.repository.entities.LodgementTiming;
-import org.sola.services.ejb.application.repository.entities.LodgementView;
-import org.sola.services.ejb.application.repository.entities.LodgementViewParams;
-import org.sola.services.ejb.application.repository.entities.RequestCategoryType;
-import org.sola.services.ejb.application.repository.entities.RequestType;
-import org.sola.services.ejb.application.repository.entities.TypeAction;
-import org.sola.services.ejb.application.repository.entities.Service;
-import org.sola.services.ejb.application.repository.entities.ServiceActionType;
-import org.sola.services.ejb.application.repository.entities.ServiceStatusType;
+import org.sola.services.ejb.application.repository.entities.*;
 
 
 /**
@@ -129,6 +117,15 @@ public interface ApplicationEJBLocal extends AbstractEJBLocal {
 
     List<ValidationResult> applicationActionAssign(
             String applicationId, String userId, String languageCode, int rowVersion);
+    
+    List<ValidationResult> applicationActionAssignBulk(
+            List<ActionedApplication> applications, String userId, String languageCode);
+    
+    List<ValidationResult> applicationActionTransfer(
+            String applicationId, String userId, String languageCode, int rowVersion);
+    
+    List<ValidationResult> applicationActionTransferBulk(
+            List<ActionedApplication> applications, String userId, String languageCode);
 
     List<ValidationResult> applicationActionResubmit(
             String applicationId, String languageCode, int rowVersion);

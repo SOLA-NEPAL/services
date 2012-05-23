@@ -214,10 +214,11 @@ public class CommonRepositoryImpl implements CommonRepository {
             loadChild = false;
             if (childInfo.isInsertBeforeParent()) {
                 // The parent holds the id of the child entity
-                String childId = (String) parentEntity.getEntityFieldValue(
-                        parentEntity.getColumnInfo(childInfo.getChildIdField()));
+                ColumnInfo columnInfo = parentEntity.getColumnInfo(childInfo.getChildIdField());
+                String childId = (String) parentEntity.getEntityFieldValue(columnInfo);
                 if (childId != null) {
-                    params.put(CommonSqlProvider.PARAM_WHERE_PART, "id = #{childId}");
+                    List<ColumnInfo> idColumns = RepositoryUtility.getIdColumns(childEntityClass);
+                    params.put(CommonSqlProvider.PARAM_WHERE_PART, idColumns.get(0).getColumnName() + " = #{childId}");
                     params.put("childId", childId);
                     loadChild = true;
                 }
@@ -251,9 +252,12 @@ public class CommonRepositoryImpl implements CommonRepository {
     private <T extends AbstractReadOnlyEntity> T mapToEntity(T entity, Map<String, Object> row) {
         if (row != null && !row.isEmpty()) {
             for (ColumnInfo columnInfo : entity.getColumns()) {
-                if (row.containsKey(columnInfo.getColumnName().toLowerCase())) {
-                    entity.setEntityFieldValue(columnInfo,
-                            row.get(columnInfo.getColumnName().toLowerCase()));
+                String columnName = columnInfo.getColumnName().toLowerCase();
+                if(columnName.contains(".") && columnName.length()-1 > columnName.lastIndexOf(".")){
+                    columnName = columnName.substring(columnName.lastIndexOf(".")+1);
+                }
+                if (row.containsKey(columnName)) {
+                    entity.setEntityFieldValue(columnInfo, row.get(columnName));
                 }
             }
             markAsLoaded(entity);

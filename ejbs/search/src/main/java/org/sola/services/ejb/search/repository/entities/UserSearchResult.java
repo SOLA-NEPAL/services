@@ -36,6 +36,8 @@ import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 @Table(name = "appuser", schema = "system")
 public class UserSearchResult extends AbstractReadOnlyEntity {
 
+    public static final String PARAM_DEPARTMENT_CODE = "departmentCode";
+            
     protected static final String SELECT_QUERY =
             "SELECT DISTINCT u.id, u.username, u.active, u.first_name, u.last_name, u.description, "
             + "(SELECT string_agg(tmp.name, ', ') FROM "
@@ -46,6 +48,9 @@ public class UserSearchResult extends AbstractReadOnlyEntity {
     
     public static final String QUERY_ACTIVE_USERS = UserSearchResult.SELECT_QUERY 
             + "WHERE active = 't' ORDER BY u.last_name";
+    
+    public static final String QUERY_USERS_BY_DEPARTMENT = UserSearchResult.SELECT_QUERY 
+            + "WHERE active = 't' AND department_code = #{" + PARAM_DEPARTMENT_CODE + "} ORDER BY u.last_name";
     
     public static final String QUERY_ADVANCED_USER_SEARCH = UserSearchResult.SELECT_QUERY
             + "WHERE POSITION(LOWER(COALESCE(#{userName}, '')) IN LOWER(COALESCE(username, ''))) > 0 "

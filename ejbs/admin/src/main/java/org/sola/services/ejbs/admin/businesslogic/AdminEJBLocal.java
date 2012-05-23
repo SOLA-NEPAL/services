@@ -165,4 +165,10 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
     
     /** Get list of VDCs by District code. */
     List<VDC> getVDCs(String districtCode, String lang);
+    
+    /** Checks if user belongs to the given department. */
+    boolean checkUserFromDepartment(String userId, String departmentCode);
+    
+    /** Checks if user belongs to the given office. */
+    boolean checkUserFromOffice(String userId, String officeCode);
 }

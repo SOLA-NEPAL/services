@@ -9,7 +9,7 @@ import org.sola.services.common.repository.entities.AbstractCodeEntity;
 @DefaultSorter(sortString="name")
 public class Department extends AbstractCodeEntity {
     public static final String PARAM_OFFICE_CODE = "officeCode";
-    public static final String WHERE_BY_OFFICE_ID = "office_code = #{" + PARAM_OFFICE_CODE + "}";
+    public static final String WHERE_BY_OFFICE_CODE = "office_code = #{" + PARAM_OFFICE_CODE + "}";
 
     @Column(name="office_code")
     private String officeCode;
