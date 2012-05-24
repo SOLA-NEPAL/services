@@ -4,6 +4,11 @@
  */
 package org.sola.services.ejbs.admin.businesslogic.repository.entities;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import org.sola.services.common.repository.entities.AbstractCodeEntity;
+
 
 /**
  *
