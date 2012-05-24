@@ -14,7 +14,7 @@ import org.sola.services.common.repository.entities.AbstractEntity;
  *
  * @author KumarKhadka
  */
-@Table(name="districts",schema="nep_system")
+@Table(name="district",schema="system")
 public class District extends AbstractEntity{
     @Id
     @Column(name="code")

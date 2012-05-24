@@ -2,37 +2,37 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.sola.services.ejb.cadastre.repository.entities;
+package org.sola.services.ejb.administrative.repository.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.sola.services.common.repository.ChildEntity;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
-import org.sola.services.ejb.administrative.repository.entities.BaUnit;
 
 /**
  *
  * @author KumarKhadka
  */
-@Table(name="land_owner_certificate",schema="nep_system")
-public class LOC extends AbstractVersionedEntity{
+@Table(name = "land_owner_certificate", schema = "Administrative")
+public class LOC extends AbstractVersionedEntity {
+
     @Id
-    @Column(name="loc_sid")
+    @Column(name = "loc_sid")
     private String locSid;
-    @Column(name="moth_sid")
+    @Column(name = "moth_sid")
     private String mothSid;
-    @Column(name="pana_no")
+    @Column(name = "pana_no")
     private int panaNo;
-    @Column(name="tmp_pana_no")
+    @Column(name = "tmp_pana_no")
     private int tmpPanaNo;
-    @Column(name="property_type")
+    @Column(name = "property_type")
     private int propertyType;
-    @Column(name="oshp_type")
+    @Column(name = "oshp_type")
     private int oshpType;
-    @Column(name="transaction_no")
+    @Column(name = "transaction_no")
     private int transactionNo;
-    @ChildEntity(childIdField="locSid")
+    @ChildEntity(childIdField = "locSid")
     private BaUnit baUnit;
 
     public BaUnit getBaUnit() {
@@ -44,12 +44,12 @@ public class LOC extends AbstractVersionedEntity{
     }
 
     public String getLocSid() {
-         locSid = locSid == null ? generateId() : locSid;
+        locSid = locSid == null ? generateId() : locSid;
         return locSid;
     }
 
     public void setLocSid(String locSid) {
-         this.locSid = locSid;
+        this.locSid = locSid;
     }
 
     public String getMothSid() {
@@ -99,6 +99,4 @@ public class LOC extends AbstractVersionedEntity{
     public void setTransactionNo(int transactionNo) {
         this.transactionNo = transactionNo;
     }
-    
-    
 }

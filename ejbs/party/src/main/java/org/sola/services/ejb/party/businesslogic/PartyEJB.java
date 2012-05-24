@@ -32,7 +32,6 @@
 package org.sola.services.ejb.party.businesslogic;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,47 +116,6 @@ public class PartyEJB extends AbstractEJB implements PartyEJBLocal {
     @Override
     public List<PartyRoleType> getPartyRoles(String languageCode) {
         return getRepository().getCodeList(PartyRoleType.class, languageCode);
-    }
-
-//    @Override
-//    public List<String> getVdc() {     
-//       List<String> vdc=new ArrayList<String>();
-//       List<Vdc> list= getRepository().getEntityList(Vdc.class);   
-//       for(Vdc i:list){
-//           vdc.add(i.getVdcName());
-//       }
-//       return vdc; 
-//    }  
-    
-    @Override
-    public Moth saveMoth(Moth moth){
-        return getRepository().saveEntity(moth);
-    }  
-    
-    @Override
-    public Moth getMoth(String id) {
-        return getRepository().getEntity(Moth.class, id);
-    }
-    
-    @Override
-    public List<Moth> getMoths(int vdcSid,String mothLuj){
-        HashMap params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_WHERE_PART, Moth.GET_BY_VDC_AND_MOTHLUJ);
-        params.put(Moth.VDC_PARAM, vdcSid);        
-        params.put(Moth.MOTH_LUJ_PARAM, mothLuj);       
-        List<Moth> mth=getRepository().getEntityList(Moth.class, params);
-        if(mth.isEmpty()){
-            return null;
-        }
-        else{
-            return mth;
-        }
-            
-    }    
-    
-    @Override
-    public List<Vdc> getVdcList() {
-        return getRepository().getEntityList(Vdc.class);
     }
 
 }

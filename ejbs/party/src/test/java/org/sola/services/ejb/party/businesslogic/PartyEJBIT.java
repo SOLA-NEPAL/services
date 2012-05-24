@@ -116,14 +116,21 @@ public class PartyEJBIT extends AbstractEJBTest {
 
     }
 
-    @Ignore
+    //@Ignore
     @Test
     public void testGetParty() throws Exception {
-        System.out.println("get party");
-        List<ChildEntityInfo> c = RepositoryUtility.getChildEntityInfo(Party.class);
-        Class<?> clazz = c.get(0).getEntityClass();
-        Class<?> clazz2 = c.get(1).getEntityClass();
-        System.out.println("do nothing");
+//        System.out.println("get party");
+//        List<ChildEntityInfo> c = RepositoryUtility.getChildEntityInfo(Party.class);
+//        Class<?> clazz = c.get(0).getEntityClass();
+//        Class<?> clazz2 = c.get(1).getEntityClass();
+//        System.out.println("do nothing");
+        
+        
+            PartyEJBLocal instance = (PartyEJBLocal) getEJBInstance(PartyEJB.class.getSimpleName());
+             Party owner = new Party();
+            Party list = instance.getParty("pqr11");
+            
+           
     }
 
     /**
@@ -155,7 +162,6 @@ public class PartyEJBIT extends AbstractEJBTest {
             owner.setRoleList(roleList);
             owner.setRightHolder(false);
             list.add(owner);
-
             tx.begin();
             for (Party onn : list) {
                 instance.saveParty(onn);
@@ -168,73 +174,5 @@ public class PartyEJBIT extends AbstractEJBTest {
         }
     }
 
-    @Ignore
-    @Test
-    public void getVdcs() throws Exception {
-        System.out.println("Getting vdcs names");
-        UserTransaction tx = getUserTransaction();
-        
-        try {
-            PartyEJBLocal instance = (PartyEJBLocal) getEJBInstance(PartyEJB.class.getSimpleName());           
-            tx.begin();
-            List<Vdc> list=instance.getVdcList();
-            for(Vdc v:list){
-                System.out.println(">>> Found " + v.getVdcName());
-                 System.out.println(">>> Found " + v.getVdcCode());
-            }
-            System.out.println(">>> Found " + list);
-            tx.commit();
-            
-                    
-
-        } catch (Exception e) {
-            tx.rollback();
-            fail(e.getMessage());
-        }
-    }
-
-    @Ignore
-    @Test
-    public void testSaveMoth() throws Exception {
-        System.out.println(">>> Testing saving moth");
-        UserTransaction tx = getUserTransaction();
-        try {
-            PartyEJBLocal instance = (PartyEJBLocal) getEJBInstance(PartyEJB.class.getSimpleName());
-            List<Moth> list = new ArrayList<Moth>();
-            Moth moth = new Moth();
-            moth.setMothlujNumber("a1");
-            moth.setVdcSid(1);
-            moth.setWardNo(5);
-            moth.setMothLuj("Moth");
-            moth.setFinancialYear(69);
-            moth.setLmocd(1);
-            list.add(moth);
-            tx.begin();
-            for (Moth mh : list) {
-                instance.saveMoth(mh);
-            }
-            tx.commit();
-
-        } catch (Exception e) {
-            tx.rollback();
-            fail(e.getMessage());
-        }
-    }
-
-    @Ignore
-    @Test
-    public void getMoths() throws Exception {
-        System.out.println(">>> Testing getting moth");
-        UserTransaction tx = getUserTransaction();
-        try {
-            PartyEJBLocal instance = (PartyEJBLocal) getEJBInstance(PartyEJB.class.getSimpleName());
-            tx.begin();
-            List<Moth> result = instance.getMoths(3, "Moth");
-            System.out.println(">>> Found " + result.size() + " moths.");
-            tx.commit();
-        } catch (Exception e) {
-            tx.rollback();
-            fail(e.getMessage());
-        }
-    }    
+      
 }

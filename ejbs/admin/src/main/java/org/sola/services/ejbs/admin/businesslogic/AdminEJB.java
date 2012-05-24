@@ -281,25 +281,25 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
    
    
     @Override
-    public List<Integer> getLMOCode() {       
-       List<Integer> lmoCode=new ArrayList<Integer>();
-       List<LMO> list= getRepository().getEntityList(LMO.class);
-       for(LMO i : list){
+    public List<String> getOfficeCode() {       
+       List<String> officeCode=new ArrayList<String>();
+       List<Office> list= getRepository().getEntityList(Office.class);
+       for(Office i : list){
            //if(yr.contains(i.getLmoCode())==false)
-           lmoCode.add(i.getLmoCode());
+           officeCode.add(i.getCode());
        } 
-       return lmoCode;       
+       return officeCode;       
     }
 
     @Override
-    public List<String> getLMONames() {
-       List<String> lmoName=new ArrayList<String>();
-       List<LMO> list= getRepository().getEntityList(LMO.class);
-       for(LMO i : list){
+    public List<String> getOfficeNames() {
+       List<String> officeName=new ArrayList<String>();
+       List<Office> list= getRepository().getEntityList(Office.class);
+       for(Office i : list){
            //if(yr.contains(i.getOfficeName())==false)
-           lmoName.add(i.getOfficeName());
+           officeName.add(i.getDisplayValue());
        } 
-       return lmoName; 
+       return officeName; 
     }
 
     @Override
@@ -323,4 +323,41 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
        } 
        return districtCode; 
     }
+    
+    
+    
+    
+//    @Override
+//    public List<String> getVdc() {     
+//       List<String> vdc=new ArrayList<String>();
+//       List<Vdc> list= getRepository().getEntityList(Vdc.class);   
+//       for(Vdc i:list){
+//           vdc.add(i.getVdcName());
+//       }
+//       return vdc; 
+//    }  
+    
+     
+    
+    @Override
+    public List<Vdc> getVdcList() {
+        return getRepository().getEntityList(Vdc.class);
+    }
+
+    @Override
+    public Vdc getVdcByCode(String vdcCode) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Vdc.GET_BY_VDC_CODE);
+        params.put(Vdc.VDC_CODE_PARAM,vdcCode);        
+        return getRepository().getEntity(Vdc.class, params);
+    }
+
+    @Override
+    public Vdc getVdcByName(String vdcName) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Vdc.GET_BY_VDC_NAME);
+        params.put(Vdc.VDC_NAME_PARAM,vdcName);        
+        return getRepository().getEntity(Vdc.class, params);
+    }
+   
 }
