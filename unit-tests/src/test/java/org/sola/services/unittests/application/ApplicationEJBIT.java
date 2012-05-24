@@ -66,9 +66,9 @@ public class ApplicationEJBIT extends AbstractEJBTest {
 
     private static String applicationId = java.util.UUID.randomUUID().toString();
     private static int appRowVersion = 0;
-    private static String APP_MODULE_NAME = "sola-application-1_0-SNAPSHOT";
-    private static String PARTY_MODULE_NAME = "sola-party-1_0-SNAPSHOT";
-    private static String USER_MODULE_NAME = "sola-user-1_0-SNAPSHOT";
+    private static String APP_MODULE_NAME = "sola-application-1_1-SNAPSHOT";
+    private static String PARTY_MODULE_NAME = "sola-party-1_1-SNAPSHOT";
+    private static String USER_MODULE_NAME = "sola-user-1_1-SNAPSHOT";
 
     public ApplicationEJBIT() {
         super();

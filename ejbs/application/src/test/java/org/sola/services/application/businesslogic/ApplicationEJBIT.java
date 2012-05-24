@@ -429,7 +429,6 @@ public class ApplicationEJBIT extends AbstractEJBTest {
             tx.begin();
             instance.applicationActionAssign(applicationId, "test-id", "en", appRowVersion);
             tx.commit();
-
         } finally {
             if (tx.getStatus() != Status.STATUS_NO_TRANSACTION) {
                 tx.rollback();

@@ -31,6 +31,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.sola.services.common.repository.ChildEntity;
 import org.sola.services.common.repository.ChildEntityList;
 import org.sola.services.common.repository.DefaultSorter;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
@@ -58,8 +59,11 @@ public class User extends AbstractVersionedEntity {
     private boolean active;
     @Column(name = "description")
     private String description;
-    @Column(name="department_id")
-    private String departmentId;
+    @Column(name="department_code")
+    private String departmentCode;
+    
+    @ChildEntity(childIdField="departmentCode", readOnly=true)
+    private Department department;
     
     @ChildEntityList(parentIdField = "userId")
     private List<UserGroup> userGroups;
@@ -127,11 +131,19 @@ public class User extends AbstractVersionedEntity {
         this.userGroups = userGroups;
     }
 
-    public String getDepartmentId() {
-        return departmentId;
+    public String getDepartmentCode() {
+        return departmentCode;
     }
 
-    public void setDepartmentId(String departmentId) {
-        this.departmentId = departmentId;
+    public void setDepartmentCode(String departmentCode) {
+        this.departmentCode = departmentCode;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 }

@@ -62,5 +62,4 @@ public interface PartyEJBLocal extends AbstractEJBLocal {
     List<GenderType> getGenderTypes(String languageCode);
 
     List<Party> getAgents();
-    
 }

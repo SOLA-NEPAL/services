@@ -661,18 +661,14 @@ public class AdminEJBIT extends AbstractEJBTest {
     
     @Ignore
     @Test
-    public void testGetLMOCodes() throws Exception {
-        System.out.println(">>> Loading LMO Codes.");
+    public void testGetOffices() throws Exception {
+        System.out.println(">>> Loading offices.");
         try {
             AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
-            List<String> result = instance.getOfficeCode();
+            List<Office> result = instance.getCodeEntityList(Office.class);
 
-
-            assertNotNull("List of LMO codes.", result);
-            System.out.println(">>> Found " + result);
-
-
-
+            assertNotNull("Can't find offices.", result);
+            System.out.println(">>> Found " + result.size() + " offices");
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -680,22 +676,21 @@ public class AdminEJBIT extends AbstractEJBTest {
     
     @Ignore
     @Test
-    public void testGetLMONames() throws Exception {
-        System.out.println(">>> Loading LMO Names.");
+
+    public void testGetDistricts() throws Exception {
+        System.out.println(">>> Loading Districts.");
         try {
             AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
-            List<String> result = instance.getOfficeNames();
+            List<District> result = instance.getCodeEntityList(District.class);
 
-
-            assertNotNull("List of LMO Names.", result);
-            System.out.println(">>> Found " + result);
-
-
+            assertNotNull("Can't find any dDistrict.", result);
+            System.out.println(">>> Found " + result.size() + " districts");
 
         } catch (Exception e) {
             fail(e.getMessage());
         }
     }
+
     
     @Ignore
     @Test
@@ -799,4 +794,5 @@ public class AdminEJBIT extends AbstractEJBTest {
         }
     }
     
+
 }

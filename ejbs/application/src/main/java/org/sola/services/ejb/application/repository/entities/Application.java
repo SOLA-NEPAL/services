@@ -68,9 +68,9 @@ public class Application extends AbstractVersionedEntity {
     private Date lodgingDatetime;
     @Column(name = "expected_completion_date")
     private Date expectedCompletionDate;
-    @Column(name = "assigned_datetime", insertable=false, updatable=false)
+    @Column(name = "assigned_datetime", insertable=true, updatable=false)
     private Date assignedDatetime;
-    @Column(name = "assignee_id", insertable=false, updatable=false)
+    @Column(name = "assignee_id", insertable=true, updatable=false)
     private String assigneeId;
     @Column(name = "action_code", insertable=false, updatable=false)
     private String actionCode;

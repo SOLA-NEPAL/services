@@ -54,6 +54,11 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     public static final String TO_NEPALI_DATE_FUNCTION = "select english_to_nepalidatestring from public.english_to_nepalidatestring(#{" + DATE_PARAM + "})";
     public static final String TO_GREGORIAN_DATE_FUNCTION = "select nepali_to_englishdate from public.nepali_to_englishdate(#{" + DATE_PARAM + "})";
 
+    @Override
+    protected void postConstruct() {
+        setEntityPackage(User.class.getPackage().getName());
+    }
+    
     @RolesAllowed(RolesConstants.ADMIN_MANAGE_SECURITY)
     @Override
     public List<User> getUsers() {
@@ -278,9 +283,25 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     public LandOwner saveLandOwner(LandOwner owner) {
         return getRepository().saveEntity(owner);
     }   
-   
-   
+
+    public List<Department> getDepartments(String officeCode, String lang) {
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Department.WHERE_BY_OFFICE_CODE);
+        params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
+        params.put(Department.PARAM_OFFICE_CODE, officeCode);
+        return getRepository().getEntityList(Department.class, params);
+    }
+
     @Override
+    public List<VDC> getVDCs(String districtCode, String lang) {
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, VDC.WHERE_BY_DISTRICT_CODE);
+        params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
+        params.put(VDC.PARAM_DISTRICT_CODE, districtCode);
+        return getRepository().getEntityList(VDC.class, params);
+    }
+    
+    
     public List<String> getOfficeCode() {       
        List<String> officeCode=new ArrayList<String>();
        List<Office> list= getRepository().getEntityList(Office.class);
@@ -303,25 +324,23 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     }
 
     @Override
-    public List<String> getDistrictNames() {
-       List<String> districtName=new ArrayList<String>();
-       List<District> list= getRepository().getEntityList(District.class);
-       for(District i : list){
-           //if(yr.contains(i.getOfficeName())==false)
-           districtName.add(i.getDistrictName());
-       } 
-       return districtName; 
+    public boolean checkUserFromDepartment(String userId, String departmentCode) {
+        User user = getRepository().getEntity(User.class, userId);
+        if(user!=null){
+            return user.getDepartmentCode().equals(departmentCode);
+        } else {
+            return false;
+        }
     }
 
     @Override
-    public List<Integer> getDistrictCodes() {
-       List<Integer> districtCode=new ArrayList<Integer>();
-       List<District> list= getRepository().getEntityList(District.class);
-       for(District i : list){
-           //if(yr.contains(i.getOfficeName())==false)
-           districtCode.add(i.getDistrictCode());
-       } 
-       return districtCode; 
+    public boolean checkUserFromOffice(String userId, String officeCode) {
+        User user = getRepository().getEntity(User.class, userId);
+        if(user!=null){
+            return user.getDepartment().getOfficeCode().equals(officeCode);
+        } else {
+            return false;
+        }
     }
     
     

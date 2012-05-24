@@ -38,20 +38,19 @@ import java.util.List;
 import javax.transaction.Status;
 import javax.transaction.UserTransaction;
 import org.junit.After;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.sola.common.DateUtility;
-import org.sola.services.ejb.party.businesslogic.PartyEJB;
-import org.sola.services.ejb.party.repository.entities.Party;
-import static org.junit.Assert.*;
-import org.junit.Ignore;
 import org.sola.services.common.EntityAction;
 import org.sola.services.common.test.AbstractEJBTest;
 import org.sola.services.ejb.administrative.repository.entities.*;
-//import org.sola.services.ejb.administrative.repository.RrrShareDetails;
-//import org.sola.services.ejb.administrative.repository.RrrSource;
 import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
+import org.sola.services.ejb.party.businesslogic.PartyEJB;
 import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
+import org.sola.services.ejb.party.repository.entities.Party;
 import org.sola.services.ejbs.admin.businesslogic.repository.entities.Vdc;
 
 /**
@@ -350,7 +349,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             }
         }
     }
-
+    
     @Ignore
     @Test
     public void testSaveMoth() throws Exception {
@@ -360,10 +359,15 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
             List<Moth> list = new ArrayList<Moth>();
             Moth moth = new Moth();
+            moth.setMothlujNumber("a1");
+            moth.setVdcSid("1");
+            moth.setWardNo(5);
+            moth.setMothLuj("Moth");
             moth.setMothlujNumber("a2");
             moth.setVdcCode("2");
             moth.setWardNo(5);
             moth.setMothLuj("M");
+
             moth.setFinancialYear(69);
             moth.setLmocd(1);
             list.add(moth);
@@ -379,14 +383,18 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         }
     }
 
+
+    
+
    @Ignore
     @Test
     public void getMoths() throws Exception {
         System.out.println(">>> Testing getting moths");
+
         UserTransaction tx = getUserTransaction();
         try {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
-            tx.begin();
+            tx.begin();            
             List<Moth> result = instance.getMoths("1", "M");
             if (result == null) {
                 System.out.println(">>> Found null");
@@ -398,9 +406,10 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             tx.rollback();
             fail(e.getMessage());
         }
-    }
+    } 
+    
 
-   //@Ignore
+   @Ignore
    @Test
     public void getMoth() throws Exception {
         System.out.println(">>> Testing getting Moth");

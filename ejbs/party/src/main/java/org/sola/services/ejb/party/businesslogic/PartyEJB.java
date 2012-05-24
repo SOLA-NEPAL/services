@@ -117,5 +117,4 @@ public class PartyEJB extends AbstractEJB implements PartyEJBLocal {
     public List<PartyRoleType> getPartyRoles(String languageCode) {
         return getRepository().getCodeList(PartyRoleType.class, languageCode);
     }
-
 }

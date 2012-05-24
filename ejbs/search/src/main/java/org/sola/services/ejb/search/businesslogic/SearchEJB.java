@@ -35,7 +35,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -43,7 +42,6 @@ import org.sola.common.RolesConstants;
 import org.sola.common.SOLAException;
 import org.sola.common.messaging.ServiceMessage;
 import org.sola.services.common.ejbs.AbstractEJB;
-import org.sola.services.common.logging.LogUtility;
 import org.sola.services.common.repository.CommonSqlProvider;
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 import org.sola.services.ejb.search.repository.entities.ApplicationLogResult;
@@ -297,16 +295,17 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
 
     @Override
     @RolesAllowed(RolesConstants.APPLICATION_VIEW_APPS)
+    @Deprecated
     public List<ApplicationSearchResult> getUnassignedApplications(String locale) {
-
-        Map params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_FROM_PART, ApplicationSearchResult.QUERY_FROM);
-        params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, locale);
-        params.put(CommonSqlProvider.PARAM_WHERE_PART, ApplicationSearchResult.QUERY_WHERE_GET_UNASSIGNED);
-        params.put(CommonSqlProvider.PARAM_ORDER_BY_PART, ApplicationSearchResult.QUERY_ORDER_BY);
-        params.put(CommonSqlProvider.PARAM_LIMIT_PART, "100");
-
-        return getRepository().getEntityList(ApplicationSearchResult.class, params);
+        return new ArrayList<ApplicationSearchResult>();
+//        Map params = new HashMap<String, Object>();
+//        params.put(CommonSqlProvider.PARAM_FROM_PART, ApplicationSearchResult.QUERY_FROM);
+//        params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, locale);
+//        params.put(CommonSqlProvider.PARAM_WHERE_PART, ApplicationSearchResult.QUERY_WHERE_GET_UNASSIGNED);
+//        params.put(CommonSqlProvider.PARAM_ORDER_BY_PART, ApplicationSearchResult.QUERY_ORDER_BY);
+//        params.put(CommonSqlProvider.PARAM_LIMIT_PART, "100");
+//
+//        return getRepository().getEntityList(ApplicationSearchResult.class, params);
     }
 
     @Override
@@ -316,11 +315,14 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         params.put(CommonSqlProvider.PARAM_FROM_PART, ApplicationSearchResult.QUERY_FROM);
         params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, locale);
         
-        if (isInRole(RolesConstants.APPLICATION_UNASSIGN_FROM_OTHERS)) {
+        if (isInRole(RolesConstants.APPLICATION_ASSIGN_TO_ALL)) {
             params.put(CommonSqlProvider.PARAM_WHERE_PART, ApplicationSearchResult.QUERY_WHERE_GET_ASSIGNED_ALL);
-        } else {
+        } else if (isInRole(RolesConstants.APPLICATION_ASSIGN_TO_DEPARTMENT)) {
+            params.put(CommonSqlProvider.PARAM_WHERE_PART, ApplicationSearchResult.QUERY_WHERE_GET_ASSIGNED_DEPARTMENT);
             params.put(ApplicationSearchResult.QUERY_PARAM_USER_NAME, getUserName());
+        } else {
             params.put(CommonSqlProvider.PARAM_WHERE_PART, ApplicationSearchResult.QUERY_WHERE_GET_ASSIGNED);
+            params.put(ApplicationSearchResult.QUERY_PARAM_USER_NAME, getUserName());
         }
         
         params.put(CommonSqlProvider.PARAM_ORDER_BY_PART, ApplicationSearchResult.QUERY_ORDER_BY);
@@ -524,5 +526,13 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
             result = this.getRepository().getEntityList(CadastreObjectSearchResult.class, params);
         }
         return result;
+    }
+
+    @Override
+    public List<UserSearchResult> getUsersByDepartment(String departmentCode) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, UserSearchResult.QUERY_USERS_BY_DEPARTMENT);
+        params.put(UserSearchResult.PARAM_DEPARTMENT_CODE, departmentCode);
+        return getRepository().getEntityList(UserSearchResult.class, params);
     }
 }

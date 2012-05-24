@@ -174,5 +174,4 @@ public class PartyEJBIT extends AbstractEJBTest {
         }
     }
 
-      
 }

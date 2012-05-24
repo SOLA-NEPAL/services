@@ -32,7 +32,6 @@ import javax.ejb.Local;
 import org.sola.services.common.ejbs.AbstractSolaTransactionEJBLocal;
 import org.sola.services.ejb.administrative.repository.entities.*;
 
-
 /**
  * Provides local interface for administrative ejbs.
  */
@@ -68,8 +67,9 @@ public interface AdministrativeEJBLocal extends AbstractSolaTransactionEJBLocal 
     Moth saveMoth(Moth moth);
 
     Moth getMoth(String id);
-
+    
     List<Moth> getMoths(String vdcCode, String mothLuj);
     
     Moth getMoth(String vdcCode,String mothLuj, String mothLujNumber);
+
 }

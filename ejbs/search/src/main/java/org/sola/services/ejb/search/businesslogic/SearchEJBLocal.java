@@ -88,7 +88,9 @@ public interface SearchEJBLocal extends AbstractEJBLocal {
     List<SourceSearchResult> searchSources(SourceSearchParams searchParams);
 
     List<UserSearchResult> getActiveUsers();
-
+    
+    List<UserSearchResult> getUsersByDepartment(String departmentCode);
+    
     List<UserSearchResult> searchUsers(UserSearchParams searchParams);
 
     List<ApplicationLogResult> getApplicationLog(String applicationId);    
