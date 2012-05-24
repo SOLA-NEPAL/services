@@ -77,14 +77,6 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
     public void tearDown() throws Exception {
         logout();
     }
-
-//    @Before
-//    public void setUp() {
-//    }
-//
-//    @After
-//    public void tearDown() {
-//    }
     /**
      * Test of createBaUnit method, of class AdministrativeEJB.
      */
