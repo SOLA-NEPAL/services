@@ -34,7 +34,9 @@ import java.util.List;
 import org.sola.services.common.ejbs.AbstractEJBLocal;
 import org.sola.services.ejbs.admin.businesslogic.repository.entities.*;
 
-public interface AdminEJBLocal extends AbstractEJBLocal {
+
+public interface AdminEJBLocal extends AbstractEJBLocal{
+
 
     LandOwner saveLandOwner(LandOwner owner);
 
@@ -160,6 +162,7 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
      */
     List<Language> getLanguages(String lang);
 
+
     /** Get list of departments by Office ID. */
     List<Department> getDepartments(String officeCode, String lang);
     
@@ -171,4 +174,34 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
     
     /** Checks if user belongs to the given office. */
     boolean checkUserFromOffice(String userId, String officeCode);
+
+    /**
+     * Returns list of LMO Codes.
+     */
+    List<String> getOfficeCode();
+    
+     /**
+     * Returns list of LMO Names.
+     */
+    List<String> getOfficeNames();
+    
+    /**
+     * Returns list of District Names.
+     */
+    List<String> getDistrictNames();
+
+    /**
+     * Returns list of District codes.
+     */
+    List<Integer> getDistrictCodes();
+    
+    
+    // List<String> getVdc();
+    List<Vdc> getVdcList();
+
+    Vdc getVdcByCode(String vdcCode);
+
+    Vdc getVdcByName(String vdcName);
+    //int getVdcSid(String vdcName);
+
 }

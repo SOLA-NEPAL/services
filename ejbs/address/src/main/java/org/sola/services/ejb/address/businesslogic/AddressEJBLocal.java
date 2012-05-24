@@ -34,8 +34,8 @@ package org.sola.services.ejb.address.businesslogic;
 
 import java.util.List;
 import javax.ejb.Local;
-import org.sola.services.ejb.address.repository.entities.Address;
 import org.sola.services.common.ejbs.AbstractEJBLocal;
+import org.sola.services.ejb.address.repository.entities.Address;
 
 /**
  *

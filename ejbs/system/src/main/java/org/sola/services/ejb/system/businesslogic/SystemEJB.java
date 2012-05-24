@@ -47,7 +47,6 @@ import org.sola.services.common.ejbs.AbstractEJB;
 import org.sola.services.common.repository.CommonSqlProvider;
 import org.sola.services.ejb.search.businesslogic.SearchEJBLocal;
 import org.sola.services.ejb.system.br.Result;
-import org.sola.services.ejb.system.br.ResultFeedback;
 import org.sola.services.ejb.system.repository.entities.Br;
 import org.sola.services.ejb.system.repository.entities.BrCurrent;
 import org.sola.services.ejb.system.repository.entities.BrReport;
@@ -248,4 +247,7 @@ public class SystemEJB extends AbstractEJB implements SystemEJBLocal {
         }
         return true;
     }
+    
+    
+    
 }

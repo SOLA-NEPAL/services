@@ -1,28 +1,30 @@
 /**
  * ******************************************************************************************
- * Copyright (C) 2012 - Food and Agriculture Organization of the United Nations (FAO).
- * All rights reserved.
+ * Copyright (C) 2012 - Food and Agriculture Organization of the United Nations
+ * (FAO). All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- *    1. Redistributions of source code must retain the above copyright notice,this list
- *       of conditions and the following disclaimer.
- *    2. Redistributions in binary form must reproduce the above copyright notice,this list
- *       of conditions and the following disclaimer in the documentation and/or other
- *       materials provided with the distribution.
- *    3. Neither the name of FAO nor the names of its contributors may be used to endorse or
- *       promote products derived from this software without specific prior written permission.
+ * 1. Redistributions of source code must retain the above copyright notice,this
+ * list of conditions and the following disclaimer. 2. Redistributions in binary
+ * form must reproduce the above copyright notice,this list of conditions and
+ * the following disclaimer in the documentation and/or other materials provided
+ * with the distribution. 3. Neither the name of FAO nor the names of its
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
- * SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,PROCUREMENT
- * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,STRICT LIABILITY,OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT,STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * *********************************************************************************************
  */
 /*
@@ -36,20 +38,20 @@ import java.util.List;
 import javax.transaction.Status;
 import javax.transaction.UserTransaction;
 import org.junit.After;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.sola.common.DateUtility;
-import org.sola.services.ejb.party.businesslogic.PartyEJB;
-import org.sola.services.ejb.party.repository.entities.Party;
-import static org.junit.Assert.*;
-import org.junit.Ignore;
 import org.sola.services.common.EntityAction;
 import org.sola.services.common.test.AbstractEJBTest;
 import org.sola.services.ejb.administrative.repository.entities.*;
-//import org.sola.services.ejb.administrative.repository.RrrShareDetails;
-//import org.sola.services.ejb.administrative.repository.RrrSource;
 import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
+import org.sola.services.ejb.party.businesslogic.PartyEJB;
 import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
+import org.sola.services.ejb.party.repository.entities.Party;
+import org.sola.services.ejbs.admin.businesslogic.repository.entities.Vdc;
 
 /**
  *
@@ -58,23 +60,34 @@ import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
 public class AdministrativeEJBIT extends AbstractEJBTest {
 
     static private String baUnitId = null;
+    private static final String LOGIN_USER = "test";
+    private static final String LOGIN_PASS = "test";
 
     public AdministrativeEJBIT() {
         super();
     }
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
+        login(LOGIN_USER, LOGIN_PASS);
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws Exception {
+        logout();
     }
 
+//    @Before
+//    public void setUp() {
+//    }
+//
+//    @After
+//    public void tearDown() {
+//    }
     /**
      * Test of createBaUnit method, of class AdministrativeEJB.
      */
-    //@Ignore
+    @Ignore
     @Test
     public void testBaUnitOperations() throws Exception {
 
@@ -225,7 +238,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
     /**
      * Test of getBaUnitByCode method, of class AdministrativeEJB.
      */
-    //@Ignore
+    @Ignore
     @Test
     public void testGetReferenceDataTypes() throws Exception {
 
@@ -269,10 +282,6 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         System.out.println(
                 "Results found:" + result.size());
 
-        System.out.print(
-                "test getSourceBaUnitRelationTypes: ");
-        result = instance.getSourceBaUnitRelationTypes(languageCode);
-
         System.out.println(
                 "Results found:" + result.size());
     }
@@ -281,11 +290,11 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
      * Test of getBaUnitByCode method, of class AdministrativeEJB.
      */
     @Test
-    //@Ignore
+    @Ignore
     public void testGetBaUnitById() throws Exception {
         baUnitId = "1096f4cc-8ff4-4322-9730-683efd07c2fc";
         //baUnitId = "3118304";
-        
+
         System.out.println("get baunit with id:" + baUnitId);
 
         if (baUnitId == null) {
@@ -310,7 +319,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             System.out.println("Parent BaUnits:" + baUnit.getParentBaUnits().size());
             System.out.println("Child BaUnits:" + baUnit.getChildBaUnits().size());
             System.out.println("nr of rrr:" + baUnit.getRrrList().size());
-            
+
             if (baUnit.getRrrList().size() > 0) {
                 Rrr rrr = baUnit.getRrrList().get(0);
                 System.out.println("Nr of parties in rrr:" + rrr.getRightHolderList().size());
@@ -328,7 +337,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
                                 party.getId(), party.getName()));
                     }
                 }
-                
+
                 System.out.println("Deleting the first rrr in the list.");
                 //LocalInfo.setUserName("test4");
                 rrr.setEntityAction(EntityAction.DELETE);
@@ -362,6 +371,11 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             moth.setVdcSid("1");
             moth.setWardNo(5);
             moth.setMothLuj("Moth");
+            moth.setMothlujNumber("a2");
+            moth.setVdcCode("2");
+            moth.setWardNo(5);
+            moth.setMothLuj("M");
+
             moth.setFinancialYear(69);
             moth.setLmocd(1);
             list.add(moth);
@@ -377,20 +391,47 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         }
     }
 
-    @Ignore
+
+    
+
+   @Ignore
     @Test
     public void getMoths() throws Exception {
-        System.out.println(">>> Testing getting moth");
+        System.out.println(">>> Testing getting moths");
+
         UserTransaction tx = getUserTransaction();
         try {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
-            tx.begin();
-            List<Moth> result = instance.getMoths("3", "Moth");
-            System.out.println(">>> Found " + result.size() + " moths.");
+            tx.begin();            
+            List<Moth> result = instance.getMoths("1", "M");
+            if (result == null) {
+                System.out.println(">>> Found null");
+            } else {
+                System.out.println(">>> Found " + result.size() + "moths");
+            }
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
         }
-    }    
+    } 
+    
+
+   @Ignore
+   @Test
+    public void getMoth() throws Exception {
+        System.out.println(">>> Testing getting Moth");
+        UserTransaction tx = getUserTransaction();
+        try {
+            AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
+            tx.begin();
+            Moth result = instance.getMoth("1", "M", "a1");
+            Vdc vdc = result.getVdc();
+            System.out.println(">>> Found " + vdc.getDisplayValue());
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            fail(e.getMessage());
+        }
+    }
 }
