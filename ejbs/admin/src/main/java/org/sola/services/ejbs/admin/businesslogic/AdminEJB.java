@@ -283,7 +283,8 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     public LandOwner saveLandOwner(LandOwner owner) {
         return getRepository().saveEntity(owner);
     }   
-
+   
+    @Override  
     public List<Department> getDepartments(String officeCode, String lang) {
         HashMap params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, Department.WHERE_BY_OFFICE_CODE);
@@ -293,15 +294,15 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     }
 
     @Override
-    public List<VDC> getVDCs(String districtCode, String lang) {
+    public List<Vdc> getVdcs(String districtCode, String lang) {
         HashMap params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_WHERE_PART, VDC.WHERE_BY_DISTRICT_CODE);
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Vdc.WHERE_BY_DISTRICT_CODE);
         params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
-        params.put(VDC.PARAM_DISTRICT_CODE, districtCode);
-        return getRepository().getEntityList(VDC.class, params);
+        params.put(Vdc.PARAM_DISTRICT_CODE, districtCode);
+        return getRepository().getEntityList(Vdc.class, params);
     }
     
-    
+     @Override
     public List<String> getOfficeCode() {       
        List<String> officeCode=new ArrayList<String>();
        List<Office> list= getRepository().getEntityList(Office.class);
@@ -341,22 +342,7 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
         } else {
             return false;
         }
-    }
-    
-    
-    
-    
-//    @Override
-//    public List<String> getVdc() {     
-//       List<String> vdc=new ArrayList<String>();
-//       List<Vdc> list= getRepository().getEntityList(Vdc.class);   
-//       for(Vdc i:list){
-//           vdc.add(i.getVdcName());
-//       }
-//       return vdc; 
-//    }  
-    
-     
+    }     
     
     @Override
     public List<Vdc> getVdcList() {
@@ -377,6 +363,16 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
         params.put(CommonSqlProvider.PARAM_WHERE_PART, Vdc.GET_BY_VDC_NAME);
         params.put(Vdc.VDC_NAME_PARAM,vdcName);        
         return getRepository().getEntity(Vdc.class, params);
+    }
+
+    @Override
+    public List<String> getDistrictNames() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<Integer> getDistrictCodes() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
    
 }

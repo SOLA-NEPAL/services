@@ -350,7 +350,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         }
     }
     
-    @Ignore
+ @Ignore
     @Test
     public void testSaveMoth() throws Exception {
         System.out.println(">>> Testing saving moth");
@@ -358,16 +358,11 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         try {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
             List<Moth> list = new ArrayList<Moth>();
-            Moth moth = new Moth();
-            moth.setMothlujNumber("a1");
-            moth.setVdcSid("1");
-            moth.setWardNo(5);
-            moth.setMothLuj("Moth");
+            Moth moth = new Moth();        
             moth.setMothlujNumber("a2");
             moth.setVdcCode("2");
             moth.setWardNo(5);
             moth.setMothLuj("M");
-
             moth.setFinancialYear(69);
             moth.setLmocd(1);
             list.add(moth);
@@ -386,7 +381,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
 
     
 
-   @Ignore
+  @Ignore
     @Test
     public void getMoths() throws Exception {
         System.out.println(">>> Testing getting moths");

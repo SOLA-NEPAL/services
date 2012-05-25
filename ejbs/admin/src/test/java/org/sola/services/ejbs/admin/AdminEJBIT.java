@@ -521,7 +521,7 @@ public class AdminEJBIT extends AbstractEJBTest {
         }
     }
 
-   // @Ignore
+   @Ignore
     @Test
     public void testGetNepaliMonth() throws Exception {
         System.out.println(">>> Loading all Months.");

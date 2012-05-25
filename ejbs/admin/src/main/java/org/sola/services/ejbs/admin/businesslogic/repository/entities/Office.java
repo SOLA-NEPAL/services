@@ -1,10 +1,3 @@
- <<<<<<< HEAD
-=======
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
->>>>>>> dateTestBranch
 package org.sola.services.ejbs.admin.businesslogic.repository.entities;
 
 import javax.persistence.Column;
@@ -13,7 +6,7 @@ import org.sola.services.common.repository.entities.AbstractCodeEntity;
 
 @Table(name = "office", schema = "system")
 public class Office extends AbstractCodeEntity {
-
+    
     @Column(name = "district_code")
     private String districtCode;
 

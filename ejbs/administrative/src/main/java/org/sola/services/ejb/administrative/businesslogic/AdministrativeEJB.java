@@ -296,39 +296,23 @@ public class AdministrativeEJB extends AbstractEJB
         return getBaUnitById(baUnitId);
     }
 
-    
     @Override
-    public Moth saveMoth(Moth moth){
+    public Moth saveMoth(Moth moth) {
         return getRepository().saveEntity(moth);
-    }  
-   
+    }
+
     @Override
     public Moth getMoth(String id) {
         return getRepository().getEntity(Moth.class, id);
     }
-    
-    @Override
-    public List<Moth> getMoths(String vdcSid,String mothLuj){
-        HashMap params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_WHERE_PART, Moth.GET_BY_VDC_AND_MOTHLUJ);
-        params.put(Moth.VDC_PARAM, vdcSid);        
-        params.put(Moth.MOTH_LUJ_PARAM, mothLuj);       
-        List<Moth> mth=getRepository().getEntityList(Moth.class, params);
-        if(mth.isEmpty()){
-            return null;
-        }
-        else{
-            return mth;
-        }
-    }
-    
+
     @Override
     public List<Moth> getMoths(String vdcCode, String mothLuj) {
         HashMap params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, Moth.GET_BY_VDC_AND_MOTHLUJ);
         params.put(Moth.VDC_PARAM, vdcCode);
         params.put(Moth.MOTH_LUJ_PARAM, mothLuj);
-        List<Moth> mth = getRepository().getEntityList(Moth.class, params);  
+        List<Moth> mth = getRepository().getEntityList(Moth.class, params);
         return mth;
     }
 
@@ -338,7 +322,7 @@ public class AdministrativeEJB extends AbstractEJB
         params.put(CommonSqlProvider.PARAM_WHERE_PART, Moth.GET_BY_VDC_MOTHLUJ_AND_MOTHLUJ_NUMBER);
         params.put(Moth.VDC_PARAM, vdcCode);
         params.put(Moth.MOTH_LUJ_PARAM, mothLuj);
-        params.put(Moth.MOTH_LUJ_NUMBER_PARAM,mothLujNumber);
+        params.put(Moth.MOTH_LUJ_NUMBER_PARAM, mothLujNumber);
         return getRepository().getEntity(Moth.class, params);
     }
 }
