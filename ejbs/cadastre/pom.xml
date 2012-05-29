@@ -9,6 +9,14 @@
     <groupId>org.sola.services.ejbs</groupId>
     <artifactId>sola-cadastre</artifactId>
     <packaging>ejb</packaging>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>  
     <name>EJB Cadastre</name>
+    <dependencies>
+        <dependency>
+            <groupId>com.vividsolutions</groupId>
+            <artifactId>jts</artifactId>
+            <version>1.12</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
 </project>

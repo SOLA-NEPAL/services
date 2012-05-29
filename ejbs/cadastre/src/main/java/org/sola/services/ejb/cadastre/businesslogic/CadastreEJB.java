@@ -236,6 +236,8 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         }
     }
 
+    // <editor-fold defaultstate="collapsed" desc="By Kabindra"> 
+    //--------------------------------------------------------------------------
     @Override
     public Segment getSegmentByPoint(double x, double y, int srid) {
         HashMap params = new HashMap();
@@ -265,4 +267,24 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         params.put("transaction_id", transactionId);
         return getRepository().getEntityList(Segment.class, params);
     }
+
+    @Override
+    public List<CadastreObject> getCadastreObjectBy_Intersection(String geom, int srid) {
+        HashMap params = new HashMap();
+        params.put("geom", geom);
+        params.put("srid", srid);
+        return getRepository().getEntityList(
+                CadastreObject.class, CadastreObject.QUERY_WHERE_SEARCHBY_STRING_INTERSECTION, params);
+    }
+
+    @Override
+    public List<CadastreObject> getCadastreObjectBy_ByteIntersection(String geom, int srid) {
+        HashMap params = new HashMap();
+        params.put("geom", geom);
+        params.put("srid", srid);
+        return getRepository().getEntityList(
+                CadastreObject.class, CadastreObject.QUERY_WHERE_SEARCHBY_BYTE_INTERSECTION, params);
+    }
+    //--------------------------------------------------------------------------
+    // </editor-fold>
 }

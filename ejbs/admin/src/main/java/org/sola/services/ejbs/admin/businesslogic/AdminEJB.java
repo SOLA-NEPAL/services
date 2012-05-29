@@ -283,8 +283,8 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     public LandOwner saveLandOwner(LandOwner owner) {
         return getRepository().saveEntity(owner);
     }   
-
-    @Override
+   
+    @Override  
     public List<Department> getDepartments(String officeCode, String lang) {
         HashMap params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, Department.WHERE_BY_OFFICE_CODE);
@@ -294,7 +294,7 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     }
 
     @Override
-    public List<Vdc> getVDCs(String districtCode, String lang) {
+    public List<Vdc> getVdcs(String districtCode, String lang) {
         HashMap params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, Vdc.WHERE_BY_DISTRICT_CODE);
         params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
@@ -320,5 +320,26 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
         } else {
             return false;
         }
+    }     
+    
+    @Override
+    public List<Vdc> getVdcList() {
+        return getRepository().getEntityList(Vdc.class);
+    }
+
+    @Override
+    public Vdc getVdcByCode(String vdcCode) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Vdc.GET_BY_VDC_CODE);
+        params.put(Vdc.VDC_CODE_PARAM,vdcCode);        
+        return getRepository().getEntity(Vdc.class, params);
+    }
+
+    @Override
+    public Vdc getVdcByName(String vdcName) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Vdc.GET_BY_VDC_NAME);
+        params.put(Vdc.VDC_NAME_PARAM,vdcName);        
+        return getRepository().getEntity(Vdc.class, params);
     }
 }

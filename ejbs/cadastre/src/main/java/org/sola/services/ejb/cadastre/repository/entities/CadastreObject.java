@@ -63,7 +63,14 @@ public class CadastreObject extends AbstractVersionedEntity {
     public static final String QUERY_WHERE_SEARCHBYGEOM = "status_code= 'current' and "
             + "ST_DWithin(geom_polygon, get_geometry_with_srid(#{geom}), "
             + "system.get_setting('map-tolerance')::double precision)";
-
+    //By Kabindra
+    //--------------------------------------------------------------------------
+    public static final String QUERY_WHERE_SEARCHBY_STRING_INTERSECTION = "status_code= 'current' and "
+            + "st_intersects(geom_polygon, setsrid(st_geomfromtext(#{geom}), #{srid}))";
+    public static final String QUERY_WHERE_SEARCHBY_BYTE_INTERSECTION = "status_code= 'current' and "
+            + "st_intersects(geom_polygon, setsrid(st_geomfromewkb(#{geom}" + "::geometry)" + ", #{srid}))";
+    //--------------------------------------------------------------------------
+    
     @Id
     @Column(name = "id")
     private String id;

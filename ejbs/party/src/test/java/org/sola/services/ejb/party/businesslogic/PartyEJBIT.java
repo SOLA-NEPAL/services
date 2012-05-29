@@ -116,14 +116,21 @@ public class PartyEJBIT extends AbstractEJBTest {
 
     }
 
-    @Ignore
+    //@Ignore
     @Test
     public void testGetParty() throws Exception {
-        System.out.println("get party");
-        List<ChildEntityInfo> c = RepositoryUtility.getChildEntityInfo(Party.class);
-        Class<?> clazz = c.get(0).getEntityClass();
-        Class<?> clazz2 = c.get(1).getEntityClass();
-        System.out.println("do nothing");
+//        System.out.println("get party");
+//        List<ChildEntityInfo> c = RepositoryUtility.getChildEntityInfo(Party.class);
+//        Class<?> clazz = c.get(0).getEntityClass();
+//        Class<?> clazz2 = c.get(1).getEntityClass();
+//        System.out.println("do nothing");
+        
+        
+            PartyEJBLocal instance = (PartyEJBLocal) getEJBInstance(PartyEJB.class.getSimpleName());
+             Party owner = new Party();
+            Party list = instance.getParty("pqr11");
+            
+           
     }
 
     /**
@@ -155,7 +162,6 @@ public class PartyEJBIT extends AbstractEJBTest {
             owner.setRoleList(roleList);
             owner.setRightHolder(false);
             list.add(owner);
-
             tx.begin();
             for (Party onn : list) {
                 instance.saveParty(onn);
@@ -167,4 +173,5 @@ public class PartyEJBIT extends AbstractEJBTest {
             fail(e.getMessage());
         }
     }
+
 }

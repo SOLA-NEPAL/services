@@ -4,16 +4,16 @@ import javax.persistence.Column;
 import javax.persistence.Table;
 import org.sola.services.common.repository.entities.AbstractCodeEntity;
 
-@Table(name="office",schema="system")
-public class Office extends AbstractCodeEntity{
-
-    @Column(name="district_code")
+@Table(name = "office", schema = "system")
+public class Office extends AbstractCodeEntity {
+    
+    @Column(name = "district_code")
     private String districtCode;
 
-    public Office(){
+    public Office() {
         super();
     }
-    
+
     public String getDistrictCode() {
         return districtCode;
     }

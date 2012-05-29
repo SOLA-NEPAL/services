@@ -160,15 +160,38 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
      */
     List<Language> getLanguages(String lang);
 
-    /** Get list of departments by Office ID. */
+    /**
+     * Get list of departments by Office ID.
+     */
     List<Department> getDepartments(String officeCode, String lang);
-    
-    /** Get list of VDCs by District code. */
-    List<Vdc> getVDCs(String districtCode, String lang);
-    
-    /** Checks if user belongs to the given department. */
+
+    /**
+     * Get list of VDCs by District code.
+     */
+    List<Vdc> getVdcs(String districtCode, String lang);
+
+    /**
+     * Checks if user belongs to the given department.
+     */
     boolean checkUserFromDepartment(String userId, String departmentCode);
-    
-    /** Checks if user belongs to the given office. */
+
+    /**
+     * Checks if user belongs to the given office.
+     */
     boolean checkUserFromOffice(String userId, String officeCode);
+
+    /**
+     * Returns list of District Names
+     */
+    List<Vdc> getVdcList();
+
+    /**
+     * RReturns Vdc according to given code.
+     */
+    Vdc getVdcByCode(String vdcCode);
+
+    /**
+     * Returns Vdc according to given Name.
+     */
+    Vdc getVdcByName(String vdcName);
 }

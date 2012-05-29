@@ -1,28 +1,30 @@
 /**
  * ******************************************************************************************
- * Copyright (C) 2012 - Food and Agriculture Organization of the United Nations (FAO).
- * All rights reserved.
+ * Copyright (C) 2012 - Food and Agriculture Organization of the United Nations
+ * (FAO). All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- *    1. Redistributions of source code must retain the above copyright notice,this list
- *       of conditions and the following disclaimer.
- *    2. Redistributions in binary form must reproduce the above copyright notice,this list
- *       of conditions and the following disclaimer in the documentation and/or other
- *       materials provided with the distribution.
- *    3. Neither the name of FAO nor the names of its contributors may be used to endorse or
- *       promote products derived from this software without specific prior written permission.
+ * 1. Redistributions of source code must retain the above copyright notice,this
+ * list of conditions and the following disclaimer. 2. Redistributions in binary
+ * form must reproduce the above copyright notice,this list of conditions and
+ * the following disclaimer in the documentation and/or other materials provided
+ * with the distribution. 3. Neither the name of FAO nor the names of its
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
- * SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,PROCUREMENT
- * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,STRICT LIABILITY,OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT,STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * *********************************************************************************************
  */
 package org.sola.services.ejb.administrative.businesslogic;
@@ -102,11 +104,6 @@ public class AdministrativeEJB extends AbstractEJB
     }
 
     @Override
-    public List<SourceBaUnitRelationType> getSourceBaUnitRelationTypes(String languageCode) {
-        return getRepository().getCodeList(SourceBaUnitRelationType.class, languageCode);
-    }
-
-    @Override
     public BaUnit getBaUnitByCode(String nameFirstpart, String nameLastpart) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, BaUnit.QUERY_WHERE_BYPROPERTYCODE);
@@ -168,7 +165,7 @@ public class AdministrativeEJB extends AbstractEJB
                 getRepository().saveEntity(baUnit);
             }
         }
-        
+
         params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, Rrr.QUERY_WHERE_BYTRANSACTIONID);
         params.put(Rrr.QUERY_PARAMETER_TRANSACTIONID, transactionId);
@@ -198,9 +195,10 @@ public class AdministrativeEJB extends AbstractEJB
 
     /**
      * It runs the business rules for validating BAUnit.
+     *
      * @param baUnit
      * @param languageCode
-     * @return 
+     * @return
      */
     private List<ValidationResult> validateBaUnit(
             BaUnitStatusChanger baUnit, String languageCode) {
@@ -214,9 +212,10 @@ public class AdministrativeEJB extends AbstractEJB
 
     /**
      * It runs the business rules for validating Rrr.
+     *
      * @param rrr
      * @param languageCode
-     * @return 
+     * @return
      */
     private List<ValidationResult> validateRrr(
             RrrStatusChanger rrr, String languageCode) {
@@ -274,7 +273,7 @@ public class AdministrativeEJB extends AbstractEJB
         }
 
         //TODO: Put BR check to have only one pending transaction for the BaUnit and BaUnit to be with "current" status.
-        
+
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, BaUnitTarget.QUERY_WHERE_GET_BY_BAUNITID);
         params.put(BaUnitTarget.PARAM_BAUNIT_ID, baUnitId);
@@ -285,7 +284,7 @@ public class AdministrativeEJB extends AbstractEJB
             for (BaUnitTarget baUnitTarget : targets) {
                 Transaction transaction = transactionEJB.getTransactionById(
                         baUnitTarget.getTransactionId(), Transaction.class);
-                if (transaction != null 
+                if (transaction != null
                         || transaction.getStatusCode().equals(RegistrationStatusType.STATUS_PENDING)) {
                     // DELETE peding 
                     baUnitTarget.setEntityAction(EntityAction.DELETE);
@@ -293,32 +292,37 @@ public class AdministrativeEJB extends AbstractEJB
                 }
             }
         }
-        
+
         return getBaUnitById(baUnitId);
     }
-    
+
     @Override
-    public Moth saveMoth(Moth moth){
+    public Moth saveMoth(Moth moth) {
         return getRepository().saveEntity(moth);
-    }  
-    
+    }
+
     @Override
     public Moth getMoth(String id) {
         return getRepository().getEntity(Moth.class, id);
     }
-    
+
     @Override
-    public List<Moth> getMoths(String vdcSid,String mothLuj){
+    public List<Moth> getMoths(String vdcCode, String mothLuj) {
         HashMap params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, Moth.GET_BY_VDC_AND_MOTHLUJ);
-        params.put(Moth.VDC_PARAM, vdcSid);        
-        params.put(Moth.MOTH_LUJ_PARAM, mothLuj);       
-        List<Moth> mth=getRepository().getEntityList(Moth.class, params);
-        if(mth.isEmpty()){
-            return null;
-        }
-        else{
-            return mth;
-        }
-    }  
+        params.put(Moth.VDC_PARAM, vdcCode);
+        params.put(Moth.MOTH_LUJ_PARAM, mothLuj);
+        List<Moth> mth = getRepository().getEntityList(Moth.class, params);
+        return mth;
+    }
+
+    @Override
+    public Moth getMoth(String vdcCode, String mothLuj, String mothLujNumber) {
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Moth.GET_BY_VDC_MOTHLUJ_AND_MOTHLUJ_NUMBER);
+        params.put(Moth.VDC_PARAM, vdcCode);
+        params.put(Moth.MOTH_LUJ_PARAM, mothLuj);
+        params.put(Moth.MOTH_LUJ_NUMBER_PARAM, mothLujNumber);
+        return getRepository().getEntity(Moth.class, params);
+    }
 }

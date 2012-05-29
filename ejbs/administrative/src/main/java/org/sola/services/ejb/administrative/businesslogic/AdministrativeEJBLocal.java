@@ -46,9 +46,7 @@ public interface AdministrativeEJBLocal extends AbstractSolaTransactionEJBLocal 
     
     List<RrrGroupType> getRRRGroupTypes(String languageCode);
     
-    List<RrrType> getRRRTypes(String languageCode);
-    
-    List<SourceBaUnitRelationType> getSourceBaUnitRelationTypes(String languageCode);
+    List<RrrType> getRRRTypes(String languageCode);    
     
     BaUnit getBaUnitById(String id);
     
@@ -69,6 +67,9 @@ public interface AdministrativeEJBLocal extends AbstractSolaTransactionEJBLocal 
     Moth saveMoth(Moth moth);
 
     Moth getMoth(String id);
+    
+    List<Moth> getMoths(String vdcCode, String mothLuj);
+    
+    Moth getMoth(String vdcCode,String mothLuj, String mothLujNumber);
 
-    List<Moth> getMoths(String vdcSid, String mothLuj);
 }

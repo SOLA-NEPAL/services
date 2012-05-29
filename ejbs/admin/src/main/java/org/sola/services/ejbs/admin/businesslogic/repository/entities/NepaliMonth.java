@@ -14,7 +14,7 @@ import org.sola.services.common.repository.entities.AbstractEntity;
  *
  * @author KumarKhadka
  */
-@Table(name = "np_calendar", schema = "nep_system")
+@Table(name = "np_calendar", schema = "system")
 @DefaultSorter(sortString = "nep_year,nep_month")
 public class NepaliMonth extends AbstractEntity{
     @Id
