@@ -294,12 +294,12 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     }
 
     @Override
-    public List<VDC> getVDCs(String districtCode, String lang) {
+    public List<Vdc> getVDCs(String districtCode, String lang) {
         HashMap params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_WHERE_PART, VDC.WHERE_BY_DISTRICT_CODE);
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Vdc.WHERE_BY_DISTRICT_CODE);
         params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
-        params.put(VDC.PARAM_DISTRICT_CODE, districtCode);
-        return getRepository().getEntityList(VDC.class, params);
+        params.put(Vdc.PARAM_DISTRICT_CODE, districtCode);
+        return getRepository().getEntityList(Vdc.class, params);
     }
 
     @Override

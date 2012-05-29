@@ -31,23 +31,26 @@ import javax.persistence.Column;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.sola.common.RolesConstants;
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 
 @Table(name = "appuser", schema = "system")
 public class UserSearchResult extends AbstractReadOnlyEntity {
 
     public static final String PARAM_DEPARTMENT_CODE = "departmentCode";
+    public static final String PARAM_OFFICE_CODE = "officeCode";
             
     protected static final String SELECT_QUERY =
             "SELECT DISTINCT u.id, u.username, u.active, u.first_name, u.last_name, u.description, "
-            + "(SELECT string_agg(tmp.name, ', ') FROM "
+            + "u.department_code, (SELECT string_agg(tmp.name, ', ') FROM "
             + "(SELECT name FROM system.appgroup g INNER JOIN system.appuser_appgroup ug2 "
             + "ON g.id = ug2.appgroup_id WHERE ug2.appuser_id = u.id ORDER BY g.name) tmp "
             + ") AS groups_list "
             + "FROM system.appuser u LEFT JOIN system.appuser_appgroup ug ON u.id = ug.appuser_id ";
     
-    public static final String QUERY_ACTIVE_USERS = UserSearchResult.SELECT_QUERY 
-            + "WHERE active = 't' ORDER BY u.last_name";
+    public static final String QUERY_USERS_BY_OFFICE = UserSearchResult.SELECT_QUERY 
+            + "WHERE active = 't' AND department_code IN (SELECT code FROM system.department "
+            + "WHERE office_code=#{" + PARAM_OFFICE_CODE + "}) ORDER BY u.last_name";
     
     public static final String QUERY_USERS_BY_DEPARTMENT = UserSearchResult.SELECT_QUERY 
             + "WHERE active = 't' AND department_code = #{" + PARAM_DEPARTMENT_CODE + "} ORDER BY u.last_name";
@@ -57,6 +60,21 @@ public class UserSearchResult extends AbstractReadOnlyEntity {
             + "AND POSITION(LOWER(COALESCE(#{firstName}, '')) IN LOWER(COALESCE(first_name, ''))) > 0 "
             + "AND POSITION(LOWER(COALESCE(#{lastName}, '')) IN LOWER(COALESCE(last_name, ''))) > 0 "
             + "AND (ug.appgroup_id = #{groupId} OR #{groupId} = '') ORDER BY u.username";
+    
+    public static final String QUERY_USERS_WITH_ASSIGN_RIGHT_BY_DEPARTMENT = UserSearchResult.SELECT_QUERY
+            + "WHERE ug.appgroup_id IN "
+            + "(SELECT appgroup_id from system.approle_appgroup WHERE "
+            + "approle_code='" + RolesConstants.APPLICATION_ASSIGN_TO_ALL + "' OR "
+            + "approle_code='" + RolesConstants.APPLICATION_ASSIGN_TO_DEPARTMENT + "') AND "
+            + "department_code = #{" + PARAM_DEPARTMENT_CODE + "} AND active = 't' ORDER BY u.last_name";
+    
+    public static final String QUERY_USERS_WITH_ASSIGN_RIGHT_BY_OFFICE = UserSearchResult.SELECT_QUERY
+            + "WHERE ug.appgroup_id IN "
+            + "(SELECT appgroup_id from system.approle_appgroup WHERE "
+            + "approle_code='" + RolesConstants.APPLICATION_ASSIGN_TO_ALL + "' OR "
+            + "approle_code='" + RolesConstants.APPLICATION_ASSIGN_TO_DEPARTMENT + "') AND "
+            + "department_code IN (SELECT code FROM system.department "
+            + "WHERE office_code=#{" + PARAM_OFFICE_CODE + "}) AND active = 't' ORDER BY u.last_name";
     
     @Id
     @Column(name = "id")
@@ -73,7 +91,9 @@ public class UserSearchResult extends AbstractReadOnlyEntity {
     private String description;
     @Column(name = "groups_list")
     private String groupsList;
-
+    @Column(name = "department_code")
+    private String departmentCode;
+    
     public UserSearchResult() {
         super();
     }
@@ -132,5 +152,13 @@ public class UserSearchResult extends AbstractReadOnlyEntity {
 
     public void setGroupsList(String groupsList) {
         this.groupsList = groupsList;
+    }
+
+    public String getDepartmentCode() {
+        return departmentCode;
+    }
+
+    public void setDepartmentCode(String departmentCode) {
+        this.departmentCode = departmentCode;
     }
 }

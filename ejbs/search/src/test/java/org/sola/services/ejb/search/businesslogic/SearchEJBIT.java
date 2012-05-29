@@ -113,28 +113,6 @@ public class SearchEJBIT extends AbstractEJBTest {
         }
     }
     
-    /** Test searching active users */
-    @Test
-    public void testActiveUserSearch() throws Exception {
-        if (skipIntegrationTest()) {
-            return;
-        }
-        try {
-            SearchEJBLocal instance = (SearchEJBLocal) getEJBInstance(SearchEJB.class.getSimpleName());
-            List<UserSearchResult> result = instance.getActiveUsers();
-
-            assertNotNull(result);
-
-            if (result != null && result.size() > 0) {
-                System.out.println("Found " + result.size() + " active users");
-            } else {
-                System.out.println("Can't find any active user");
-            }
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
-    
     /** Test advanced searching of users */
     @Test
     public void testAdavncedUserSearch() throws Exception {
