@@ -691,45 +691,6 @@ public class AdminEJBIT extends AbstractEJBTest {
         }
     }
 
-    
-    @Ignore
-    @Test
-    public void testGetDistrictNames() throws Exception {
-        System.out.println(">>> Loading District Names.");
-        try {
-            AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
-            List<String> result = instance.getDistrictNames();
-
-            assertNotNull("List of District Names.", result);
-            System.out.println(">>> Found " + result);
-
-
-
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
-    
-    @Ignore
-    @Test
-    public void testGetDistrictCodes() throws Exception {
-        System.out.println(">>> Loading District Codes.");
-        try {
-            AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
-            List<Integer> result = instance.getDistrictCodes();
-
-
-            assertNotNull("List of District Codes.", result);
-            System.out.println(">>> Found " + result);
-
-
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
-    
-    
-    
     @Ignore
     @Test
     public void getVdcs() throws Exception {
@@ -746,9 +707,6 @@ public class AdminEJBIT extends AbstractEJBTest {
             }
             System.out.println(">>> Found " + list);
             tx.commit();
-
-
-
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
