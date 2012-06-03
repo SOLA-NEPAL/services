@@ -31,7 +31,6 @@
  */
 package org.sola.services.ejb.transaction.repository.entities;
 
-import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
