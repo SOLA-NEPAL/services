@@ -261,10 +261,9 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     @Override
     public void executeQuery(String cmd) {
         HashMap params = new HashMap();
-        params.put(CommonSqlProvider.PARAM_QUERY,cmd);
+        params.put(CommonSqlProvider.PARAM_QUERY, cmd);
         getRepository().executeSql(params);
     }
-
 
     @Override
     public MapSheet getMapSheet(String id) {
@@ -275,28 +274,6 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     public MapSheet saveMapSheet(MapSheet mapSheet) {
         return getRepository().saveEntity(mapSheet);
     }
-
     //--------------------------------------------------------------------------
     // </editor-fold>
-
-    @Override
-    public Segment getSegmentByPoint(double x, double y, int srid) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Segment saveSegment(Segment seg) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<Segment> getSegmentObjects(List<String> segObjIds) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<Segment> getSegmentsByTransaction(String transactionId) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
 }

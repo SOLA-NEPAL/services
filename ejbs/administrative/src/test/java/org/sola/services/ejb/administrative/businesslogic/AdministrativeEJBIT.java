@@ -573,25 +573,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
     }
    
    
-   @Ignore
-   @Test
-   public void saveLOC()throws Exception{
-       System.out.println(">>> Testing Saving LOC");
-       UserTransaction tx=getUserTransaction();
-       try{
-           AdministrativeEJBLocal instance=(AdministrativeEJBLocal) getEJBInstance((AdministrativeEJB.class.getSimpleName()));
-           tx.begin();
-           LOC loc=new LOC();                    
-           loc.setMothSid("587737ce-5158-470f-a6b9-9e10899010ab");
-           loc.setPanaNo(1);           
-           instance.saveLOC(loc);
-           tx.commit();
-       }
-       catch(Exception e){
-           tx.rollback();
-           fail(e.getMessage());
-       }
-   }
+   
    
 //   //@Ignore
 //   @Test

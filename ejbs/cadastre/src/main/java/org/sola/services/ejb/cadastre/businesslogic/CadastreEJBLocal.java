@@ -77,29 +77,17 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
 
     void approveCadastreRedefinition(String transactionId);
 
-
-    //For segment selection.
-    Segment getSegmentByPoint(double x, double y, int srid);
-
-    Segment saveSegment(Segment seg);
-
-    List<Segment> getSegmentObjects(List<String> segObjIds);
-
-    List<Segment> getSegmentsByTransaction(String transactionId);
-
     MapSheet getMapSheet(String id);
 
     MapSheet saveMapSheet(MapSheet mapSheet);
 
-    
     // <editor-fold defaultstate="collapsed" desc="By Kabindra">
     //--------------------------------------------------------------------------
     List<CadastreObject> getCadastreObjectBy_Intersection(String geom, int srid);
-    
+
     List<CadastreObject> getCadastreObjectBy_ByteIntersection(String geom, int srid);
-    
+
     void executeQuery(String cmd);
     //--------------------------------------------------------------------------
     // </editor-fold>
-
 }
