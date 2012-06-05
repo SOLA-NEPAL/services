@@ -35,7 +35,7 @@ public class LOC extends AbstractVersionedEntity {
     @Column(name = "property_type")
     private int propertyType;
     @Column(name = "oshp_type")
-    private int oshpType;
+    private int oshpType; 
     @Column(name = "transaction_no")
     private int transactionNo;
     @ChildEntityList(parentIdField = "locId")

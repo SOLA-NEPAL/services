@@ -353,8 +353,8 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             }
         }
     }
-
-    @Ignore
+    
+// @Ignore
     @Test
     public void getMoths() throws Exception {
         System.out.println(">>> Testing getting moths");
@@ -362,6 +362,15 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         UserTransaction tx = getUserTransaction();
         try {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
+            List<Moth> list = new ArrayList<Moth>();
+            Moth moth = new Moth();        
+            moth.setMothlujNumber("a2");
+            moth.setVdcCode("1");
+            moth.setWardNo(5);
+            moth.setMothLuj("M");
+            moth.setFinancialYear(69);
+            moth.setLmocd(1);
+            list.add(moth);
             tx.begin();
             List<Moth> result = instance.getMoths("1", "M");
             if (result == null) {
@@ -562,4 +571,44 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             fail(e.getMessage());
         }
     }
+   
+   
+   @Ignore
+   @Test
+   public void saveLOC()throws Exception{
+       System.out.println(">>> Testing Saving LOC");
+       UserTransaction tx=getUserTransaction();
+       try{
+           AdministrativeEJBLocal instance=(AdministrativeEJBLocal) getEJBInstance((AdministrativeEJB.class.getSimpleName()));
+           tx.begin();
+           LOC loc=new LOC();                    
+           loc.setMothSid("587737ce-5158-470f-a6b9-9e10899010ab");
+           loc.setPanaNo(1);           
+           instance.saveLOC(loc);
+           tx.commit();
+       }
+       catch(Exception e){
+           tx.rollback();
+           fail(e.getMessage());
+       }
+   }
+   
+//   //@Ignore
+//   @Test
+//   public void getLOC() throws Exception{
+//       System.err.println(">>> Testing getting LOC using id");
+//       UserTransaction tx=getUserTransaction();
+//       try{
+//           AdministrativeEJBLocal instance=(AdministrativeEJBLocal)getEJBInstance(AdministrativeEJB.class.getSimpleName());
+//           tx.begin();          
+//           LOC loc=instance.getLOC("8cbe76be-b7e6-4aa9-8ea7-64bd9e19f217");
+//           System.out.println(loc.getPanaNo());
+//           tx.commit();
+//           
+//       }
+//       catch(Exception e){
+//           tx.rollback();
+//           fail(e.getMessage());
+//       }
+//   }
 }

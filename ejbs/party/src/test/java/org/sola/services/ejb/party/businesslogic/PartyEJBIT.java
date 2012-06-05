@@ -117,6 +117,7 @@ public class PartyEJBIT extends AbstractEJBTest {
     }
 
  @Ignore
+
     @Test
     public void testGetParty() throws Exception {
 //        System.out.println("get party");
@@ -136,7 +137,8 @@ public class PartyEJBIT extends AbstractEJBTest {
     /**
      * Test of saveParty method, of class PartyEJB.
      */
-   @Ignore
+
+  @Ignore
     @Test
     public void testSaveParty() throws Exception {
         System.out.println(">>> Testing saving land owner");
@@ -154,13 +156,13 @@ public class PartyEJBIT extends AbstractEJBTest {
             Address add = new Address();
             add.setDescription("dfof");
             owner.setAddress(add);
-            List<PartyRole> roleList = new ArrayList<PartyRole>();
-            PartyRole role = new PartyRole();
-            role.setPartyId("ofikfrri");
-            role.setRoleCode("bank");
-            roleList.add(role);
-            owner.setRoleList(roleList);
-            owner.setRightHolder(false);
+//            List<PartyRole> roleList = new ArrayList<PartyRole>();
+//            PartyRole role = new PartyRole();
+//            role.setPartyId("ofikf55i");
+//            role.setRoleCode("bank");
+//            roleList.add(role);
+//            owner.setRoleList(roleList);
+//            owner.setRightHolder(false);
             list.add(owner);
             tx.begin();
             for (Party onn : list) {
