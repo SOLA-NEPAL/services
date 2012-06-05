@@ -257,10 +257,10 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     }
     
     @Override
-    public void executeQuery(String cmd) {
+    public List<HashMap> executeQuery(String cmd) {
         HashMap params = new HashMap();
         params.put(CommonSqlProvider.PARAM_QUERY,cmd);
-        getRepository().executeSql(params);
+        return getRepository().executeSql(params);
     }
     //--------------------------------------------------------------------------
     // </editor-fold>
