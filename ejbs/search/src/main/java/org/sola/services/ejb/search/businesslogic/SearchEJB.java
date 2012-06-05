@@ -332,9 +332,10 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
     }
 
     @Override
-    public List<UserSearchResult> getActiveUsers() {
+    public List<UserSearchResult> getUsersByOffice(String officeCode) {
         Map params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_QUERY, UserSearchResult.QUERY_ACTIVE_USERS);
+        params.put(CommonSqlProvider.PARAM_QUERY, UserSearchResult.QUERY_USERS_BY_OFFICE);
+        params.put(UserSearchResult.PARAM_OFFICE_CODE, officeCode);
         return getRepository().getEntityList(UserSearchResult.class, params);
     }
 
@@ -533,6 +534,24 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_QUERY, UserSearchResult.QUERY_USERS_BY_DEPARTMENT);
         params.put(UserSearchResult.PARAM_DEPARTMENT_CODE, departmentCode);
+        return getRepository().getEntityList(UserSearchResult.class, params);
+    }
+
+    @Override
+    @RolesAllowed({RolesConstants.ADMIN_MANAGE_SECURITY, RolesConstants.APPLICATION_ASSIGN_TO_ALL, RolesConstants.APPLICATION_ASSIGN_TO_DEPARTMENT})
+    public List<UserSearchResult> getUsersWithAssignRightByDepartment(String departmentCode) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, UserSearchResult.QUERY_USERS_WITH_ASSIGN_RIGHT_BY_DEPARTMENT);
+        params.put(UserSearchResult.PARAM_DEPARTMENT_CODE, departmentCode);
+        return getRepository().getEntityList(UserSearchResult.class, params);
+    }
+
+    @Override
+    @RolesAllowed({RolesConstants.ADMIN_MANAGE_SECURITY, RolesConstants.APPLICATION_ASSIGN_TO_ALL, RolesConstants.APPLICATION_ASSIGN_TO_DEPARTMENT})
+    public List<UserSearchResult> getUsersWithAssignRightByOffice(String officeCode) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, UserSearchResult.QUERY_USERS_WITH_ASSIGN_RIGHT_BY_OFFICE);
+        params.put(UserSearchResult.PARAM_OFFICE_CODE, officeCode);
         return getRepository().getEntityList(UserSearchResult.class, params);
     }
 }

@@ -33,7 +33,6 @@ import org.sola.services.common.br.ValidationResult;
 import org.sola.services.common.ejbs.AbstractEJBLocal;
 import org.sola.services.ejb.transaction.repository.entities.RegistrationStatusType;
 import org.sola.services.ejb.transaction.repository.entities.TransactionBasic;
-import org.sola.services.ejb.transaction.repository.entities.TransactionCadastreChange;
 
 /**
  * Provides local interface for administrative ejbs.

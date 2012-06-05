@@ -238,35 +238,33 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         }
     }
 
+    // <editor-fold defaultstate="collapsed" desc="By Kabindra"> 
+    //--------------------------------------------------------------------------
     @Override
-    public Segment getSegmentByPoint(double x, double y, int srid) {
+    public List<CadastreObject> getCadastreObjectBy_Intersection(String geom, int srid) {
         HashMap params = new HashMap();
-        params.put("x", x);
-        params.put("y", y);
+        params.put("geom", geom);
         params.put("srid", srid);
-        return getRepository().getEntity(
-                Segment.class, Segment.QUERY_WHERE_SEARCHBYPOINT, params);
+        return getRepository().getEntityList(
+                CadastreObject.class, CadastreObject.QUERY_WHERE_SEARCHBY_STRING_INTERSECTION, params);
     }
 
     @Override
-    public Segment saveSegment(Segment seg) {
-        return getRepository().saveEntity(seg);
+    public List<CadastreObject> getCadastreObjectBy_ByteIntersection(String geom, int srid) {
+        HashMap params = new HashMap();
+        params.put("geom", geom);
+        params.put("srid", srid);
+        return getRepository().getEntityList(
+                CadastreObject.class, CadastreObject.QUERY_WHERE_SEARCHBY_BYTE_INTERSECTION, params);
     }
 
     @Override
-    public List<Segment> getSegmentObjects(List<String> segObjIds) {
-        return getRepository().getEntityListByIds(Segment.class, segObjIds);
+    public void executeQuery(String cmd) {
+        HashMap params = new HashMap();
+        params.put(CommonSqlProvider.PARAM_QUERY,cmd);
+        getRepository().executeSql(params);
     }
 
-    @Override
-    public List<Segment> getSegmentsByTransaction(String transactionId) {
-        Map params = new HashMap<String, Object>();
-        params.put(
-                CommonSqlProvider.PARAM_WHERE_PART,
-                Segment.QUERY_WHERE_SEARCHBYTRANSACTION);
-        params.put("transaction_id", transactionId);
-        return getRepository().getEntityList(Segment.class, params);
-    }
 
     @Override
     public MapSheet getMapSheet(String id) {
@@ -277,4 +275,28 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     public MapSheet saveMapSheet(MapSheet mapSheet) {
         return getRepository().saveEntity(mapSheet);
     }
+
+    //--------------------------------------------------------------------------
+    // </editor-fold>
+
+    @Override
+    public Segment getSegmentByPoint(double x, double y, int srid) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Segment saveSegment(Segment seg) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<Segment> getSegmentObjects(List<String> segObjIds) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<Segment> getSegmentsByTransaction(String transactionId) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }

@@ -301,28 +301,6 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
         params.put(Vdc.PARAM_DISTRICT_CODE, districtCode);
         return getRepository().getEntityList(Vdc.class, params);
     }
-    
-     @Override
-    public List<String> getOfficeCode() {       
-       List<String> officeCode=new ArrayList<String>();
-       List<Office> list= getRepository().getEntityList(Office.class);
-       for(Office i : list){
-           //if(yr.contains(i.getLmoCode())==false)
-           officeCode.add(i.getCode());
-       } 
-       return officeCode;       
-    }
-
-    @Override
-    public List<String> getOfficeNames() {
-       List<String> officeName=new ArrayList<String>();
-       List<Office> list= getRepository().getEntityList(Office.class);
-       for(Office i : list){
-           //if(yr.contains(i.getOfficeName())==false)
-           officeName.add(i.getDisplayValue());
-       } 
-       return officeName; 
-    }
 
     @Override
     public boolean checkUserFromDepartment(String userId, String departmentCode) {
@@ -364,15 +342,4 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
         params.put(Vdc.VDC_NAME_PARAM,vdcName);        
         return getRepository().getEntity(Vdc.class, params);
     }
-
-    @Override
-    public List<String> getDistrictNames() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<Integer> getDistrictCodes() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-   
 }

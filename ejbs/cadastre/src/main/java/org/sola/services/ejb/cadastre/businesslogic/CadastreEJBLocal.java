@@ -77,6 +77,7 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
 
     void approveCadastreRedefinition(String transactionId);
 
+
     //For segment selection.
     Segment getSegmentByPoint(double x, double y, int srid);
 
@@ -89,4 +90,16 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
     MapSheet getMapSheet(String id);
 
     MapSheet saveMapSheet(MapSheet mapSheet);
+
+    
+    // <editor-fold defaultstate="collapsed" desc="By Kabindra">
+    //--------------------------------------------------------------------------
+    List<CadastreObject> getCadastreObjectBy_Intersection(String geom, int srid);
+    
+    List<CadastreObject> getCadastreObjectBy_ByteIntersection(String geom, int srid);
+    
+    void executeQuery(String cmd);
+    //--------------------------------------------------------------------------
+    // </editor-fold>
+
 }

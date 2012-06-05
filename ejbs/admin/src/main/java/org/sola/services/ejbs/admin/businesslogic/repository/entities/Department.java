@@ -6,7 +6,7 @@ import org.sola.services.common.repository.DefaultSorter;
 import org.sola.services.common.repository.entities.AbstractCodeEntity;
 
 @Table(name="department", schema="system")
-@DefaultSorter(sortString="name")
+@DefaultSorter(sortString="display_value")
 public class Department extends AbstractCodeEntity {
     public static final String PARAM_OFFICE_CODE = "officeCode";
     public static final String WHERE_BY_OFFICE_CODE = "office_code = #{" + PARAM_OFFICE_CODE + "}";

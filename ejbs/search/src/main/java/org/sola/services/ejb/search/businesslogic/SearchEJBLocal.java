@@ -87,9 +87,13 @@ public interface SearchEJBLocal extends AbstractEJBLocal {
 
     List<SourceSearchResult> searchSources(SourceSearchParams searchParams);
 
-    List<UserSearchResult> getActiveUsers();
+    List<UserSearchResult> getUsersByOffice(String officeCode);
     
     List<UserSearchResult> getUsersByDepartment(String departmentCode);
+    
+    List<UserSearchResult> getUsersWithAssignRightByDepartment(String departmentCode);
+    
+    List<UserSearchResult> getUsersWithAssignRightByOffice(String officeCode);
     
     List<UserSearchResult> searchUsers(UserSearchParams searchParams);
 

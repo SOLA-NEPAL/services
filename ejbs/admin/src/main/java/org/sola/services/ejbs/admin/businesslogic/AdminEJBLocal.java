@@ -181,26 +181,6 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
     boolean checkUserFromOffice(String userId, String officeCode);
 
     /**
-     * Returns list of LMO Codes.
-     */
-    List<String> getOfficeCode();
-
-    /**
-     * Returns list of LMO Names.
-     */
-    List<String> getOfficeNames();
-
-    /**
-     * Returns list of District Names.
-     */
-    List<String> getDistrictNames();
-
-    /**
-     * Returns list of District codes.
-     */
-    List<Integer> getDistrictCodes();
-
-    /**
      * Returns list of District Names
      */
     List<Vdc> getVdcList();
