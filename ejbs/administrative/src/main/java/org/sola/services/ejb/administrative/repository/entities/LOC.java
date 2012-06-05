@@ -4,24 +4,30 @@
  */
 package org.sola.services.ejb.administrative.repository.entities;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import org.sola.services.common.repository.ChildEntity;
+import org.sola.services.common.repository.ChildEntityList;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
 
 /**
  *
  * @author KumarKhadka
  */
-@Table(name = "land_owner_certificate", schema = "Administrative")
+@Table(name = "land_owner_certificate", schema = "administrative")
 public class LOC extends AbstractVersionedEntity {
-
+    
+    public static final String PANA_NO_PARAM = "panaNo";
+    public static final String MOTH_ID_PARAM = "mothId";
+    public static final String GET_BY_MOTH_ID_AND_PANA_NO = "pana_no=#{" + PANA_NO_PARAM + "} and moth_id=#{" + MOTH_ID_PARAM + "}";
+    
     @Id
-    @Column(name = "loc_sid")
-    private String locSid;
-    @Column(name = "moth_sid")
-    private String mothSid;
+    @Column(name = "id")
+    private String id;
+    @Column(name = "moth_id")
+    private String mothId;
     @Column(name = "pana_no")
     private int panaNo;
     @Column(name = "tmp_pana_no")
@@ -32,32 +38,33 @@ public class LOC extends AbstractVersionedEntity {
     private int oshpType;
     @Column(name = "transaction_no")
     private int transactionNo;
-    @ChildEntity(childIdField = "locSid")
-    private BaUnit baUnit;
+    @ChildEntityList(parentIdField = "locId")
+    private List<BaUnit> baUnit;
 
-    public BaUnit getBaUnit() {
+    public List<BaUnit> getBaUnit() {
+        baUnit = baUnit == null ? new ArrayList<BaUnit>() : baUnit;
         return baUnit;
     }
 
-    public void setBaUnit(BaUnit baUnit) {
+    public void setBaUnit(List<BaUnit> baUnit) {
         this.baUnit = baUnit;
     }
 
-    public String getLocSid() {
-        locSid = locSid == null ? generateId() : locSid;
-        return locSid;
+    public String getId() {
+        id = id == null ? generateId() : id;
+        return id;
     }
 
-    public void setLocSid(String locSid) {
-        this.locSid = locSid;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getMothSid() {
-        return mothSid;
+    public String getMothId() {
+        return mothId;
     }
 
-    public void setMothSid(String mothSid) {
-        this.mothSid = mothSid;
+    public void setMothId(String mothId) {
+        this.mothId = mothId;
     }
 
     public int getOshpType() {

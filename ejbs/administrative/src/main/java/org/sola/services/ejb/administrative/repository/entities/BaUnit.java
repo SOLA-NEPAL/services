@@ -77,6 +77,8 @@ public class BaUnit extends AbstractVersionedEntity {
     @Id
     @Column(name = "id")
     private String id;
+    @Column(name = "loc_id")
+    private String locId;
     @Column(name = "type_code")
     private String typeCode;
     @Column(name = "name")
@@ -91,8 +93,6 @@ public class BaUnit extends AbstractVersionedEntity {
     private String transactionId;
     @ChildEntityList(parentIdField = "baUnitId")
     private List<Rrr> rrrList;
-    
-    
     @ChildEntityList(parentIdField = "baUnitId")
     private List<BaUnitNotation> baUnitNotationList;
     @ExternalEJB(ejbLocalClass = SourceEJBLocal.class,
@@ -116,6 +116,14 @@ public class BaUnit extends AbstractVersionedEntity {
 
     public BaUnit() {
         super();
+    }
+
+    public String getLocId() {
+        return locId;
+    }
+
+    public void setLocId(String locId) {
+        this.locId = locId;
     }
 
     private Transaction getTransaction() {

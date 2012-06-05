@@ -33,6 +33,7 @@
  */
 package org.sola.services.ejb.administrative.businesslogic;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Status;
@@ -48,6 +49,8 @@ import org.sola.services.common.EntityAction;
 import org.sola.services.common.test.AbstractEJBTest;
 import org.sola.services.ejb.administrative.repository.entities.*;
 import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
+import org.sola.services.ejb.cadastre.repository.entities.MapSheet;
+import org.sola.services.ejb.cadastre.repository.entities.SpatialValueArea;
 import org.sola.services.ejb.party.businesslogic.PartyEJB;
 import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
 import org.sola.services.ejb.party.repository.entities.Party;
@@ -76,6 +79,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
     public void tearDown() throws Exception {
         logout();
     }
+
     /**
      * Test of createBaUnit method, of class AdministrativeEJB.
      */
@@ -349,39 +353,8 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             }
         }
     }
-    
- @Ignore
-    @Test
-    public void testSaveMoth() throws Exception {
-        System.out.println(">>> Testing saving moth");
-        UserTransaction tx = getUserTransaction();
-        try {
-            AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
-            List<Moth> list = new ArrayList<Moth>();
-            Moth moth = new Moth();        
-            moth.setMothlujNumber("a2");
-            moth.setVdcCode("2");
-            moth.setWardNo(5);
-            moth.setMothLuj("M");
-            moth.setFinancialYear(69);
-            moth.setLmocd(1);
-            list.add(moth);
-            tx.begin();
-            for (Moth mh : list) {
-                instance.saveMoth(mh);
-            }
-            tx.commit();
 
-        } catch (Exception e) {
-            tx.rollback();
-            fail(e.getMessage());
-        }
-    }
-
-
-    
-
-  @Ignore
+    @Ignore
     @Test
     public void getMoths() throws Exception {
         System.out.println(">>> Testing getting moths");
@@ -389,7 +362,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         UserTransaction tx = getUserTransaction();
         try {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
-            tx.begin();            
+            tx.begin();
             List<Moth> result = instance.getMoths("1", "M");
             if (result == null) {
                 System.out.println(">>> Found null");
@@ -401,22 +374,190 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             tx.rollback();
             fail(e.getMessage());
         }
-    } 
-    
+    }
 
-   @Ignore
-   @Test
+    @Ignore
+    @Test
     public void getMoth() throws Exception {
         System.out.println(">>> Testing getting Moth");
         UserTransaction tx = getUserTransaction();
         try {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
             tx.begin();
-            Moth result = instance.getMoth("1", "M", "a1");
+            Moth result = instance.getMoth("1", "M", "test1");
             Vdc vdc = result.getVdc();
             System.out.println(">>> Found " + vdc.getDisplayValue());
             tx.commit();
         } catch (Exception e) {
+            tx.rollback();
+            fail(e.getMessage());
+        }
+    }
+
+    @Ignore
+    @Test
+    public void saveLOC() throws Exception {
+        System.out.println(">>> Testing Saving LOC");
+        UserTransaction tx = getUserTransaction();
+        try {
+            AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance((AdministrativeEJB.class.getSimpleName()));
+            tx.begin();
+            LOC loc = new LOC();
+            loc.setMothId("240237f8-f677-4df6-9a4d-94484f6a1d7f");
+            loc.setPanaNo(1);
+            instance.saveLOC(loc);
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            fail(e.getMessage());
+        }
+    }
+
+    @Ignore
+    @Test
+    public void getLOC() throws Exception {
+        System.err.println(">>> Testing getting LOC using id");
+        UserTransaction tx = getUserTransaction();
+        try {
+            AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
+            tx.begin();
+            LOC loc = instance.getLOC("8cbe76be-b7e6-4aa9-8ea7-64bd9e19f217");
+            //System.out.println(loc.getPanaNo());
+            tx.commit();
+
+        } catch (Exception e) {
+            tx.rollback();
+            fail(e.getMessage());
+        }
+    }
+
+   @Ignore
+    @Test
+    public void getMothById() throws Exception {
+        System.out.println(">>> Testing getting moth by id");
+
+        UserTransaction tx = getUserTransaction();
+        try {
+            AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
+            tx.begin();
+            Moth result = instance.getMoth("9a4915ec-765e-4d1b-9e0a-0a73204cea5f");
+
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            fail(e.getMessage());
+        }
+    }
+
+    @Ignore
+    @Test
+    public void saveBaUnit() throws Exception {
+        System.out.println(">>> Testing saving Bauint");
+        UserTransaction tx = getUserTransaction();
+        try {
+            AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
+            BaUnit baUnit = new BaUnit();
+            tx.begin();
+            baUnit.setLocId("8cbe76be-b7e6-4aa9-8ea7-64bd9e19f217");
+            baUnit.setTypeCode("administrativeUnit");
+            baUnit.setName("TestBaunit");
+            baUnit.setNameFirstpart("TestBaunit");
+            baUnit.setNameLastpart("TestBaunit");
+            baUnit.setStatusCode("current");
+            instance.saveBaUnit(baUnit);
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            fail(e.getMessage());
+
+        }
+    }
+
+    @Ignore
+    @Test
+    public void testSaveMoth() throws Exception {
+        System.out.println(">>> Testing saving moth");
+        UserTransaction tx = getUserTransaction();
+        try {
+            AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
+            List<Moth> mothList = new ArrayList<Moth>();
+            Moth moth = new Moth();
+            moth.setMothlujNumber("test1");
+            moth.setVdcCode("1");
+            moth.setWardNo(4);
+            moth.setMothLuj("M");
+            moth.setFinancialYear(69);
+            moth.setLmocd(1);
+
+            LOC loc = new LOC();
+            loc.setMothId(moth.getId());
+            loc.setPanaNo(1);
+
+
+            BaUnit baUnit = new BaUnit();
+            baUnit.setLocId(loc.getId());
+            baUnit.setTypeCode("administrativeUnit");
+            baUnit.setName("TestBaunit");
+            baUnit.setNameFirstpart("TestBaunit");
+            baUnit.setNameLastpart("TestBaunit");
+            baUnit.setStatusCode("current");
+
+            CadastreObject cobj = new CadastreObject();
+            cobj.setTypeCode("parcel");
+            cobj.setStatusCode("pending");
+            cobj.setTransactionId("first");
+            cobj.setParcelno(152);
+            cobj.setParcelType(0);
+            MapSheet mapSheet = new MapSheet();
+            mapSheet.setMapNumber("123Map");
+            mapSheet.setSheetType(0);
+            mapSheet.setAlpha_code("1");
+            cobj.setMapSheet(mapSheet);
+            cobj.setMapSheetCode(mapSheet.getId());
+
+            SpatialValueArea spValA = new SpatialValueArea();
+            spValA.setSpatialUnitId(moth.getId());
+            spValA.setTypeCode("officialArea");
+            BigDecimal bigVal = new BigDecimal(1526836);
+            spValA.setSize(bigVal);
+
+
+            List< SpatialValueArea> spatialValAreaList = new ArrayList<SpatialValueArea>();
+            spatialValAreaList.add(spValA);
+            cobj.setSpatialValueAreaList(spatialValAreaList);
+            List<CadastreObject> cadObjList = new ArrayList<CadastreObject>();
+            cadObjList.add(cobj);
+            baUnit.setCadastreObjectList(cadObjList);
+            List<BaUnit> baUnitList = new ArrayList<BaUnit>();
+            baUnitList.add(baUnit);
+            loc.setBaUnit(baUnitList);
+            List<LOC> locList = new ArrayList<LOC>();
+            locList.add(loc);
+            moth.setLocList(locList);
+            mothList.add(moth);
+            tx.begin();
+            for (Moth mh : mothList) {
+                instance.saveMoth(mh);
+            }
+            tx.commit();
+
+        } catch (Exception e) {
+            tx.rollback();
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+   @Ignore
+    public void getLOCByMothIdAndPanaNo() throws Exception {
+        System.out.println("Testing getting LOC");
+        UserTransaction tx = getUserTransaction();
+        try {
+            AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
+            tx.begin();
+            LOC loc = instance.getLOCByPageNoAndMothId(1, "9a4915ec-765e-4d1b-9e0a-0a73204cea5f");
+            tx.commit();
+        } catch (Exception e) { 
             tx.rollback();
             fail(e.getMessage());
         }

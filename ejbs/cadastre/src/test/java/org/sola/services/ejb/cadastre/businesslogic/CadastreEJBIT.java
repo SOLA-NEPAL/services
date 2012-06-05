@@ -32,13 +32,16 @@ package org.sola.services.ejb.cadastre.businesslogic;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.transaction.UserTransaction;
 import org.junit.After;
+import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.sola.services.common.test.AbstractEJBTest;
 import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
 import org.sola.services.ejb.cadastre.repository.entities.CadastreObjectNode;
+import org.sola.services.ejb.cadastre.repository.entities.MapSheet;
 
 /**
  *
@@ -115,5 +118,57 @@ public class CadastreEJBIT extends AbstractEJBTest {
         System.out.println("getCadastreObjectNodePotential");
         nodeObj = instance.getCadastreObjectNodePotential(1784900, 5925445, 1784950, 5925512, 2193);
         System.out.println("Result :" + nodeObj.toString());
+    }
+    
+    
+     @Test
+    @Ignore
+    public void testSaveCadestreObject()throws Exception{
+        System.out.println(">>> Testing saving CadastreObject");
+         UserTransaction tx=getUserTransaction();
+         try{
+             tx.begin();
+             CadastreEJBLocal instance=(CadastreEJBLocal) getEJBInstance(CadastreEJB.class.getSimpleName());
+             CadastreObject cobj=new CadastreObject();
+             cobj.setTypeCode("parcel");
+             cobj.setStatusCode("pending");
+             //Transaction bx=new Transaction();
+             cobj.setTransactionId("first");
+             cobj.setParcelno(15258);
+             cobj.setParcelType(0);
+             instance.saveCadastreObject(cobj);
+             tx.commit();
+         }catch(Exception e){
+             tx.rollback();
+             fail(e.getMessage());
+         }
+         
+     }  
+     @Test
+     @Ignore
+    public void testSaveMapSheet()throws Exception{
+        System.out.println(">>> Testing saving Map Sheet");
+         UserTransaction tx=getUserTransaction();
+         try{
+             tx.begin();
+             CadastreEJBLocal instance=(CadastreEJBLocal) getEJBInstance(CadastreEJB.class.getSimpleName());
+             MapSheet mapSheet=new MapSheet();
+             mapSheet.setAlpha_code("1");
+             mapSheet.setMapNumber("abc123");
+             mapSheet.setSheetType(1);
+//             cobj.setTypeCode("parcel");
+//             cobj.setStatusCode("pending");
+//             //Transaction bx=new Transaction();
+//             cobj.setTransactionId("first");
+//             cobj.setParcelno(15258);
+//             cobj.setParcelType(0);
+             instance.saveMapSheet(mapSheet);
+             tx.commit();
+         }catch(Exception e){
+             tx.rollback();
+             fail(e.getMessage());
+         }
+         
+             
     }
 }
