@@ -41,11 +41,11 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.sola.services.common.repository.RepositoryUtility;
-import org.sola.services.common.repository.entities.ChildEntityInfo;
 import org.sola.services.common.test.AbstractEJBTest;
 import org.sola.services.ejb.address.repository.entities.Address;
-import org.sola.services.ejb.party.repository.entities.*;
+import org.sola.services.ejb.party.repository.entities.CommunicationType;
+import org.sola.services.ejb.party.repository.entities.Party;
+import org.sola.services.ejb.party.repository.entities.PartyRole;
 
 /**
  *
@@ -116,7 +116,7 @@ public class PartyEJBIT extends AbstractEJBTest {
 
     }
 
-    //@Ignore
+  @Ignore
     @Test
     public void testGetParty() throws Exception {
 //        System.out.println("get party");
@@ -136,7 +136,7 @@ public class PartyEJBIT extends AbstractEJBTest {
     /**
      * Test of saveParty method, of class PartyEJB.
      */
-    @Ignore
+  @Ignore
     @Test
     public void testSaveParty() throws Exception {
         System.out.println(">>> Testing saving land owner");
@@ -145,22 +145,22 @@ public class PartyEJBIT extends AbstractEJBTest {
             PartyEJBLocal instance = (PartyEJBLocal) getEJBInstance(PartyEJB.class.getSimpleName());
             List<Party> list = new ArrayList<Party>();
             Party owner = new Party();
-            owner.setId("pqr11");
+           // owner.setId("pqr11");
             owner.setTypeCode("baunit");
             owner.setName("sfdf");
             owner.setLastName("sfdf");
 
-            owner.setAddressId("myIdsd");
+            //owner.setAddressId("myIdsd");
             Address add = new Address();
             add.setDescription("dfof");
             owner.setAddress(add);
-            List<PartyRole> roleList = new ArrayList<PartyRole>();
-            PartyRole role = new PartyRole();
-            role.setPartyId("ofikfrri");
-            role.setRoleCode("bank");
-            roleList.add(role);
-            owner.setRoleList(roleList);
-            owner.setRightHolder(false);
+//            List<PartyRole> roleList = new ArrayList<PartyRole>();
+//            PartyRole role = new PartyRole();
+//            role.setPartyId("ofikf55i");
+//            role.setRoleCode("bank");
+//            roleList.add(role);
+//            owner.setRoleList(roleList);
+//            owner.setRightHolder(false);
             list.add(owner);
             tx.begin();
             for (Party onn : list) {

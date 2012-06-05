@@ -18,10 +18,10 @@ import org.sola.services.common.repository.entities.AbstractVersionedEntity;
 public class LOC extends AbstractVersionedEntity {
 
     @Id
-    @Column(name = "loc_sid")
-    private String locSid;
-    @Column(name = "moth_sid")
-    private String mothSid;
+    @Column(name = "id")
+    private String id;
+    @Column(name = "moth_id")
+    private String mothId;
     @Column(name = "pana_no")
     private int panaNo;
     @Column(name = "tmp_pana_no")
@@ -29,10 +29,10 @@ public class LOC extends AbstractVersionedEntity {
     @Column(name = "property_type")
     private int propertyType;
     @Column(name = "oshp_type")
-    private int oshpType;
+    private int oshpType; 
     @Column(name = "transaction_no")
     private int transactionNo;
-    @ChildEntity(childIdField = "locSid")
+    @ChildEntity(parentIdField= "id")
     private BaUnit baUnit;
 
     public BaUnit getBaUnit() {
@@ -43,21 +43,21 @@ public class LOC extends AbstractVersionedEntity {
         this.baUnit = baUnit;
     }
 
-    public String getLocSid() {
-        locSid = locSid == null ? generateId() : locSid;
-        return locSid;
+    public String getId() {
+        id = id == null ? generateId() : id;
+        return id;
     }
 
-    public void setLocSid(String locSid) {
-        this.locSid = locSid;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getMothSid() {
-        return mothSid;
+    public String getMothId() {
+        return mothId;
     }
 
-    public void setMothSid(String mothSid) {
-        this.mothSid = mothSid;
+    public void setMothSid(String mothId) {
+        this.mothId = mothId;
     }
 
     public int getOshpType() {

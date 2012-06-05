@@ -4,14 +4,18 @@
  */
 package org.sola.services.ejb.administrative.repository.entities;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.sola.services.common.repository.ChildEntity;
+import org.sola.services.common.repository.ChildEntityList;
 import org.sola.services.common.repository.ExternalEJB;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
 import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
 import org.sola.services.ejbs.admin.businesslogic.repository.entities.Vdc;
+
 /**
  *
  * @author KumarKhadka
@@ -39,11 +43,21 @@ public class Moth extends AbstractVersionedEntity {
     private int financialYear;
     @Column(name = "lmocd")
     private int lmocd;
-    @ExternalEJB(ejbLocalClass= AdminEJBLocal.class , loadMethod = "getVdcByCode")
-    @ChildEntity(childIdField="vdcCode")
+    @ExternalEJB(ejbLocalClass = AdminEJBLocal.class, loadMethod = "getVdcByCode")
+    @ChildEntity(childIdField = "vdcCode")
     private Vdc vdc;
-    
-   
+    @ChildEntityList(parentIdField = "id")
+    private List<LOC> locList;
+
+    public List<LOC> getLocList() {
+         locList = locList == null ? new ArrayList<LOC>() : locList;
+        return locList;
+    }
+
+    public void setLocList(List<LOC> locList) {
+        this.locList = locList;
+    }
+
     public int getFinancialYear() {
         return financialYear;
     }
@@ -53,7 +67,7 @@ public class Moth extends AbstractVersionedEntity {
     }
 
     public String getId() {
-         id = id == null ? generateId() : id;
+        id = id == null ? generateId() : id;
         return id;
     }
 

@@ -325,4 +325,14 @@ public class AdministrativeEJB extends AbstractEJB
         params.put(Moth.MOTH_LUJ_NUMBER_PARAM, mothLujNumber);
         return getRepository().getEntity(Moth.class, params);
     }
+
+    @Override
+    public LOC saveLOC(LOC loc) {
+        return getRepository().saveEntity(loc);
+    }
+
+    @Override
+    public LOC getLOC(String id) {
+        return getRepository().getEntity(LOC.class, id);
+    }
 }
