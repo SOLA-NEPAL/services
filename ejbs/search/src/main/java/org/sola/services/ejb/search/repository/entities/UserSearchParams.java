@@ -30,10 +30,11 @@ package org.sola.services.ejb.search.repository.entities;
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 
 public class UserSearchParams  extends AbstractReadOnlyEntity {
-    private String groupId;
+    private String departmentCode;
     private String userName;
     private String firstName;
     private String lastName;
+    private String locale;
     
     public UserSearchParams(){
         super();
@@ -47,12 +48,12 @@ public class UserSearchParams  extends AbstractReadOnlyEntity {
         this.firstName = firstName;
     }
 
-    public String getGroupId() {
-        return groupId;
+    public String getDepartmentCode() {
+        return departmentCode;
     }
 
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
+    public void setDepartmentCode(String departmentCode) {
+        this.departmentCode = departmentCode;
     }
 
     public String getLastName() {
@@ -70,5 +71,12 @@ public class UserSearchParams  extends AbstractReadOnlyEntity {
     public void setUserName(String userName) {
         this.userName = userName;
     }
-    
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
 }

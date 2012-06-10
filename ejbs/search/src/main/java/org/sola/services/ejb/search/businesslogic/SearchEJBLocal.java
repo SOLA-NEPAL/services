@@ -81,8 +81,6 @@ public interface SearchEJBLocal extends AbstractEJBLocal {
 
     HashMap<String, String> getMapSettingList();
     
-    HashMap getResultObjectFromStatement(String sqlStatement, Map params);
-
     List<PartySearchResult> searchParties(PartySearchParams searchParams);
 
     List<SourceSearchResult> searchSources(SourceSearchParams searchParams);

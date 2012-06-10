@@ -38,6 +38,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import org.sola.common.RolesConstants;
+import org.sola.services.common.LocalInfo;
 import org.sola.services.common.ejbs.AbstractEJB;
 import org.sola.services.common.repository.CommonSqlProvider;
 import org.sola.services.ejbs.admin.businesslogic.repository.entities.*;
@@ -53,7 +54,7 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     public static final String DATE_PARAM = "date";
     public static final String TO_NEPALI_DATE_FUNCTION = "select english_to_nepalidatestring from public.english_to_nepalidatestring(#{" + DATE_PARAM + "})";
     public static final String TO_GREGORIAN_DATE_FUNCTION = "select nepali_to_englishdate from public.nepali_to_englishdate(#{" + DATE_PARAM + "})";
-
+    
     @Override
     protected void postConstruct() {
         setEntityPackage(User.class.getPackage().getName());
@@ -341,5 +342,21 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
         params.put(CommonSqlProvider.PARAM_WHERE_PART, Vdc.GET_BY_VDC_NAME);
         params.put(Vdc.VDC_NAME_PARAM,vdcName);        
         return getRepository().getEntity(Vdc.class, params);
+    }
+
+    @Override
+    public Office getCurrentOffice() {
+        Office currentOffice = LocalInfo.get(LocalInfo.CURRENT_OFFICE, Office.class, true);
+        
+        if(currentOffice == null){
+            Map params = new HashMap<String, Object>();
+            params.put(CommonSqlProvider.PARAM_WHERE_PART, Office.WHERE_BY_USERNAME);
+            params.put(User.PARAM_USERNAME, getUserName());
+            currentOffice = getRepository().getEntity(Office.class, params);
+            if(currentOffice!=null){
+                LocalInfo.set(LocalInfo.CURRENT_OFFICE, currentOffice, true, true);
+            }
+        }
+        return currentOffice;
     }
 }

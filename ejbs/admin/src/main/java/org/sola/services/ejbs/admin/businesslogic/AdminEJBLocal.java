@@ -194,4 +194,7 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
      * Returns Vdc according to given Name.
      */
     Vdc getVdcByName(String vdcName);
+    
+    /** Returns office object related to the current user. */
+    Office getCurrentOffice();
 }

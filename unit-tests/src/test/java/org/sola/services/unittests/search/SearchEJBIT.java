@@ -32,11 +32,12 @@
 package org.sola.services.unittests.search;
 
 import org.junit.After;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import org.sola.services.common.contracts.GenericTranslator;
-import static org.junit.Assert.*;
 import org.sola.services.boundary.transferobjects.search.PropertyVerifierTO;
+import org.sola.services.common.contracts.GenericTranslator;
 import org.sola.services.common.test.AbstractEJBTest;
 import org.sola.services.ejb.search.businesslogic.SearchEJB;
 import org.sola.services.ejb.search.businesslogic.SearchEJBLocal;

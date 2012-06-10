@@ -20,7 +20,13 @@
             <artifactId>sola-application</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
-            </dependency>
+        </dependency>
+        <dependency>
+            <groupId>org.sola.services.ejbs</groupId>
+            <artifactId>sola-search</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>sola-test-common</artifactId>

@@ -13,11 +13,4 @@
     <name>EJB System</name>
     <repositories>
     </repositories>
-    <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>sola-search</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
 </project>
