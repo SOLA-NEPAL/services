@@ -25,9 +25,6 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * *********************************************************************************************
  */
-/*
- * To change this template, choose Tools | Templates and open the template in the editor.
- */
 package org.sola.services.ejb.system.businesslogic;
 
 import java.io.Serializable;
@@ -45,23 +42,15 @@ import org.sola.common.messaging.ServiceMessage;
 import org.sola.services.common.br.ValidationResult;
 import org.sola.services.common.ejbs.AbstractEJB;
 import org.sola.services.common.repository.CommonSqlProvider;
-import org.sola.services.ejb.search.businesslogic.SearchEJBLocal;
 import org.sola.services.ejb.system.br.Result;
 import org.sola.services.ejb.system.repository.entities.Br;
 import org.sola.services.ejb.system.repository.entities.BrCurrent;
 import org.sola.services.ejb.system.repository.entities.BrReport;
 import org.sola.services.ejb.system.repository.entities.BrValidation;
 
-/**
- *
- * @author soladev
- */
 @Stateless
 @EJB(name = "java:global/SOLA/SystemEJBLocal", beanInterface = SystemEJBLocal.class)
 public class SystemEJB extends AbstractEJB implements SystemEJBLocal {
-
-    @EJB
-    private SearchEJBLocal searchEJB;
 
     @Override
     protected void postConstruct() {
@@ -172,7 +161,7 @@ public class SystemEJB extends AbstractEJB implements SystemEJBLocal {
                 //Here is supposed to come the code which runs the business rule using drools engine.
             } else if (br.getTechnicalTypeCode().equals("sql")) {
                 String sqlStatement = br.getBody();
-                ruleResult = searchEJB.getResultObjectFromStatement(sqlStatement, parameters);
+                ruleResult = getResultObjectFromStatement(sqlStatement, parameters);
                 if (ruleResult == null) {
                     ruleResult = new HashMap();
                 }
@@ -186,6 +175,28 @@ public class SystemEJB extends AbstractEJB implements SystemEJBLocal {
         }
     }
 
+    /**
+     * It returns the first row of the result set. It is used especially from
+     * business rules.
+     *
+     * @param sqlStatement
+     * @param params
+     * @return
+     */
+    private HashMap getResultObjectFromStatement(String sqlStatement, Map params) {
+        params = params == null ? new HashMap<String, Object>() : params;
+        params.put(CommonSqlProvider.PARAM_QUERY, sqlStatement);
+        // Returns a single result
+        //return getRepository().getScalar(Object.class, params); 
+        // To use if more than one result is required. 
+        List<HashMap> resultList = getRepository().executeSql(params);
+        HashMap result = null;
+        if (!resultList.isEmpty()) {
+            result = resultList.get(0);
+        }
+        return result;
+    }
+    
     @Override
     public Result checkRuleGetResultSingle(
             String brName, HashMap<String, Serializable> parameters) {

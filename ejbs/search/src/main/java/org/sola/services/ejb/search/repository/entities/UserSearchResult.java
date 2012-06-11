@@ -39,18 +39,20 @@ public class UserSearchResult extends AbstractReadOnlyEntity {
 
     public static final String PARAM_DEPARTMENT_CODE = "departmentCode";
     public static final String PARAM_OFFICE_CODE = "officeCode";
+    public static final String PARAM_LANG_CODE = "langCode";
             
     protected static final String SELECT_QUERY =
             "SELECT DISTINCT u.id, u.username, u.active, u.first_name, u.last_name, u.description, "
-            + "u.department_code, (SELECT string_agg(tmp.name, ', ') FROM "
+            + "u.department_code, "
+            + "(SELECT string_agg(tmp.name, ', ') FROM "
             + "(SELECT name FROM system.appgroup g INNER JOIN system.appuser_appgroup ug2 "
             + "ON g.id = ug2.appgroup_id WHERE ug2.appuser_id = u.id ORDER BY g.name) tmp "
             + ") AS groups_list "
-            + "FROM system.appuser u LEFT JOIN system.appuser_appgroup ug ON u.id = ug.appuser_id ";
+            + "FROM (system.appuser u INNER JOIN system.department d on u.department_code = d.code) "
+            + "LEFT JOIN system.appuser_appgroup ug ON u.id = ug.appuser_id ";
     
     public static final String QUERY_USERS_BY_OFFICE = UserSearchResult.SELECT_QUERY 
-            + "WHERE active = 't' AND department_code IN (SELECT code FROM system.department "
-            + "WHERE office_code=#{" + PARAM_OFFICE_CODE + "}) ORDER BY u.last_name";
+            + "WHERE active = 't' AND d.office_code=#{" + PARAM_OFFICE_CODE + "} ORDER BY u.last_name";
     
     public static final String QUERY_USERS_BY_DEPARTMENT = UserSearchResult.SELECT_QUERY 
             + "WHERE active = 't' AND department_code = #{" + PARAM_DEPARTMENT_CODE + "} ORDER BY u.last_name";
@@ -59,7 +61,8 @@ public class UserSearchResult extends AbstractReadOnlyEntity {
             + "WHERE POSITION(LOWER(COALESCE(#{userName}, '')) IN LOWER(COALESCE(username, ''))) > 0 "
             + "AND POSITION(LOWER(COALESCE(#{firstName}, '')) IN LOWER(COALESCE(first_name, ''))) > 0 "
             + "AND POSITION(LOWER(COALESCE(#{lastName}, '')) IN LOWER(COALESCE(last_name, ''))) > 0 "
-            + "AND (ug.appgroup_id = #{groupId} OR #{groupId} = '') ORDER BY u.username";
+            + "AND (u.department_code = #{departmentCode} OR #{departmentCode} = '') "
+            + "ORDER BY u.username";
     
     public static final String QUERY_USERS_WITH_ASSIGN_RIGHT_BY_DEPARTMENT = UserSearchResult.SELECT_QUERY
             + "WHERE ug.appgroup_id IN "
@@ -73,8 +76,7 @@ public class UserSearchResult extends AbstractReadOnlyEntity {
             + "(SELECT appgroup_id from system.approle_appgroup WHERE "
             + "approle_code='" + RolesConstants.APPLICATION_ASSIGN_TO_ALL + "' OR "
             + "approle_code='" + RolesConstants.APPLICATION_ASSIGN_TO_DEPARTMENT + "') AND "
-            + "department_code IN (SELECT code FROM system.department "
-            + "WHERE office_code=#{" + PARAM_OFFICE_CODE + "}) AND active = 't' ORDER BY u.last_name";
+            + "d.office_code=#{" + PARAM_OFFICE_CODE + "} AND active = 't' ORDER BY u.last_name";
     
     @Id
     @Column(name = "id")

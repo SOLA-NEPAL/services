@@ -203,5 +203,8 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
      * Get list of Offices by District code.
      */
     List<Office> getOfficesByDistrict(String districtCode, String lang);
+
+    /** Returns office object related to the current user. */
+    Office getCurrentOffice();
 }
 

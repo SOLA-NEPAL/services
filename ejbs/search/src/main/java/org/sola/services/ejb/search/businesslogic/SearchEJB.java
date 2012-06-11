@@ -41,6 +41,7 @@ import javax.ejb.Stateless;
 import org.sola.common.RolesConstants;
 import org.sola.common.SOLAException;
 import org.sola.common.messaging.ServiceMessage;
+import org.sola.services.common.LocalInfo;
 import org.sola.services.common.ejbs.AbstractEJB;
 import org.sola.services.common.repository.CommonSqlProvider;
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
@@ -70,11 +71,15 @@ import org.sola.services.ejb.search.spatial.QueryForNavigation;
 import org.sola.services.ejb.search.spatial.QueryForSelect;
 import org.sola.services.ejb.search.spatial.ResultForNavigationInfo;
 import org.sola.services.ejb.search.spatial.ResultForSelectionInfo;
+import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
 
 @Stateless
 @EJB(name = "java:global/SOLA/SearchEJBLocal", beanInterface = SearchEJBLocal.class)
 public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
 
+    @EJB
+    AdminEJBLocal adminEJB;
+    
     private DynamicQuery getDynamicQuery(String queryName, Map params) {
         DynamicQuery query = null;
         // Retrieve the dynamic query from the database. Use localization if it is provided
@@ -168,29 +173,6 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         return result;
     }
 
-    /**
-     * It returns the first row of the result set. It is used especially from
-     * business rules.
-     *
-     * @param sqlStatement
-     * @param params
-     * @return
-     */
-    @Override
-    public HashMap getResultObjectFromStatement(String sqlStatement, Map params) {
-        params = params == null ? new HashMap<String, Object>() : params;
-        params.put(CommonSqlProvider.PARAM_QUERY, sqlStatement);
-        // Returns a single result
-        //return getRepository().getScalar(Object.class, params); 
-        // To use if more than one result is required. 
-        List<HashMap> resultList = getRepository().executeSql(params);
-        HashMap result = null;
-        if (!resultList.isEmpty()) {
-            result = resultList.get(0);
-        }
-        return result;
-    }
-
     @Override
     public PropertyVerifier getPropertyVerifier(String applicationNumber, String firstPart, String lastPart) {
         if(applicationNumber==null){
@@ -268,8 +250,8 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
     @Override
     @RolesAllowed(RolesConstants.ADMIN_MANAGE_SECURITY)
     public List<UserSearchResult> searchUsers(UserSearchParams searchParams) {
-        if (searchParams.getGroupId() == null) {
-            searchParams.setGroupId("");
+        if (searchParams.getDepartmentCode() == null) {
+            searchParams.setDepartmentCode("");
         }
 
         if (searchParams.getUserName() == null) {
@@ -284,12 +266,17 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
             searchParams.setLastName("");
         }
 
+        if (searchParams.getLocale() == null) {
+            searchParams.setLocale("");
+        }
+               
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_QUERY, UserSearchResult.QUERY_ADVANCED_USER_SEARCH);
         params.put("userName", searchParams.getUserName());
         params.put("firstName", searchParams.getFirstName());
         params.put("lastName", searchParams.getLastName());
-        params.put("groupId", searchParams.getGroupId());
+        params.put("departmentCode", searchParams.getDepartmentCode());
+        params.put(UserSearchResult.PARAM_LANG_CODE, searchParams.getLocale());
         return getRepository().getEntityList(UserSearchResult.class, params);
     }
 
@@ -298,14 +285,6 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
     @Deprecated
     public List<ApplicationSearchResult> getUnassignedApplications(String locale) {
         return new ArrayList<ApplicationSearchResult>();
-//        Map params = new HashMap<String, Object>();
-//        params.put(CommonSqlProvider.PARAM_FROM_PART, ApplicationSearchResult.QUERY_FROM);
-//        params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, locale);
-//        params.put(CommonSqlProvider.PARAM_WHERE_PART, ApplicationSearchResult.QUERY_WHERE_GET_UNASSIGNED);
-//        params.put(CommonSqlProvider.PARAM_ORDER_BY_PART, ApplicationSearchResult.QUERY_ORDER_BY);
-//        params.put(CommonSqlProvider.PARAM_LIMIT_PART, "100");
-//
-//        return getRepository().getEntityList(ApplicationSearchResult.class, params);
     }
 
     @Override
