@@ -194,4 +194,9 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
      * Returns Vdc according to given Name.
      */
     Vdc getVdcByName(String vdcName);
+
+    
+    //<editor-fold defaultstate="collapsed" desc="By Dinesh">
+    Vdc saveVdc(Vdc vdc);    
+    //</editor-fold>
 }

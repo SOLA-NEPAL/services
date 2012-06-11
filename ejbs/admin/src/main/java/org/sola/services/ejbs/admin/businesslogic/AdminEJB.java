@@ -342,4 +342,10 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
         params.put(Vdc.VDC_NAME_PARAM,vdcName);        
         return getRepository().getEntity(Vdc.class, params);
     }
+
+    @Override
+    public Vdc saveVdc(Vdc vdc) {
+        return getRepository().saveEntity(vdc);
+    }
+    
 }
