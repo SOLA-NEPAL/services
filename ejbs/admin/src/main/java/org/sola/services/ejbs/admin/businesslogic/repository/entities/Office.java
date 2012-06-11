@@ -6,6 +6,8 @@ import org.sola.services.common.repository.entities.AbstractCodeEntity;
 
 @Table(name = "office", schema = "system")
 public class Office extends AbstractCodeEntity {
+    public static final String PARAM_DISTRICT_CODE = "districtCode";
+    public static final String WHERE_BY_DISTRICT_CODE = "district_code = #{" + PARAM_DISTRICT_CODE + "}";
     
     @Column(name = "district_code")
     private String districtCode;
