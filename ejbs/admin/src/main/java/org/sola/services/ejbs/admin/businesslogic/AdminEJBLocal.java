@@ -195,8 +195,13 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
      */
     Vdc getVdcByName(String vdcName);
 
-    
     //<editor-fold defaultstate="collapsed" desc="By Dinesh">
     Vdc saveVdc(Vdc vdc);    
     //</editor-fold>
+
+    /**
+     * Get list of Offices by District code.
+     */
+    List<Office> getOfficesByDistrict(String districtCode, String lang);
 }
+

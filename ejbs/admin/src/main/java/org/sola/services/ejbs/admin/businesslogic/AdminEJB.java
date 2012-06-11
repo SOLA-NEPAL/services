@@ -292,6 +292,15 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
         params.put(Department.PARAM_OFFICE_CODE, officeCode);
         return getRepository().getEntityList(Department.class, params);
     }
+    
+     @Override  
+    public List<Office> getOfficesByDistrict(String districtCode, String lang) {
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Office.WHERE_BY_DISTRICT_CODE);
+        params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
+        params.put(Office.PARAM_DISTRICT_CODE, districtCode);
+        return getRepository().getEntityList(Office.class, params);
+    }
 
     @Override
     public List<Vdc> getVdcs(String districtCode, String lang) {

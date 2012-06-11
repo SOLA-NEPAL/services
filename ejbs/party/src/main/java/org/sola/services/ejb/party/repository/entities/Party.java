@@ -97,24 +97,107 @@ public class Party extends AbstractVersionedEntity {
     private String typeCode;
     @Column(name = "gender_code")
     private String genderCode;
-    @Column(name = "ward_no")
-    private String wardNo;
-    @Column(name = "street")
-    private String street;
-    @Column(name = "date_of_birth")
-    private Date dob;
-    @Column(name = "vdc_code")
-    private String vdcCode;
-    @Column(name = "remarks")
-    private String remarks;
-    @ExternalEJB(ejbLocalClass = AddressEJBLocal.class, loadMethod = "getAddress", saveMethod = "saveAddress")
+    
+    @ExternalEJB(ejbLocalClass = AddressEJBLocal.class,loadMethod = "getAddress", saveMethod = "saveAddress")
     @ChildEntity(childIdField = "addressId")
     private Address address;
     @ChildEntityList(parentIdField = "partyId")
     private List<PartyRole> roleList;
     @Column(name = "party.is_rightholder(id) AS is_rightholder", insertable = false, updatable = false)
     private boolean rightHolder;
+    
+    //additional fields
+    @Column(name="grandfather_name")
+    private String grandfatherName;
+    @Column(name="grandfather_last_name")
+    private String grandFatherLastName;
+    @Column(name="date_of_birth")
+    private Date birthDate;
+    @Column(name="districtcode")
+    private String districtCode;
+    @Column(name="vdc_code")
+    private String vdcCode;
+    @Column(name="ward_no")
+    private int wardNo;
+    @Column(name="remarks")
+    private String rmks;
+    @Column(name="id_provider_office_code")
+    private String issuingOfficeCode;
+    @Column(name="id_issue_date")
+    private Date idIssueDate;
 
+    public String getDistrictCode() {
+        return districtCode;
+    }
+
+    public void setDistrictCode(String districtCode) {
+        this.districtCode = districtCode;
+    }
+    
+    public Date getBirthDate(){
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getGrandFatherLastName() {
+        return grandFatherLastName;
+    }
+
+    public void setGrandFatherLastName(String grandFatherLastName) {
+        this.grandFatherLastName = grandFatherLastName;
+    }
+
+    public String getGrandfatherName() {
+        return grandfatherName;
+    }
+
+    public void setGrandfatherName(String grandfatherName) {
+        this.grandfatherName = grandfatherName;
+    }
+
+    public Date getIdIssueDate() {
+        return idIssueDate;
+    }
+
+    public void setIdIssueDate(Date idIssueDate) {
+        this.idIssueDate = idIssueDate;
+    }
+
+    public String getIssuingOfficeCode() {
+        return issuingOfficeCode;
+    }
+
+    public void setIssuingOfficeCode(String issuingOfficeCode) {
+        this.issuingOfficeCode = issuingOfficeCode;
+    }
+
+    public String getRmks() {
+        return rmks;
+    }
+
+    public void setRmks(String rmks) {
+        this.rmks = rmks;
+    }
+
+    public String getVdcCode() {
+        return vdcCode;
+    }
+
+    public void setVdcCode(String vdcCode) {
+        this.vdcCode = vdcCode;
+    }
+
+    public int getWardNo() {
+        return wardNo;
+    }
+
+    public void setWardNo(int wardNo) {
+        this.wardNo = wardNo;
+    }
+    
     public Party() {
         super();
     }
@@ -168,14 +251,6 @@ public class Party extends AbstractVersionedEntity {
         this.fathersName = fathersName;
     }
 
-    public Date getDob() {
-        return dob;
-    }
-
-    public void setDob(Date dob) {
-        this.dob = dob;
-    }
-
     public String getGrandFathersLastName() {
         return grandFathersLastName;
     }
@@ -191,39 +266,7 @@ public class Party extends AbstractVersionedEntity {
     public void setGrandFathersName(String grandFathersName) {
         this.grandFathersName = grandFathersName;
     }
-
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getVdcCode() {
-        return vdcCode;
-    }
-
-    public void setVdcCode(String vdcCode) {
-        this.vdcCode = vdcCode;
-    }
-
-    public String getWardNo() {
-        return wardNo;
-    }
-
-    public void setWardNo(String wardNo) {
-        this.wardNo = wardNo;
-    }
-
+    
     public String getExtId() {
         return extId;
     }
