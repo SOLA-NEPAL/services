@@ -106,6 +106,8 @@ public class Party extends AbstractVersionedEntity {
     @Column(name = "party.is_rightholder(id) AS is_rightholder", insertable = false, updatable = false)
     private boolean rightHolder;
     
+    @Column(name="street")
+    private String street;
     //additional fields
     @Column(name="grandfather_name")
     private String grandfatherName;
@@ -125,6 +127,14 @@ public class Party extends AbstractVersionedEntity {
     private String issuingOfficeCode;
     @Column(name="id_issue_date")
     private Date idIssueDate;
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
 
     public String getDistrictCode() {
         return districtCode;
