@@ -69,10 +69,7 @@ public class Party extends AbstractVersionedEntity {
     private String fathersName;
     @Column(name = "fathers_last_name")
     private String fathersLastName;
-    @Column(name = "grandfather_name")
-    private String grandFathersName;
-    @Column(name = "grandfathers_last_name")
-    private String grandFathersLastName;
+
     @Column(name = "alias")
     private String alias;
     @Column(name = "ext_id")
@@ -259,22 +256,6 @@ public class Party extends AbstractVersionedEntity {
 
     public void setFathersName(String fathersName) {
         this.fathersName = fathersName;
-    }
-
-    public String getGrandFathersLastName() {
-        return grandFathersLastName;
-    }
-
-    public void setGrandFathersLastName(String grandFathersLastName) {
-        this.grandFathersLastName = grandFathersLastName;
-    }
-
-    public String getGrandFathersName() {
-        return grandFathersName;
-    }
-
-    public void setGrandFathersName(String grandFathersName) {
-        this.grandFathersName = grandFathersName;
     }
     
     public String getExtId() {
