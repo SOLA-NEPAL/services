@@ -1,28 +1,30 @@
 /**
  * ******************************************************************************************
- * Copyright (C) 2012 - Food and Agriculture Organization of the United Nations (FAO).
- * All rights reserved.
+ * Copyright (C) 2012 - Food and Agriculture Organization of the United Nations
+ * (FAO). All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- *    1. Redistributions of source code must retain the above copyright notice,this list
- *       of conditions and the following disclaimer.
- *    2. Redistributions in binary form must reproduce the above copyright notice,this list
- *       of conditions and the following disclaimer in the documentation and/or other
- *       materials provided with the distribution.
- *    3. Neither the name of FAO nor the names of its contributors may be used to endorse or
- *       promote products derived from this software without specific prior written permission.
+ * 1. Redistributions of source code must retain the above copyright notice,this
+ * list of conditions and the following disclaimer. 2. Redistributions in binary
+ * form must reproduce the above copyright notice,this list of conditions and
+ * the following disclaimer in the documentation and/or other materials provided
+ * with the distribution. 3. Neither the name of FAO nor the names of its
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
- * SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,PROCUREMENT
- * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,STRICT LIABILITY,OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT,STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * *********************************************************************************************
  */
 /*
@@ -38,6 +40,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import org.sola.services.common.LocalInfo;
 import org.sola.services.common.repository.AccessFunctions;
+import org.sola.services.common.repository.ChildEntity;
 import org.sola.services.common.repository.ChildEntityList;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
 
@@ -63,6 +66,8 @@ public class CadastreObject extends AbstractVersionedEntity {
     public static final String QUERY_WHERE_SEARCHBYGEOM = "status_code= 'current' and "
             + "ST_DWithin(geom_polygon, get_geometry_with_srid(#{geom}), "
             + "system.get_setting('map-tolerance')::double precision)";
+
+
     //By Kabindra
     //--------------------------------------------------------------------------
     public static final String QUERY_WHERE_SEARCHBY_STRING_INTERSECTION = "status_code= 'current' and "
@@ -71,11 +76,14 @@ public class CadastreObject extends AbstractVersionedEntity {
             + "st_intersects(geom_polygon, setsrid(st_geomfromewkb(#{geom}" + "::geometry)" + ", #{srid}))";
     //--------------------------------------------------------------------------
     
+
     @Id
     @Column(name = "id")
     private String id;
     @Column(name = "type_code")
     private String typeCode;
+    @Column(name = "map_sheet_id")
+    private String mapSheetCode;
     @Column(name = "approval_datetime")
     private Date approvalDatetime;
     @Column(name = "historic_datetime")
@@ -96,22 +104,31 @@ public class CadastreObject extends AbstractVersionedEntity {
     private byte[] geomPolygon;
     @ChildEntityList(parentIdField = "spatialUnitId")
     private List<SpatialValueArea> spatialValueAreaList;
-    
     //Additional field required for SAEx application.
-    @Column(name="parcel_no")
+    @Column(name = "parcel_no")
     private int parcelno;
-    @Column(name="district")
+    @Column(name = "district")
     private int district;
-    @Column(name="vdc")
+    @Column(name = "vdc")
     private int vdc;
-    @Column(name="wardno")
+    @Column(name = "wardno")
     private String wardno;
-    @Column(name="grids1")
+    @Column(name = "grids1")
     private String grids1;
-    @Column(name="parcel_note")
+    @Column(name = "parcel_note")
     private String parcelNote;
-    @Column(name="parcel_type")
+    @Column(name = "parcel_type")
     private int parcelType;
+    @ChildEntity(childIdField = "mapSheetCode")
+    private MapSheet mapSheet;
+
+    public String getMapSheetCode() {
+        return mapSheetCode;
+    }
+
+    public void setMapSheetCode(String mapSheetCode) {
+        this.mapSheetCode = mapSheetCode;
+    }
 
     public int getDistrict() {
         return district;
@@ -168,8 +185,6 @@ public class CadastreObject extends AbstractVersionedEntity {
     public void setWardno(String wardno) {
         this.wardno = wardno;
     }
-    
-    
 
     public CadastreObject() {
         super();
@@ -263,6 +278,17 @@ public class CadastreObject extends AbstractVersionedEntity {
 
     public void setSpatialValueAreaList(List<SpatialValueArea> spatialValueAreaList) {
         this.spatialValueAreaList = spatialValueAreaList;
+    }
+
+    public MapSheet getMapSheet() {
+        return mapSheet;
+    }
+
+    public void setMapSheet(MapSheet mapSheet) {
+        this.mapSheet = mapSheet;
+        if (mapSheet != null) {
+            this.setMapSheetCode(mapSheet.getId());
+        }
     }
 
     @Override

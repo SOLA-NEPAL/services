@@ -1,28 +1,30 @@
 /**
  * ******************************************************************************************
- * Copyright (C) 2012 - Food and Agriculture Organization of the United Nations (FAO).
- * All rights reserved.
+ * Copyright (C) 2012 - Food and Agriculture Organization of the United Nations
+ * (FAO). All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- *    1. Redistributions of source code must retain the above copyright notice,this list
- *       of conditions and the following disclaimer.
- *    2. Redistributions in binary form must reproduce the above copyright notice,this list
- *       of conditions and the following disclaimer in the documentation and/or other
- *       materials provided with the distribution.
- *    3. Neither the name of FAO nor the names of its contributors may be used to endorse or
- *       promote products derived from this software without specific prior written permission.
+ * 1. Redistributions of source code must retain the above copyright notice,this
+ * list of conditions and the following disclaimer. 2. Redistributions in binary
+ * form must reproduce the above copyright notice,this list of conditions and
+ * the following disclaimer in the documentation and/or other materials provided
+ * with the distribution. 3. Neither the name of FAO nor the names of its
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
- * SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,PROCUREMENT
- * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,STRICT LIABILITY,OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT,STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * *********************************************************************************************
  */
 package org.sola.services.ejb.cadastre.businesslogic;
@@ -102,9 +104,9 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     }
 
     /**
-     * 
+     *
      * @param transactionId
-     * @param statusCode 
+     * @param statusCode
      */
     @Override
     public void ChangeStatusOfCadastreObjects(
@@ -118,7 +120,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
             getRepository().saveEntity(involvedCo);
         }
     }
-    
+
     @Override
     public List<CadastreObjectTarget> getCadastreObjectTargetsByTransaction(String transactionId) {
         Map params = new HashMap<String, Object>();
@@ -149,14 +151,14 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         return getRepository().getEntityList(CadastreObject.class, params);
 
     }
-    
+
     @Override
     public CadastreObjectNode getCadastreObjectNode(
-            double xMin, double yMin, double xMax, double yMax, int srid){
+            double xMin, double yMin, double xMax, double yMax, int srid) {
         Map params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_FROM_PART, 
+        params.put(CommonSqlProvider.PARAM_FROM_PART,
                 CadastreObjectNode.QUERY_GET_BY_RECTANGLE_FROM_PART);
-        params.put(CommonSqlProvider.PARAM_WHERE_PART, 
+        params.put(CommonSqlProvider.PARAM_WHERE_PART,
                 CadastreObjectNode.QUERY_GET_BY_RECTANGLE_WHERE_PART);
         params.put(CommonSqlProvider.PARAM_LIMIT_PART, 1);
         params.put("minx", xMin);
@@ -165,8 +167,8 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         params.put("maxy", yMax);
         params.put("srid", srid);
         CadastreObjectNode cadastreObjectNode = getRepository().getEntity(
-                CadastreObjectNode.class, params);   
-        if (cadastreObjectNode != null){
+                CadastreObjectNode.class, params);
+        if (cadastreObjectNode != null) {
             params.clear();
             params.put("geom", cadastreObjectNode.getGeom());
             cadastreObjectNode.setCadastreObjectList(getRepository().getEntityList(
@@ -178,9 +180,9 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
 
     @Override
     public CadastreObjectNode getCadastreObjectNodePotential(
-            double xMin, double yMin, double xMax, double yMax, int srid){
+            double xMin, double yMin, double xMax, double yMax, int srid) {
         Map params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_FROM_PART, 
+        params.put(CommonSqlProvider.PARAM_FROM_PART,
                 CadastreObjectNode.QUERY_GET_BY_RECTANGLE_POTENTIAL_FROM_PART);
         params.put(CommonSqlProvider.PARAM_LIMIT_PART, 1);
         params.put("minx", xMin);
@@ -189,8 +191,8 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         params.put("maxy", yMax);
         params.put("srid", srid);
         CadastreObjectNode cadastreObjectNode = getRepository().getEntity(
-                CadastreObjectNode.class, params);   
-        if (cadastreObjectNode != null){
+                CadastreObjectNode.class, params);
+        if (cadastreObjectNode != null) {
             params.clear();
             params.put("geom", cadastreObjectNode.getGeom());
             cadastreObjectNode.setCadastreObjectList(getRepository().getEntityList(
@@ -225,9 +227,9 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     public void approveCadastreRedefinition(String transactionId) {
         List<CadastreObjectTargetRedefinition> targetObjectList =
                 this.getCadastreObjectRedefinitionTargetsByTransaction(transactionId);
-        for(CadastreObjectTargetRedefinition targetObject: targetObjectList){
-            CadastreObjectStatusChanger cadastreObject = 
-                    this.getRepository().getEntity(CadastreObjectStatusChanger.class, 
+        for (CadastreObjectTargetRedefinition targetObject : targetObjectList) {
+            CadastreObjectStatusChanger cadastreObject =
+                    this.getRepository().getEntity(CadastreObjectStatusChanger.class,
                     targetObject.getCadastreObjectId());
             cadastreObject.setGeomPolygon(targetObject.getGeomPolygon());
             cadastreObject.setTransactionId(transactionId);
@@ -238,36 +240,6 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
 
     // <editor-fold defaultstate="collapsed" desc="By Kabindra"> 
     //--------------------------------------------------------------------------
-    @Override
-    public Segment getSegmentByPoint(double x, double y, int srid) {
-        HashMap params = new HashMap();
-        params.put("x", x);
-        params.put("y", y);
-        params.put("srid", srid);
-        return getRepository().getEntity(
-                Segment.class, Segment.QUERY_WHERE_SEARCHBYPOINT, params);
-    }
-
-    @Override
-    public Segment saveSegment(Segment seg) {
-        return getRepository().saveEntity(seg);
-    }
-
-    @Override
-    public List<Segment> getSegmentObjects(List<String> segObjIds) {
-        return getRepository().getEntityListByIds(Segment.class, segObjIds);
-    }
-    
-    @Override
-    public List<Segment> getSegmentsByTransaction(String transactionId) {
-        Map params = new HashMap<String, Object>();
-        params.put(
-                CommonSqlProvider.PARAM_WHERE_PART,
-                Segment.QUERY_WHERE_SEARCHBYTRANSACTION);
-        params.put("transaction_id", transactionId);
-        return getRepository().getEntityList(Segment.class, params);
-    }
-
     @Override
     public List<CadastreObject> getCadastreObjectBy_Intersection(String geom, int srid) {
         HashMap params = new HashMap();
@@ -284,6 +256,23 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         params.put("srid", srid);
         return getRepository().getEntityList(
                 CadastreObject.class, CadastreObject.QUERY_WHERE_SEARCHBY_BYTE_INTERSECTION, params);
+    }
+
+    @Override
+    public void executeQuery(String cmd) {
+        HashMap params = new HashMap();
+        params.put(CommonSqlProvider.PARAM_QUERY, cmd);
+        getRepository().executeSql(params);
+    }
+
+    @Override
+    public MapSheet getMapSheet(String id) {
+        return getRepository().getEntity(MapSheet.class, id);
+    }
+
+    @Override
+    public MapSheet saveMapSheet(MapSheet mapSheet) {
+        return getRepository().saveEntity(mapSheet);
     }
     //--------------------------------------------------------------------------
     // </editor-fold>

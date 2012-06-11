@@ -359,4 +359,8 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
         }
         return currentOffice;
     }
+
+    public Vdc saveVdc(Vdc vdc) {
+        return getRepository().saveEntity(vdc);
+    }
 }

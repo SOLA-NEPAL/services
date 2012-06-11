@@ -197,4 +197,6 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
     
     /** Returns office object related to the current user. */
     Office getCurrentOffice();
+
+    Vdc saveVdc(Vdc vdc);    
 }
