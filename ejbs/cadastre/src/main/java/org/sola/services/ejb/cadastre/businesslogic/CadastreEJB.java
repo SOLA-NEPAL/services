@@ -240,7 +240,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
 
     // <editor-fold defaultstate="collapsed" desc="By Kabindra"> 
     //--------------------------------------------------------------------------
-    @Override
+     @Override
     public List<CadastreObject> getCadastreObjectBy_Intersection(String geom, int srid) {
         HashMap params = new HashMap();
         params.put("geom", geom);
@@ -264,7 +264,10 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         params.put(CommonSqlProvider.PARAM_QUERY,cmd);
         return getRepository().executeSql(params);
     }
+    //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="By Kumar">
+    //*****************************************************************************************************************************
     @Override
     public MapSheet getMapSheet(String id) {
         return getRepository().getEntity(MapSheet.class, id);
@@ -274,6 +277,19 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     public MapSheet saveMapSheet(MapSheet mapSheet) {
         return getRepository().saveEntity(mapSheet);
     }
-    //--------------------------------------------------------------------------
-    // </editor-fold>
+
+    @Override
+    public List<MapSheet> getMapSheetList() {
+        return getRepository().getEntityList(MapSheet.class);
+    }
+
+    @Override
+    public List<CadastreObject> loadCadastreObjectList(String mapSheetCode) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, CadastreObject.GET_CADASTRE_BY_MAPSHEET_CODE);
+        params.put(CadastreObject.MAP_SHEET_CODE_PARAM, mapSheetCode);
+        return getRepository().getEntityList(CadastreObject.class, params);
+    }
+    //*****************************************************************************************************************************
+    //</editor-fold>
 }

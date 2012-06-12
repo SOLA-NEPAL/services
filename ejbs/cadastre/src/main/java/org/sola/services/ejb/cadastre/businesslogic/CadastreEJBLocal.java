@@ -29,7 +29,6 @@
  */
 package org.sola.services.ejb.cadastre.businesslogic;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Local;
@@ -78,18 +77,26 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
             String transactionId);
 
     void approveCadastreRedefinition(String transactionId);
-
+    //<editor-fold defaultstate="collapsed" desc="By Kumar">
+    //*****************************************************************************************************************************
     MapSheet getMapSheet(String id);
-
+    
     MapSheet saveMapSheet(MapSheet mapSheet);
+    
+    List<MapSheet> getMapSheetList();
+    
+    List<CadastreObject> loadCadastreObjectList(String mapSheetCode);
+    //*****************************************************************************************************************************
+    //</editor-fold>
 
+    //For segment selection.
     // <editor-fold defaultstate="collapsed" desc="By Kabindra">
     //--------------------------------------------------------------------------
-    List<CadastreObject> getCadastreObjectBy_Intersection(String geom, int srid);
+   List<CadastreObject> getCadastreObjectBy_Intersection(String geom, int srid);
 
     List<CadastreObject> getCadastreObjectBy_ByteIntersection(String geom, int srid);
     
     List<HashMap> executeQuery(String cmd);
-    //--------------------------------------------------------------------------
-    // </editor-fold>
+     //</editor-fold>
+
 }

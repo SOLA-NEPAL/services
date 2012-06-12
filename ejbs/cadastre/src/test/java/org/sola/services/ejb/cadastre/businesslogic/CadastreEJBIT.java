@@ -122,56 +122,83 @@ public class CadastreEJBIT extends AbstractEJBTest {
     
 
     
-     @Test
+    //<editor-fold defaultstate="collapsed" desc="By Kumar">
+    //***********************************************************************************************************
+    @Test
     @Ignore
     public void testSaveCadestreObject()throws Exception{
         System.out.println(">>> Testing saving CadastreObject");
-         UserTransaction tx=getUserTransaction();
-         try{
-             tx.begin();
-             CadastreEJBLocal instance=(CadastreEJBLocal) getEJBInstance(CadastreEJB.class.getSimpleName());
-             CadastreObject cobj=new CadastreObject();
-             cobj.setTypeCode("parcel");
-             cobj.setStatusCode("pending");
-             //Transaction bx=new Transaction();
-             cobj.setTransactionId("first");
-             cobj.setParcelno(15258);
-             cobj.setParcelType(0);
-             instance.saveCadastreObject(cobj);
-             tx.commit();
-         }catch(Exception e){
-             tx.rollback();
-             fail(e.getMessage());
-         }
-         
-     }  
-     @Test
-     @Ignore
+        UserTransaction tx=getUserTransaction();
+        try{
+            tx.begin();
+            CadastreEJBLocal instance=(CadastreEJBLocal) getEJBInstance(CadastreEJB.class.getSimpleName());
+            CadastreObject cobj=new CadastreObject();
+           // cobj.setTypeCode("parcel");
+           // cobj.setStatusCode("pending");
+            //Transaction bx=new Transaction();
+            cobj.setTransactionId("first");
+            cobj.setMapSheetCode("558fd2b4-ebac-4592-86aa-6d1e28aecf45");
+            cobj.setParcelno(15258);
+            cobj.setParcelType(0);
+            instance.saveCadastreObject(cobj);
+            tx.commit();
+        }catch(Exception e){
+            tx.rollback();
+            fail(e.getMessage());
+        }
+        
+    }
+    @Test
+    @Ignore
     public void testSaveMapSheet()throws Exception{
         System.out.println(">>> Testing saving Map Sheet");
-         UserTransaction tx=getUserTransaction();
-         try{
-             tx.begin();
-             CadastreEJBLocal instance=(CadastreEJBLocal) getEJBInstance(CadastreEJB.class.getSimpleName());
-             MapSheet mapSheet=new MapSheet();
-             mapSheet.setAlpha_code("1");
-             mapSheet.setMapNumber("abc123");
-             mapSheet.setSheetType(1);
-//             cobj.setTypeCode("parcel");
-//             cobj.setStatusCode("pending");
-//             //Transaction bx=new Transaction();
-//             cobj.setTransactionId("first");
-//             cobj.setParcelno(15258);
-//             cobj.setParcelType(0);
-             instance.saveMapSheet(mapSheet);
-             tx.commit();
-         }catch(Exception e){
-             tx.rollback();
-             fail(e.getMessage());
-         }
+        UserTransaction tx=getUserTransaction();
+        try{
+            tx.begin();
+            CadastreEJBLocal instance=(CadastreEJBLocal) getEJBInstance(CadastreEJB.class.getSimpleName());
+            MapSheet mapSheet=new MapSheet();
+            mapSheet.setAlpha_code("1");
+            mapSheet.setMapNumber("abc123");
+            mapSheet.setSheetType(1);
+            //             cobj.setTypeCode("parcel");
+            //             cobj.setStatusCode("pending");
+            //             //Transaction bx=new Transaction();
+            //             cobj.setTransactionId("first");
+            //             cobj.setParcelno(15258);
+            //             cobj.setParcelType(0);
+            instance.saveMapSheet(mapSheet);
+            tx.commit();
+        }catch(Exception e){
+            tx.rollback();
+            fail(e.getMessage());
+        }
+        
+    }
+    
+    
+    @Test
+    @Ignore
+    public void testGetMapSheetList()throws Exception{
+        System.out.println(">>> Testing getting Map Sheet list");
+        UserTransaction tx=getUserTransaction();
+        try{
+            tx.begin();
+            CadastreEJBLocal instance=(CadastreEJBLocal) getEJBInstance(CadastreEJB.class.getSimpleName());
+            List<MapSheet> mapSheetList=instance.getMapSheetList();
+            
+            tx.commit();
+        }catch(Exception e){
+            tx.rollback();
+            fail(e.getMessage());
+        }
+        
+    }
+    //***********************************************************************************************************
+    //</editor-fold>
+  
          
-     }       
 
+    //<editor-fold defaultstate="collapsed" desc="By Kabindra">
     @Test
     @Ignore
     public void testForLineIntersection() throws Exception {
@@ -188,6 +215,7 @@ public class CadastreEJBIT extends AbstractEJBTest {
         String geom="0103000020ED7B01000100000006000000F0A7C64BDB532341D122DBA59D654741FA7E6A5CD6532341FED478C19A65474122B072E8BA5323416F1283589E654741CDAB725BBF532341DF0A8091A06547414C378931C053234121B072FCA0654741F0A7C64BDB532341D122DBA59D654741";
         int srid=97261;
         List<CadastreObject> the_parcels =instance.getCadastreObjectBy_ByteIntersection(geom,srid);
-
+        
     }
+    //</editor-fold>
 }
