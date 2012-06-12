@@ -17,7 +17,7 @@ import org.sola.services.common.repository.entities.AbstractVersionedEntity;
  * @author KumarKhadka
  */
 @Table(name = "land_owner_certificate", schema = "administrative")
-public class LOC extends AbstractVersionedEntity {
+public class Loc extends AbstractVersionedEntity {
     
     public static final String PANA_NO_PARAM = "panaNo";
     public static final String MOTH_ID_PARAM = "mothId";
@@ -39,15 +39,15 @@ public class LOC extends AbstractVersionedEntity {
     @Column(name = "transaction_no")
     private int transactionNo;
     @ChildEntityList(parentIdField = "locId")
-    private List<BaUnit> baUnit;
+    private List<BaUnit> baUnits;
 
-    public List<BaUnit> getBaUnit() {
-        baUnit = baUnit == null ? new ArrayList<BaUnit>() : baUnit;
-        return baUnit;
+    public List<BaUnit> getBaUnits() {
+        baUnits = baUnits == null ? new ArrayList<BaUnit>() : baUnits;
+        return baUnits;
     }
 
-    public void setBaUnit(List<BaUnit> baUnit) {
-        this.baUnit = baUnit;
+    public void setBaUnits(List<BaUnit> baUnits) {
+        this.baUnits = baUnits;
     }
 
     public String getId() {

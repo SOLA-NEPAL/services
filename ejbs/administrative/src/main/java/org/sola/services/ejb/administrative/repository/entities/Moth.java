@@ -48,14 +48,14 @@ public class Moth extends AbstractVersionedEntity {
     private Vdc vdc;
    // @ExternalEJB(ejbLocalClass = AdministrativeEJBLocal.class, loadMethod = "getLOC")
     @ChildEntityList(parentIdField = "mothId")
-    private List<LOC> locList;   
+    private List<Loc> locList;   
 
-    public List<LOC> getLocList() {
-         locList = locList == null ? new ArrayList<LOC>() : locList;
+    public List<Loc> getLocList() {
+         locList = locList == null ? new ArrayList<Loc>() : locList;
         return locList;
     }
 
-    public void setLocList(List<LOC> locList) {
+    public void setLocList(List<Loc> locList) {
         this.locList = locList;
     }
 

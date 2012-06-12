@@ -261,11 +261,13 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     @Override
     public void executeQuery(String cmd) {
         HashMap params = new HashMap();
-        params.put(CommonSqlProvider.PARAM_QUERY,cmd);
+        params.put(CommonSqlProvider.PARAM_QUERY, cmd);
         getRepository().executeSql(params);
     }
+    //</editor-fold>
 
-
+    //<editor-fold defaultstate="collapsed" desc="By Kumar">
+    //*****************************************************************************************************************************
     @Override
     public MapSheet getMapSheet(String id) {
         return getRepository().getEntity(MapSheet.class, id);
@@ -276,27 +278,18 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         return getRepository().saveEntity(mapSheet);
     }
 
-    //--------------------------------------------------------------------------
-    // </editor-fold>
-
     @Override
-    public Segment getSegmentByPoint(double x, double y, int srid) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<MapSheet> getMapSheetList() {
+        return getRepository().getEntityList(MapSheet.class);
     }
 
     @Override
-    public Segment saveSegment(Segment seg) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<CadastreObject> loadCadastreObjectList(String mapSheetCode) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, CadastreObject.GET_CADASTRE_BY_MAPSHEET_CODE);
+        params.put(CadastreObject.MAP_SHEET_CODE_PARAM, mapSheetCode);
+        return getRepository().getEntityList(CadastreObject.class, params);
     }
-
-    @Override
-    public List<Segment> getSegmentObjects(List<String> segObjIds) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<Segment> getSegmentsByTransaction(String transactionId) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
+    //*****************************************************************************************************************************
+    //</editor-fold>
 }

@@ -295,6 +295,8 @@ public class AdministrativeEJB extends AbstractEJB
 
         return getBaUnitById(baUnitId);
     }
+    //<editor-fold defaultstate="collapsed" desc="By Kumar">
+    //***********************************************************************************************************
 
     @Override
     public Moth saveMoth(Moth moth) {
@@ -327,13 +329,13 @@ public class AdministrativeEJB extends AbstractEJB
     }
 
     @Override
-    public LOC saveLOC(LOC loc) {
+    public Loc saveLoc(Loc loc) {
         return getRepository().saveEntity(loc);
     }
 
     @Override
-    public LOC getLOC(String id) {
-        return getRepository().getEntity(LOC.class, id);
+    public Loc getLoc(String id) {
+        return getRepository().getEntity(Loc.class, id);
     }
 
     @Override
@@ -342,11 +344,23 @@ public class AdministrativeEJB extends AbstractEJB
     }
 
     @Override
-    public LOC getLOCByPageNoAndMothId(int panaNo, String mothId) {
-        HashMap params=new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_WHERE_PART, LOC.GET_BY_MOTH_ID_AND_PANA_NO);
-        params.put(LOC.MOTH_ID_PARAM, mothId);
-        params.put((LOC.PANA_NO_PARAM), panaNo);
-        return getRepository().getEntity(LOC.class, params);         
+    public Loc getLocByPageNoAndMothId(int panaNo, String mothId) {
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Loc.GET_BY_MOTH_ID_AND_PANA_NO);
+        params.put(Loc.MOTH_ID_PARAM, mothId);
+        params.put((Loc.PANA_NO_PARAM), panaNo);
+        return getRepository().getEntity(Loc.class, params);
     }
+
+    @Override
+    public BaUnitContainsSpatialUnit saveBaUnitContainsSpatialUnit(BaUnitContainsSpatialUnit baUnitContainsSpatialUnit) {
+        return getRepository().saveEntity(baUnitContainsSpatialUnit);
+    }
+
+    @Override
+    public BaUnitContainsSpatialUnit getBaUnitContainsSpatialUnit(String id) {
+        return getRepository().getEntity(BaUnitContainsSpatialUnit.class, id);
+    }
+    //***********************************************************************************************************
+    //</editor-fold>
 }

@@ -354,11 +354,13 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         }
     }
 
-    @Ignore
+    //<editor-fold defaultstate="collapsed" desc="By Kumar">
+    //***********************************************************************************************************
+   @Ignore
     @Test
     public void getMoths() throws Exception {
         System.out.println(">>> Testing getting moths");
-
+        
         UserTransaction tx = getUserTransaction();
         try {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
@@ -375,7 +377,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             fail(e.getMessage());
         }
     }
-
+    
     @Ignore
     @Test
     public void getMoth() throws Exception {
@@ -393,62 +395,62 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             fail(e.getMessage());
         }
     }
-
+    
     @Ignore
     @Test
     public void saveLOC() throws Exception {
-        System.out.println(">>> Testing Saving LOC");
+        System.out.println(">>> Testing Saving Loc");
         UserTransaction tx = getUserTransaction();
         try {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance((AdministrativeEJB.class.getSimpleName()));
             tx.begin();
-            LOC loc = new LOC();
+            Loc loc = new Loc();
             loc.setMothId("240237f8-f677-4df6-9a4d-94484f6a1d7f");
             loc.setPanaNo(1);
-            instance.saveLOC(loc);
+            instance.saveLoc(loc);
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
         }
     }
-
+    
     @Ignore
     @Test
     public void getLOC() throws Exception {
-        System.err.println(">>> Testing getting LOC using id");
+        System.err.println(">>> Testing getting Loc using id");
         UserTransaction tx = getUserTransaction();
         try {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
             tx.begin();
-            LOC loc = instance.getLOC("8cbe76be-b7e6-4aa9-8ea7-64bd9e19f217");
+            Loc loc = instance.getLoc("8cbe76be-b7e6-4aa9-8ea7-64bd9e19f217");
             //System.out.println(loc.getPanaNo());
             tx.commit();
-
+            
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
         }
     }
-
-   @Ignore
+    
+    @Ignore
     @Test
     public void getMothById() throws Exception {
         System.out.println(">>> Testing getting moth by id");
-
+        
         UserTransaction tx = getUserTransaction();
         try {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
             tx.begin();
             Moth result = instance.getMoth("9a4915ec-765e-4d1b-9e0a-0a73204cea5f");
-
+            
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
         }
     }
-
+    
     @Ignore
     @Test
     public void saveBaUnit() throws Exception {
@@ -469,10 +471,10 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
-
+            
         }
     }
-
+    
     @Ignore
     @Test
     public void testSaveMoth() throws Exception {
@@ -488,12 +490,12 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             moth.setMothLuj("M");
             moth.setFinancialYear(69);
             moth.setLmocd(1);
-
-            LOC loc = new LOC();
+            
+            Loc loc = new Loc();
             loc.setMothId(moth.getId());
             loc.setPanaNo(1);
-
-
+            
+            
             BaUnit baUnit = new BaUnit();
             baUnit.setLocId(loc.getId());
             baUnit.setTypeCode("administrativeUnit");
@@ -501,7 +503,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             baUnit.setNameFirstpart("TestBaunit");
             baUnit.setNameLastpart("TestBaunit");
             baUnit.setStatusCode("current");
-
+            
             CadastreObject cobj = new CadastreObject();
             cobj.setTypeCode("parcel");
             cobj.setStatusCode("pending");
@@ -514,14 +516,14 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             mapSheet.setAlpha_code("1");
             cobj.setMapSheet(mapSheet);
             cobj.setMapSheetCode(mapSheet.getId());
-
+            
             SpatialValueArea spValA = new SpatialValueArea();
             spValA.setSpatialUnitId(moth.getId());
             spValA.setTypeCode("officialArea");
             BigDecimal bigVal = new BigDecimal(1526836);
             spValA.setSize(bigVal);
-
-
+            
+            
             List< SpatialValueArea> spatialValAreaList = new ArrayList<SpatialValueArea>();
             spatialValAreaList.add(spValA);
             cobj.setSpatialValueAreaList(spatialValAreaList);
@@ -530,8 +532,8 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             baUnit.setCadastreObjectList(cadObjList);
             List<BaUnit> baUnitList = new ArrayList<BaUnit>();
             baUnitList.add(baUnit);
-            loc.setBaUnit(baUnitList);
-            List<LOC> locList = new ArrayList<LOC>();
+            loc.setBaUnits(baUnitList);
+            List<Loc> locList = new ArrayList<Loc>();
             locList.add(loc);
             moth.setLocList(locList);
             mothList.add(moth);
@@ -540,26 +542,28 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
                 instance.saveMoth(mh);
             }
             tx.commit();
-
+            
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
         }
     }
-
+    
     @Test
-   @Ignore
+    @Ignore
     public void getLOCByMothIdAndPanaNo() throws Exception {
-        System.out.println("Testing getting LOC");
+        System.out.println("Testing getting Loc");
         UserTransaction tx = getUserTransaction();
         try {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
             tx.begin();
-            LOC loc = instance.getLOCByPageNoAndMothId(1, "9a4915ec-765e-4d1b-9e0a-0a73204cea5f");
+            Loc loc = instance.getLocByPageNoAndMothId(1, "9a4915ec-765e-4d1b-9e0a-0a73204cea5f");
             tx.commit();
-        } catch (Exception e) { 
+        } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
         }
     }
+    //***********************************************************************************************************
+    //</editor-fold>
 }
