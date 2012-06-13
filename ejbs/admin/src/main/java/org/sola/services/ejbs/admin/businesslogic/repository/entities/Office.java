@@ -6,7 +6,8 @@ import org.sola.services.common.repository.entities.AbstractCodeEntity;
 
 @Table(name = "office", schema = "system")
 public class Office extends AbstractCodeEntity {
-
+    public static final String PARAM_DISTRICT_CODE = "districtCode";
+    public static final String WHERE_BY_DISTRICT_CODE = "district_code = #{" + PARAM_DISTRICT_CODE + "}";
     public static final String WHERE_BY_USERNAME = "code in ("
             + "SELECT d.office_code FROM system.department d inner join system.appuser u "
             + "on d.code = u.department_code where u.username = #{" + User.PARAM_USERNAME + "}) ";
