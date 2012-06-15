@@ -74,8 +74,16 @@ public class CadastreObject extends AbstractVersionedEntity {
             + "st_intersects(geom_polygon, setsrid(st_geomfromewkb(#{geom}" + "::geometry)" + ", #{srid}))";
     //--------------------------------------------------------------------------
     //<editor-fold defaultstate="collapsed" desc="By Kumar">
+    //***********************************************************************************************************
     public static final String MAP_SHEET_CODE_PARAM = "mapSheetCode";
     public static final String GET_CADASTRE_BY_MAPSHEET_CODE = "map_sheet_id=#{" + MAP_SHEET_CODE_PARAM + "}";
+    public static final String VDC_PARAM = "vdc";
+    public static final String WARD_NO_PARAM = "wardno";
+    public static final String GET_BY_VDC_AND_WARD_NO = "vdc=#{" + VDC_PARAM + "} and wardno=#{" + WARD_NO_PARAM + "}";
+    public static final String PARCEL_NO_PARAM = "parcelno";    
+    public static final String GET_BY_VDC_AND_WARD_NO_PARCEL_NO = "vdc=#{" + VDC_PARAM + "} and wardno=#{" + WARD_NO_PARAM + "} and parcel_no=#{" + PARCEL_NO_PARAM + "}";
+    public static final String GET_BY_MAPSHEET_AND_PARCELNO = "map_sheet_id=#{" + MAP_SHEET_CODE_PARAM + "} and parcel_no=#{" + PARCEL_NO_PARAM + "}";
+    //***********************************************************************************************************
     //</editor-fold>   
     @Id
     @Column(name = "id")
@@ -108,9 +116,9 @@ public class CadastreObject extends AbstractVersionedEntity {
     @Column(name = "parcel_no")
     private int parcelno;
     @Column(name = "district")
-    private int district;
+    private String district;
     @Column(name = "vdc")
-    private int vdc;
+    private String vdc;
     @Column(name = "wardno")
     private String wardno;
     @Column(name = "grids1")
@@ -130,11 +138,11 @@ public class CadastreObject extends AbstractVersionedEntity {
         this.mapSheetCode = mapSheetCode;
     }
 
-    public int getDistrict() {
+    public String getDistrict() {
         return district;
     }
 
-    public void setDistrict(int district) {
+    public void setDistrict(String district) {
         this.district = district;
     }
 
@@ -170,11 +178,11 @@ public class CadastreObject extends AbstractVersionedEntity {
         this.parcelno = parcelno;
     }
 
-    public int getVdc() {
+    public String getVdc() {
         return vdc;
     }
 
-    public void setVdc(int vdc) {
+    public void setVdc(String vdc) {
         this.vdc = vdc;
     }
 

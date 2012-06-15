@@ -240,7 +240,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
 
     // <editor-fold defaultstate="collapsed" desc="By Kabindra"> 
     //--------------------------------------------------------------------------
-     @Override
+    @Override
     public List<CadastreObject> getCadastreObjectBy_Intersection(String geom, int srid) {
         HashMap params = new HashMap();
         params.put("geom", geom);
@@ -261,7 +261,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     @Override
     public List<HashMap> executeQuery(String cmd) {
         HashMap params = new HashMap();
-        params.put(CommonSqlProvider.PARAM_QUERY,cmd);
+        params.put(CommonSqlProvider.PARAM_QUERY, cmd);
         return getRepository().executeSql(params);
     }
     //</editor-fold>
@@ -289,6 +289,42 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         params.put(CommonSqlProvider.PARAM_WHERE_PART, CadastreObject.GET_CADASTRE_BY_MAPSHEET_CODE);
         params.put(CadastreObject.MAP_SHEET_CODE_PARAM, mapSheetCode);
         return getRepository().getEntityList(CadastreObject.class, params);
+    }
+
+    @Override
+    public List<CadastreObject> getCadastreObjectList(String vdcCode, String wardNo) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, CadastreObject.GET_BY_VDC_AND_WARD_NO);
+        params.put(CadastreObject.VDC_PARAM, vdcCode);
+        params.put(CadastreObject.WARD_NO_PARAM, wardNo);
+        return getRepository().getEntityList(CadastreObject.class, params);
+    }
+
+    @Override
+    public List<MapSheet> loadMapSheet(String mapSheetType) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, MapSheet.GET_BY_MAYSHEET_TYPE);
+        params.put(MapSheet.MAPSHEET_TYPE_PARAM, mapSheetType);
+        return getRepository().getEntityList(MapSheet.class, params);
+    }
+
+    @Override
+    public CadastreObject getCadastreObject(String vdcCode, String wardNo, int parcelNo) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, CadastreObject.GET_BY_VDC_AND_WARD_NO_PARCEL_NO);
+        params.put(CadastreObject.VDC_PARAM, vdcCode);
+        params.put(CadastreObject.PARCEL_NO_PARAM, parcelNo);
+        params.put(CadastreObject.WARD_NO_PARAM, wardNo);
+        return getRepository().getEntity(CadastreObject.class, params);
+    }
+
+    @Override
+    public CadastreObject getCadastreObject(String mapSheetCode, int parcelNo) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, CadastreObject.GET_BY_MAPSHEET_AND_PARCELNO);
+        params.put(CadastreObject.MAP_SHEET_CODE_PARAM, mapSheetCode);
+        params.put(CadastreObject.PARCEL_NO_PARAM, parcelNo);        
+        return getRepository().getEntity(CadastreObject.class, params);
     }
     //*****************************************************************************************************************************
     //</editor-fold>
