@@ -54,12 +54,12 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     public static final String DATE_PARAM = "date";
     public static final String TO_NEPALI_DATE_FUNCTION = "select english_to_nepalidatestring from public.english_to_nepalidatestring(#{" + DATE_PARAM + "})";
     public static final String TO_GREGORIAN_DATE_FUNCTION = "select nepali_to_englishdate from public.nepali_to_englishdate(#{" + DATE_PARAM + "})";
-    
+
     @Override
     protected void postConstruct() {
         setEntityPackage(User.class.getPackage().getName());
     }
-    
+
     @RolesAllowed(RolesConstants.ADMIN_MANAGE_SECURITY)
     @Override
     public List<User> getUsers() {
@@ -269,27 +269,30 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     }
 
     @Override
-    public List<Integer> getNepaliYear() {       
-       List<Integer> yr=new ArrayList<Integer>();
-       List<NepaliMonth> list= getRepository().getEntityList(NepaliMonth.class);
-       for(NepaliMonth i : list){
-           if(yr.contains(i.getNepYear())==false)
-           yr.add(i.getNepYear());
-       } 
-       return yr;       
+    public List<Integer> getNepaliYear() {
+        List<Integer> yr = new ArrayList<Integer>();
+        List<NepaliMonth> list = getRepository().getEntityList(NepaliMonth.class);
+        for (NepaliMonth i : list) {
+            if (yr.contains(i.getNepYear()) == false) {
+                yr.add(i.getNepYear());
+            }
+        }
+        return yr;
     }
-    
-   @Override    
+
+    @Override
     @RolesAllowed(RolesConstants.ADMIN_MANAGE_SETTINGS)
     public LandOwner saveLandOwner(LandOwner owner) {
         return getRepository().saveEntity(owner);
-    }   
-   
-    @Override  
+    }
+
+    @Override
     public List<Department> getDepartments(String officeCode, String lang) {
         HashMap params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, Department.WHERE_BY_OFFICE_CODE);
-        params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
+        if (lang != null && !lang.isEmpty()) {
+            params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
+        }
         params.put(Department.PARAM_OFFICE_CODE, officeCode);
         return getRepository().getEntityList(Department.class, params);
     }
@@ -315,7 +318,7 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     @Override
     public boolean checkUserFromDepartment(String userId, String departmentCode) {
         User user = getRepository().getEntity(User.class, userId);
-        if(user!=null){
+        if (user != null) {
             return user.getDepartmentCode().equals(departmentCode);
         } else {
             return false;
@@ -325,13 +328,13 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     @Override
     public boolean checkUserFromOffice(String userId, String officeCode) {
         User user = getRepository().getEntity(User.class, userId);
-        if(user!=null){
+        if (user != null) {
             return user.getDepartment().getOfficeCode().equals(officeCode);
         } else {
             return false;
         }
-    }     
-    
+    }
+
     @Override
     public List<Vdc> getVdcList() {
         return getRepository().getEntityList(Vdc.class);
@@ -341,7 +344,7 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     public Vdc getVdcByCode(String vdcCode) {
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, Vdc.GET_BY_VDC_CODE);
-        params.put(Vdc.VDC_CODE_PARAM,vdcCode);        
+        params.put(Vdc.VDC_CODE_PARAM, vdcCode);
         return getRepository().getEntity(Vdc.class, params);
     }
 
@@ -349,20 +352,20 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     public Vdc getVdcByName(String vdcName) {
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, Vdc.GET_BY_VDC_NAME);
-        params.put(Vdc.VDC_NAME_PARAM,vdcName);        
+        params.put(Vdc.VDC_NAME_PARAM, vdcName);
         return getRepository().getEntity(Vdc.class, params);
     }
 
     @Override
     public Office getCurrentOffice() {
         Office currentOffice = LocalInfo.get(LocalInfo.CURRENT_OFFICE, Office.class, true);
-        
-        if(currentOffice == null){
+
+        if (currentOffice == null) {
             Map params = new HashMap<String, Object>();
             params.put(CommonSqlProvider.PARAM_WHERE_PART, Office.WHERE_BY_USERNAME);
             params.put(User.PARAM_USERNAME, getUserName());
             currentOffice = getRepository().getEntity(Office.class, params);
-            if(currentOffice!=null){
+            if (currentOffice != null) {
                 LocalInfo.set(LocalInfo.CURRENT_OFFICE, currentOffice, true, true);
             }
         }

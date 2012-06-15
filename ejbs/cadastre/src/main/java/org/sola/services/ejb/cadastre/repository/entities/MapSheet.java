@@ -14,8 +14,10 @@ import org.sola.services.common.repository.entities.AbstractEntity;
  * @author KumarKhadka
  */
 @Table(name = "map_sheet", schema = "cadastre")
-public class MapSheet extends AbstractEntity {   
+public class MapSheet extends AbstractEntity {
 
+    public static final String MAPSHEET_TYPE_PARAM = "sheetType";    
+    public static final String GET_BY_MAYSHEET_TYPE= "sheet_type=#{" + MAPSHEET_TYPE_PARAM + "}";
     @Id
     @Column(name = "id")
     private String id;
@@ -58,5 +60,4 @@ public class MapSheet extends AbstractEntity {
     public void setSheetType(int sheetType) {
         this.sheetType = sheetType;
     }
-    
 }

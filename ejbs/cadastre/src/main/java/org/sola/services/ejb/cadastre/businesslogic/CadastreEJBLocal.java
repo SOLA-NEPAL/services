@@ -79,24 +79,32 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
     void approveCadastreRedefinition(String transactionId);
     //<editor-fold defaultstate="collapsed" desc="By Kumar">
     //*****************************************************************************************************************************
+
     MapSheet getMapSheet(String id);
-    
+
     MapSheet saveMapSheet(MapSheet mapSheet);
-    
+
     List<MapSheet> getMapSheetList();
-    
+
     List<CadastreObject> loadCadastreObjectList(String mapSheetCode);
+
+    List<CadastreObject> getCadastreObjectList(String vdcCode, String wardNo);
+
+    List<MapSheet> loadMapSheet(String mapSheetType);
+
+    CadastreObject getCadastreObject(String vdcCode, String wardNo, int parcelNo);
+
+    CadastreObject getCadastreObject(String mapSheetCode, int parcelNo);    
+
     //*****************************************************************************************************************************
     //</editor-fold>
-
     //For segment selection.
     // <editor-fold defaultstate="collapsed" desc="By Kabindra">
     //--------------------------------------------------------------------------
-   List<CadastreObject> getCadastreObjectBy_Intersection(String geom, int srid);
+    List<CadastreObject> getCadastreObjectBy_Intersection(String geom, int srid);
 
     List<CadastreObject> getCadastreObjectBy_ByteIntersection(String geom, int srid);
-    
-    List<HashMap> executeQuery(String cmd);
-     //</editor-fold>
 
+    List<HashMap> executeQuery(String cmd);
+    //</editor-fold>
 }

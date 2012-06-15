@@ -475,7 +475,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         }
     }
     
-    @Ignore
+    //@Ignore
     @Test
     public void testSaveMoth() throws Exception {
         System.out.println(">>> Testing saving moth");
@@ -484,18 +484,16 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
             List<Moth> mothList = new ArrayList<Moth>();
             Moth moth = new Moth();
-            moth.setMothlujNumber("test1");
-            moth.setVdcCode("1");
-            moth.setWardNo(4);
+            moth.setMothlujNumber("MOOO2");
+            moth.setVdcCode("43055");
+            moth.setWardNo("1");
             moth.setMothLuj("M");
-            moth.setFinancialYear(69);
-            moth.setLmocd(1);
-            
+            moth.setFinancialYear(69);          
+
             Loc loc = new Loc();
             loc.setMothId(moth.getId());
             loc.setPanaNo(1);
-            
-            
+           
             BaUnit baUnit = new BaUnit();
             baUnit.setLocId(loc.getId());
             baUnit.setTypeCode("administrativeUnit");
@@ -507,11 +505,13 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             CadastreObject cobj = new CadastreObject();
             cobj.setTypeCode("parcel");
             cobj.setStatusCode("pending");
-            cobj.setTransactionId("first");
-            cobj.setParcelno(152);
+            cobj.setTransactionId("cadastre-transaction");
+            cobj.setParcelno(1501);
             cobj.setParcelType(0);
+            cobj.setVdc("43055");
+            cobj.setWardno("1");
             MapSheet mapSheet = new MapSheet();
-            mapSheet.setMapNumber("123Map");
+            mapSheet.setMapNumber("M0002");
             mapSheet.setSheetType(0);
             mapSheet.setAlpha_code("1");
             cobj.setMapSheet(mapSheet);

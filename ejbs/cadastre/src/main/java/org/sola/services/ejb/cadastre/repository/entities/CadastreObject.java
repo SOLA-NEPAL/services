@@ -74,8 +74,16 @@ public class CadastreObject extends AbstractVersionedEntity {
             + "st_intersects(geom_polygon, setsrid(st_geomfromewkb(#{geom}" + "::geometry)" + ", #{srid}))";
     //--------------------------------------------------------------------------
     //<editor-fold defaultstate="collapsed" desc="By Kumar">
+    //***********************************************************************************************************
     public static final String MAP_SHEET_CODE_PARAM = "mapSheetCode";
     public static final String GET_CADASTRE_BY_MAPSHEET_CODE = "map_sheet_id=#{" + MAP_SHEET_CODE_PARAM + "}";
+    public static final String VDC_PARAM = "vdc";
+    public static final String WARD_NO_PARAM = "wardno";
+    public static final String GET_BY_VDC_AND_WARD_NO = "vdc=#{" + VDC_PARAM + "} and wardno=#{" + WARD_NO_PARAM + "}";
+    public static final String PARCEL_NO_PARAM = "parcelno";    
+    public static final String GET_BY_VDC_AND_WARD_NO_PARCEL_NO = "vdc=#{" + VDC_PARAM + "} and wardno=#{" + WARD_NO_PARAM + "} and parcel_no=#{" + PARCEL_NO_PARAM + "}";
+    public static final String GET_BY_MAPSHEET_AND_PARCELNO = "map_sheet_id=#{" + MAP_SHEET_CODE_PARAM + "} and parcel_no=#{" + PARCEL_NO_PARAM + "}";
+    //***********************************************************************************************************
     //</editor-fold>   
     
     @Id
