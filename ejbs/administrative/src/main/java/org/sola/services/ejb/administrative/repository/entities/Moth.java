@@ -36,7 +36,7 @@ public class Moth extends AbstractVersionedEntity {
     @Column(name = "vdc_code")
     private String vdcCode;
     @Column(name = "ward_no")
-    private int wardNo;
+    private String wardNo;
     @Column(name = "moth_luj")
     private String mothLuj;
     @Column(name = "financialyear")
@@ -119,11 +119,11 @@ public class Moth extends AbstractVersionedEntity {
         this.vdcCode = vdcCode;
     }
 
-    public int getWardNo() {
+    public String getWardNo() {
         return wardNo;
     }
 
-    public void setWardNo(int wardNo) {
+    public void setWardNo(String wardNo) {
         this.wardNo = wardNo;
     }
 }

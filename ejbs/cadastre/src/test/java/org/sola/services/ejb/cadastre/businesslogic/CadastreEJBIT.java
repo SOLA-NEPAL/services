@@ -125,21 +125,20 @@ public class CadastreEJBIT extends AbstractEJBTest {
     //<editor-fold defaultstate="collapsed" desc="By Kumar">
     //***********************************************************************************************************
     @Test
-    @Ignore
+   @Ignore
     public void testSaveCadestreObject()throws Exception{
         System.out.println(">>> Testing saving CadastreObject");
         UserTransaction tx=getUserTransaction();
         try{
             tx.begin();
             CadastreEJBLocal instance=(CadastreEJBLocal) getEJBInstance(CadastreEJB.class.getSimpleName());
-            CadastreObject cobj=new CadastreObject();
-           // cobj.setTypeCode("parcel");
-           // cobj.setStatusCode("pending");
-            //Transaction bx=new Transaction();
-            cobj.setTransactionId("first");
-            cobj.setMapSheetCode("558fd2b4-ebac-4592-86aa-6d1e28aecf45");
-            cobj.setParcelno(15258);
+            CadastreObject cobj=new CadastreObject();                     
+            cobj.setTransactionId("cadastre-transaction");
+            cobj.setMapSheetCode("ab6d2a4d-ccec-4ab2-91ee-701dbe3ecd42");
+            cobj.setParcelno(1500);
             cobj.setParcelType(0);
+            cobj.setVdc("43055");
+            cobj.setWardno("4");
             instance.saveCadastreObject(cobj);
             tx.commit();
         }catch(Exception e){
@@ -148,8 +147,8 @@ public class CadastreEJBIT extends AbstractEJBTest {
         }
         
     }
-    @Test
-    @Ignore
+ @Test
+   @Ignore
     public void testSaveMapSheet()throws Exception{
         System.out.println(">>> Testing saving Map Sheet");
         UserTransaction tx=getUserTransaction();
@@ -158,7 +157,7 @@ public class CadastreEJBIT extends AbstractEJBTest {
             CadastreEJBLocal instance=(CadastreEJBLocal) getEJBInstance(CadastreEJB.class.getSimpleName());
             MapSheet mapSheet=new MapSheet();
             mapSheet.setAlpha_code("1");
-            mapSheet.setMapNumber("abc123");
+            mapSheet.setMapNumber("0000002");
             mapSheet.setSheetType(1);
             //             cobj.setTypeCode("parcel");
             //             cobj.setStatusCode("pending");
