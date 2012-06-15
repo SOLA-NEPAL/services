@@ -46,7 +46,48 @@ public class Address extends AbstractVersionedEntity {
     private String description;
     @Column(name = "ext_address_id")
     private String extAddressId;
+    //additional fields.
+    @Column(name="street")
+    private String street;
+    @Column(name="districtcode")
+    private String districtCode;
+    @Column(name="vdc_code")
+    private String vdcCode;
+    @Column(name="ward_no")
+    private String wardNo;
+    
+    public String getVdcCode() {
+        return vdcCode;
+    }
 
+    public void setVdcCode(String vdcCode) {
+        this.vdcCode = vdcCode;
+    }
+    
+    public String getWardNo() {
+        return wardNo;
+    }
+
+    public void setWardNo(String wardNo) {
+        this.wardNo = wardNo;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getDistrictCode() {
+        return districtCode;
+    }
+
+    public void setDistrictCode(String districtCode) {
+        this.districtCode = districtCode;
+    }
+    
     public Address() {
         super();
     }

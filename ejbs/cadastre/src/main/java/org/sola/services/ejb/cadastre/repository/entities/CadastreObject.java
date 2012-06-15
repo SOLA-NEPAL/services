@@ -77,6 +77,7 @@ public class CadastreObject extends AbstractVersionedEntity {
     public static final String MAP_SHEET_CODE_PARAM = "mapSheetCode";
     public static final String GET_CADASTRE_BY_MAPSHEET_CODE = "map_sheet_id=#{" + MAP_SHEET_CODE_PARAM + "}";
     //</editor-fold>   
+    
     @Id
     @Column(name = "id")
     private String id;
@@ -107,14 +108,6 @@ public class CadastreObject extends AbstractVersionedEntity {
     //Additional field required for SAEx application.
     @Column(name = "parcel_no")
     private int parcelno;
-    @Column(name = "district")
-    private int district;
-    @Column(name = "vdc")
-    private int vdc;
-    @Column(name = "wardno")
-    private String wardno;
-    @Column(name = "grids1")
-    private String grids1;
     @Column(name = "parcel_note")
     private String parcelNote;
     @Column(name = "parcel_type")
@@ -128,22 +121,6 @@ public class CadastreObject extends AbstractVersionedEntity {
 
     public void setMapSheetCode(String mapSheetCode) {
         this.mapSheetCode = mapSheetCode;
-    }
-
-    public int getDistrict() {
-        return district;
-    }
-
-    public void setDistrict(int district) {
-        this.district = district;
-    }
-
-    public String getGrids1() {
-        return grids1;
-    }
-
-    public void setGrids1(String grids1) {
-        this.grids1 = grids1;
     }
 
     public String getParcelNote() {
@@ -168,22 +145,6 @@ public class CadastreObject extends AbstractVersionedEntity {
 
     public void setParcelno(int parcelno) {
         this.parcelno = parcelno;
-    }
-
-    public int getVdc() {
-        return vdc;
-    }
-
-    public void setVdc(int vdc) {
-        this.vdc = vdc;
-    }
-
-    public String getWardno() {
-        return wardno;
-    }
-
-    public void setWardno(String wardno) {
-        this.wardno = wardno;
     }
 
     public CadastreObject() {
