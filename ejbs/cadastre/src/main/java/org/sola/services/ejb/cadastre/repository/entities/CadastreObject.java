@@ -85,6 +85,7 @@ public class CadastreObject extends AbstractVersionedEntity {
     public static final String GET_BY_MAPSHEET_AND_PARCELNO = "map_sheet_id=#{" + MAP_SHEET_CODE_PARAM + "} and parcel_no=#{" + PARCEL_NO_PARAM + "}";
     //***********************************************************************************************************
     //</editor-fold>   
+    
     @Id
     @Column(name = "id")
     private String id;
