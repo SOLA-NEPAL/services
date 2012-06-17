@@ -86,6 +86,23 @@ public class CadastreObject extends AbstractVersionedEntity {
     //***********************************************************************************************************
     //</editor-fold>   
     
+    //full query by Kabindra
+    public static final String GET_BY_ADMIN_BOUNDARY_SELECT_PART=
+            "p.id, p.type_code, p.map_sheet_id, p.approval_datetime, p.historic_datetime,"
+            + "p.source_reference, p.name_firstpart, p.name_lastpart, p.status_code, p.transaction_id,"
+            + "st_asewkb(p.geom_polygon) as geom_polygon, p.parcel_no, p.parcel_note, p.parcel_type," 
+            +  "p.rowversion, p.change_user, p.rowidentifier";
+    public static final String GET_BY_ADMIN_BOUNDARY_FROM_PART = 
+            "cadastre.cadastre_object as p,"
+            + "cadastre.spatial_unit_address as pa,"
+            + "address.address as a";
+    public static final String GET_BY_ADMIN_BOUNDARY_WHERE_PART =
+            " p.id=pa.spatial_unit_id and " 
+            + " pa.address_id=a.id and " 
+            + " a.vdc_code=#{" + VDC_PARAM
+            + "} and a.ward_no=#{" + WARD_NO_PARAM
+            + "} and p.parcel_no=#{" + PARCEL_NO_PARAM + "}";
+    
     @Id
     @Column(name = "id")
     private String id;

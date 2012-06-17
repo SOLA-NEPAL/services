@@ -125,7 +125,7 @@ public class CadastreEJBIT extends AbstractEJBTest {
     //<editor-fold defaultstate="collapsed" desc="By Kumar">
     //***********************************************************************************************************
     @Test
-   @Ignore
+    @Ignore
     public void testSaveCadestreObject()throws Exception{
         System.out.println(">>> Testing saving CadastreObject");
         UserTransaction tx=getUserTransaction();
@@ -137,8 +137,6 @@ public class CadastreEJBIT extends AbstractEJBTest {
             cobj.setMapSheetCode("ab6d2a4d-ccec-4ab2-91ee-701dbe3ecd42");
             cobj.setParcelno(1500);
             cobj.setParcelType(0);
-            cobj.setVdc("43055");
-            cobj.setWardno("4");
             instance.saveCadastreObject(cobj);
             tx.commit();
         }catch(Exception e){

@@ -475,7 +475,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         }
     }
     
-    //@Ignore
+    @Ignore
     @Test
     public void testSaveMoth() throws Exception {
         System.out.println(">>> Testing saving moth");
@@ -508,8 +508,6 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             cobj.setTransactionId("cadastre-transaction");
             cobj.setParcelno(1501);
             cobj.setParcelType(0);
-            cobj.setVdc("43055");
-            cobj.setWardno("1");
             MapSheet mapSheet = new MapSheet();
             mapSheet.setMapNumber("M0002");
             mapSheet.setSheetType(0);
