@@ -53,7 +53,6 @@ import org.sola.services.ejb.address.repository.entities.Address;
 @Table(name = "party", schema = "party")
 @DefaultSorter(sortString = "name, last_name")
 public class Party extends AbstractVersionedEntity {
-
     public static final String TYPE_CODE_NON_NATURAL_PERSON = "nonNaturalPerson";
     public static final String TYPE_CODE_NATURAL_PERSON = "naturalPerson";
     public static final String QUERY_WHERE_BYTYPECODE = "type_code = #{partyTypeCode}";
@@ -103,8 +102,6 @@ public class Party extends AbstractVersionedEntity {
     @Column(name = "party.is_rightholder(id) AS is_rightholder", insertable = false, updatable = false)
     private boolean rightHolder;
     
-    @Column(name="street")
-    private String street;
     //additional fields
     @Column(name="grandfather_name")
     private String grandfatherName;
@@ -112,34 +109,12 @@ public class Party extends AbstractVersionedEntity {
     private String grandFatherLastName;
     @Column(name="date_of_birth")
     private Date birthDate;
-    @Column(name="districtcode")
-    private String districtCode;
-    @Column(name="vdc_code")
-    private String vdcCode;
-    @Column(name="ward_no")
-    private int wardNo;
     @Column(name="remarks")
     private String rmks;
     @Column(name="id_provider_office_code")
     private String issuingOfficeCode;
     @Column(name="id_issue_date")
     private Date idIssueDate;
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getDistrictCode() {
-        return districtCode;
-    }
-
-    public void setDistrictCode(String districtCode) {
-        this.districtCode = districtCode;
-    }
     
     public Date getBirthDate(){
         return birthDate;
@@ -189,22 +164,6 @@ public class Party extends AbstractVersionedEntity {
         this.rmks = rmks;
     }
 
-    public String getVdcCode() {
-        return vdcCode;
-    }
-
-    public void setVdcCode(String vdcCode) {
-        this.vdcCode = vdcCode;
-    }
-
-    public int getWardNo() {
-        return wardNo;
-    }
-
-    public void setWardNo(int wardNo) {
-        this.wardNo = wardNo;
-    }
-    
     public Party() {
         super();
     }

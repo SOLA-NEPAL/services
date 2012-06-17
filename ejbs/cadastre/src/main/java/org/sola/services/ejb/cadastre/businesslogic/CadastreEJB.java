@@ -308,10 +308,13 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         return getRepository().getEntityList(MapSheet.class, params);
     }
 
+    //modified by Kabindra.
     @Override
     public CadastreObject getCadastreObject(String vdcCode, String wardNo, int parcelNo) {
         Map params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_WHERE_PART, CadastreObject.GET_BY_VDC_AND_WARD_NO_PARCEL_NO);
+        params.put(CommonSqlProvider.PARAM_SELECT_PART, CadastreObject.GET_BY_ADMIN_BOUNDARY_SELECT_PART);
+        params.put(CommonSqlProvider.PARAM_FROM_PART,CadastreObject.GET_BY_ADMIN_BOUNDARY_FROM_PART);
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, CadastreObject.GET_BY_ADMIN_BOUNDARY_WHERE_PART);
         params.put(CadastreObject.VDC_PARAM, vdcCode);
         params.put(CadastreObject.PARCEL_NO_PARAM, parcelNo);
         params.put(CadastreObject.WARD_NO_PARAM, wardNo);
