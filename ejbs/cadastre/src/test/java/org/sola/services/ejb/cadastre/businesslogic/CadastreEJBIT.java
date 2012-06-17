@@ -157,7 +157,7 @@ public class CadastreEJBIT extends AbstractEJBTest {
             tx.begin();
             CadastreEJBLocal instance=(CadastreEJBLocal) getEJBInstance(CadastreEJB.class.getSimpleName());
             MapSheet mapSheet=new MapSheet();
-            mapSheet.setAlpha_code("1");
+//            mapSheet.setAlphaCode("1");
             mapSheet.setMapNumber("abc123");
             mapSheet.setSheetType(1);
             //             cobj.setTypeCode("parcel");
