@@ -34,6 +34,9 @@ package org.sola.services.ejb.application.repository.entities;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.sola.services.common.repository.AccessFunctions;
+import org.sola.services.common.repository.ChildEntity;
+import org.sola.services.common.repository.ChildEntityList;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
 
 /**
@@ -63,6 +66,10 @@ public class ServiceActionTaker extends AbstractVersionedEntity {
     @Column(name = "action_code")
     private String actionCode;
 
+    @Column(name = "office_code", insertable=false, updatable=false)
+    @AccessFunctions(onSelect="(SELECT office_code FROM application.application a WHERE a.id = application_id)")
+    private String officeCode;
+    
     public ServiceActionTaker() {
         super();
     }
@@ -92,7 +99,6 @@ public class ServiceActionTaker extends AbstractVersionedEntity {
         this.actionCode = actionCode;
     }
 
-
     public String getRequestTypeCode() {
         return requestTypeCode;
     }
@@ -107,5 +113,13 @@ public class ServiceActionTaker extends AbstractVersionedEntity {
 
     public void setStatusCode(String statusCode) {
         this.statusCode = statusCode;
+    }
+
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public void setOfficeCode(String officeCode) {
+        this.officeCode = officeCode;
     }
 }

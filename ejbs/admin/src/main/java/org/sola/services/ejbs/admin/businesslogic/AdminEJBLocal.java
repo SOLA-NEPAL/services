@@ -206,5 +206,25 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
 
     /** Returns office object related to the current user. */
     Office getCurrentOffice();
+    
+    String getCurrentOfficeCode();
+    
+    /**
+     * Checks provided office code against the office code of the current user. 
+     * By default exception will be thrown if codes are different.
+     *
+     * @param officeCode Provided office code to check
+     */
+    boolean checkOfficeCode(String officeCode);
+    
+    /**
+     * Checks provided office code against the office code of the current user. 
+     *
+     * @param officeCode Provided office code to check
+     * @param throwException Boolean flag indicating whether to throw an
+     * exception in case of office code difference with current user office
+     * code.
+     */
+    boolean checkOfficeCode(String officeCode, boolean throwException);
 }
 

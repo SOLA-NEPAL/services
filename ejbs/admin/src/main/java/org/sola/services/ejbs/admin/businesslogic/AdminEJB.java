@@ -371,7 +371,28 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
         }
         return currentOffice;
     }
+    
+    @Override
+    public String getCurrentOfficeCode(){
+        Office office = getCurrentOffice();
+        if(office!=null){
+            return office.getCode();
+        }else{
+            return null;
+        }
+    }
 
+    @Override
+    public boolean checkOfficeCode(String officeCode) {
+        return checkOfficeCode(officeCode, true);
+    }
+
+    @Override
+    public boolean checkOfficeCode(String officeCode, boolean throwException) {
+        return checkOfficeCode(officeCode, getCurrentOfficeCode(), throwException);
+    }
+    
+    @Override
     public Vdc saveVdc(Vdc vdc) {
         return getRepository().saveEntity(vdc);
     }

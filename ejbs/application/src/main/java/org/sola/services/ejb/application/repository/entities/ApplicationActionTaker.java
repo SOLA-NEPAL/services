@@ -56,6 +56,8 @@ public class ApplicationActionTaker extends AbstractVersionedEntity {
     private Date assignedDatetime;
     @Column(name = "assignee_id")
     private String assigneeId;
+    @Column(name="office_code")
+    private String officeCode;
 
     public ApplicationActionTaker() {
         super();
@@ -102,5 +104,11 @@ public class ApplicationActionTaker extends AbstractVersionedEntity {
         this.assigneeId = assigneeId;
     }
     
-    
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public void setOfficeCode(String officeCode) {
+        this.officeCode = officeCode;
+    }
 }
