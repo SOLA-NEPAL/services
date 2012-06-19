@@ -25,6 +25,9 @@ public class MapSheet extends AbstractEntity {
     private String mapNumber;
     @Column(name = "sheet_type")
     private int sheetType;
+    @Column(name="office_code")
+    private String officeCode;
+            
 //    @Column(name = "alpha_code")
 //    private String alphaCode;
 
@@ -60,4 +63,13 @@ public class MapSheet extends AbstractEntity {
     public void setSheetType(int sheetType) {
         this.sheetType = sheetType;
     }
+
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public void setOfficeCode(String officeCode) {
+        this.officeCode = officeCode;
+    }
+    
 }
