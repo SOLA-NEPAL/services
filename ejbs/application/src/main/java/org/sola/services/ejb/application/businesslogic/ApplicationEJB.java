@@ -146,7 +146,8 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
 
         application.setAssignedDatetime(DateUtility.now());
         application.setAssigneeId(adminEJB.getCurrentUser().getId());
-
+        application.setOfficeCode(adminEJB.getCurrentOfficeCode());
+        
         if (application.getLodgingDatetime() == null) {
             application.setLodgingDatetime(DateUtility.now());
         }
@@ -311,13 +312,18 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
         if (application == null) {
             return application;
         }
+        
+        if(application.isNew()){
+            application.setOfficeCode(adminEJB.getCurrentOfficeCode());
+        } else {
+            adminEJB.checkOfficeCode(application.getOfficeCode());
+        }
+        
         Date now = DateUtility.now();
         if (application.getServiceList() != null) {
             List<RequestType> requestTypes = this.getRequestTypes("en");
             for (Service ser : application.getServiceList()) {
                 if (ser.isNew()) {
-                    //ser.setStatusCode(ServiceStatusType.STATUS_LODGED);
-                    //ser.setActionCode(ServiceActionType.LODGED);
                     ser.setLodgingDatetime(now);
                     ser.setExpectedCompletionDate(
                             calculateServiceCompletionDate(requestTypes, ser, now));
@@ -588,7 +594,7 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
                 // Check current assignee
                 checkUser(application.getAssigneeId());
             }
-
+            
             application.setAssigneeId(userId);
             application.setAssignedDatetime(Calendar.getInstance().getTime());
             validationResults.addAll(this.takeActionAgainstApplication(application,
@@ -740,15 +746,21 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
 
     private List<ValidationResult> takeActionAgainstService(
             String serviceId, String actionCode, String languageCode, int rowVersion) {
+        
         ServiceActionTaker service = getRepository().getEntity(ServiceActionTaker.class, serviceId);
+        
         if (service == null) {
             throw new SOLAException(ServiceMessage.EJB_APPLICATION_SERVICE_NOT_FOUND);
         }
 
+        adminEJB.checkOfficeCode(service.getOfficeCode());
+        
         ServiceActionType serviceActionType =
                 getRepository().getCode(ServiceActionType.class, actionCode, languageCode);
+        
         List<ValidationResult> validationResultList = this.validateService(
                 service, languageCode, serviceActionType);
+        
         if (systemEJB.validationSucceeded(validationResultList)) {
             transactionEJB.changeTransactionStatusFromService(
                     serviceId, serviceActionType.getStatusToSet());
@@ -776,6 +788,8 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
             ApplicationActionTaker application, String actionCode,
             String languageCode, int rowVersion) {
 
+        adminEJB.checkOfficeCode(application.getOfficeCode());
+        
         List<BrValidation> brValidationList =
                 systemEJB.getBrForValidatingApplication(actionCode);
 
