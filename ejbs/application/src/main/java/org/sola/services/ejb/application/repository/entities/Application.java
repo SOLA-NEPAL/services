@@ -112,7 +112,9 @@ public class Application extends AbstractVersionedEntity {
     @ChildEntityList(parentIdField = "applicationId", childIdField = "sourceId",
     manyToManyClass = ApplicationUsesSource.class)
     private List<Source> sourceList;
-
+    @Column(name="office_code", updatable=false)
+    private String officeCode;
+    
     public Application() {
         super();
     }
@@ -313,6 +315,14 @@ public class Application extends AbstractVersionedEntity {
 
     public void setSourceList(List<Source> sourceList) {
         this.sourceList = sourceList;
+    }
+
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public void setOfficeCode(String officeCode) {
+        this.officeCode = officeCode;
     }
 
     @Override

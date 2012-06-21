@@ -511,7 +511,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             MapSheet mapSheet = new MapSheet();
             mapSheet.setMapNumber("M0002");
             mapSheet.setSheetType(0);
-           // mapSheet.setAlpha_code("1");
+            //mapSheet.setAlphaCode("1");
             cobj.setMapSheet(mapSheet);
             cobj.setMapSheetCode(mapSheet.getId());
             
