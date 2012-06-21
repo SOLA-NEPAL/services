@@ -207,14 +207,7 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
     Vdc getVdcByName(String vdcName);
     //***************************************************************************************
     //</editor-fold>
-
-    /**
-     * Get list of Offices by District code.
-     */
-    List<Office> getOfficesByDistrict(String districtCode, String lang);
-
-    /** Returns office object related to the current user. */
-    Office getCurrentOffice();
+    
     
     String getCurrentOfficeCode();
     
