@@ -47,6 +47,7 @@ import org.junit.Test;
 import org.sola.common.DateUtility;
 import org.sola.services.common.EntityAction;
 import org.sola.services.common.test.AbstractEJBTest;
+import org.sola.services.ejb.address.repository.entities.Address;
 import org.sola.services.ejb.administrative.repository.entities.*;
 import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
 import org.sola.services.ejb.cadastre.repository.entities.MapSheet;
@@ -91,7 +92,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
 
         AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
 
-
+        
         // Manage the scope of the transction 
         UserTransaction tx = getUserTransaction();
         try {
@@ -433,7 +434,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         }
     }
     
-    @Ignore
+  @Ignore
     @Test
     public void getMothById() throws Exception {
         System.out.println(">>> Testing getting moth by id");
@@ -442,7 +443,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         try {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
             tx.begin();
-            Moth result = instance.getMoth("9a4915ec-765e-4d1b-9e0a-0a73204cea5f");
+            Moth result = instance.getMoth("032a8c58-a7a6-4831-aeab-1b0d93849e0e");
             
             tx.commit();
         } catch (Exception e) {
@@ -451,7 +452,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         }
     }
     
-    @Ignore
+   @Ignore
     @Test
     public void saveBaUnit() throws Exception {
         System.out.println(">>> Testing saving Bauint");
@@ -460,7 +461,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
             BaUnit baUnit = new BaUnit();
             tx.begin();
-            baUnit.setLocId("8cbe76be-b7e6-4aa9-8ea7-64bd9e19f217");
+            baUnit.setLocId("5063d6e3-c48d-4465-b268-8dd52defd2cc");
             baUnit.setTypeCode("administrativeUnit");
             baUnit.setName("TestBaunit");
             baUnit.setNameFirstpart("TestBaunit");
@@ -485,10 +486,9 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             List<Moth> mothList = new ArrayList<Moth>();
             Moth moth = new Moth();
             moth.setMothlujNumber("MOOO2");
-            moth.setVdcCode("43055");
-            moth.setWardNo("1");
+            moth.setVdcCode("43055");          
             moth.setMothLuj("M");
-            moth.setFinancialYear(69);          
+            moth.setFinancialYear("69");          
 
             Loc loc = new Loc();
             loc.setMothId(moth.getId());
@@ -511,7 +511,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             MapSheet mapSheet = new MapSheet();
             mapSheet.setMapNumber("M0002");
             mapSheet.setSheetType(0);
-            mapSheet.setAlpha_code("1");
+           // mapSheet.setAlpha_code("1");
             cobj.setMapSheet(mapSheet);
             cobj.setMapSheetCode(mapSheet.getId());
             
@@ -528,6 +528,20 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             List<CadastreObject> cadObjList = new ArrayList<CadastreObject>();
             cadObjList.add(cobj);
             baUnit.setCadastreObjectList(cadObjList);
+            
+            Party owner = new Party();
+            owner.setTypeCode("baunit");
+            owner.setName("Kumar");
+            owner.setLastName("Khadka");            
+            Address add = new Address();
+            add.setDescription("Testing");
+            add.setVdcCode("43055");
+            add.setDistrictCode("25");            
+            owner.setAddress(add);
+            List<Party> partyList=new ArrayList<Party>();
+            partyList.add(owner);
+            baUnit.setParties(partyList);
+            
             List<BaUnit> baUnitList = new ArrayList<BaUnit>();
             baUnitList.add(baUnit);
             loc.setBaUnits(baUnitList);
@@ -560,6 +574,46 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
+        }
+    }
+    
+    @Ignore
+    @Test
+    public void saveBaUnitContainsSpatialUnit() throws Exception {
+        System.out.println(">>> Testing saving BaUnitContainsSpatialUnit");
+        UserTransaction tx = getUserTransaction();
+        try {
+            AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
+            BaUnitContainsSpatialUnit baUnitContains = new BaUnitContainsSpatialUnit();
+            tx.begin();
+            baUnitContains.setBaUnitId("a0c54e1c-d655-49ce-8f13-c4d9e06eac45");
+            baUnitContains.setSpatialUnitId("17988e25-4424-4f45-9a0d-7eb5d4d671ca");            
+            instance.saveBaUnitContainsSpatialUnit(baUnitContains);
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            fail(e.getMessage());
+            
+        }
+    }
+    
+    @Ignore
+    @Test
+    public void saveBaUnitAsParty() throws Exception {
+        System.out.println(">>> Testing saving BaUnitAsParty");
+        UserTransaction tx = getUserTransaction();
+        try {
+            AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
+            BaUnitAsParty baUnitContains = new BaUnitAsParty();
+            tx.begin();
+            baUnitContains.setBaUnitId("a0c54e1c-d655-49ce-8f13-c4d9e06eac45");
+            baUnitContains.setPartyId("");
+          //  instance.saveBaUnitAsParty(baUnitContains);
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            fail(e.getMessage());
+            
         }
     }
     //***********************************************************************************************************

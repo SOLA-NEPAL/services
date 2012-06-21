@@ -134,7 +134,7 @@ public class CadastreEJBIT extends AbstractEJBTest {
             CadastreEJBLocal instance=(CadastreEJBLocal) getEJBInstance(CadastreEJB.class.getSimpleName());
             CadastreObject cobj=new CadastreObject();                     
             cobj.setTransactionId("cadastre-transaction");
-            cobj.setMapSheetCode("ab6d2a4d-ccec-4ab2-91ee-701dbe3ecd42");
+            cobj.setMapSheetCode("3cde8359-396c-4ff0-b99d-6160b13828cc");
             cobj.setParcelno(1500);
             cobj.setParcelType(0);
             instance.saveCadastreObject(cobj);
@@ -146,7 +146,7 @@ public class CadastreEJBIT extends AbstractEJBTest {
         
     }
  @Test
-   @Ignore
+ @Ignore
     public void testSaveMapSheet()throws Exception{
         System.out.println(">>> Testing saving Map Sheet");
         UserTransaction tx=getUserTransaction();
@@ -154,7 +154,7 @@ public class CadastreEJBIT extends AbstractEJBTest {
             tx.begin();
             CadastreEJBLocal instance=(CadastreEJBLocal) getEJBInstance(CadastreEJB.class.getSimpleName());
             MapSheet mapSheet=new MapSheet();
-            mapSheet.setAlpha_code("1");
+           // mapSheet.setAlpha_code("1");
             mapSheet.setMapNumber("0000002");
             mapSheet.setSheetType(1);
             //             cobj.setTypeCode("parcel");

@@ -36,53 +36,6 @@ import org.sola.services.ejbs.admin.businesslogic.repository.entities.*;
 
 public interface AdminEJBLocal extends AbstractEJBLocal {
 
-    LandOwner saveLandOwner(LandOwner owner);
-
-    /**
-     * List of nepali year from database with out any parameter given
-     */
-    List<Integer> getNepaliYear();
-
-    /**
-     * Returns List of Nepali date from database with out any parameter given
-     */
-    List<NepaliMonth> getNepaliMonths();
-
-    /**
-     * Returns List of Nepali date from database
-     *
-     * @param year parameter to return list of month in given year
-     */
-    List<NepaliMonth> getNepaliMonths(int year);
-
-    /**
-     * Returns the entity NepaliMonth
-     *
-     * @param year nepali year
-     * @param month nepali month
-     */
-    NepaliMonth getNepaliMonth(int year, int month);
-
-    /**
-     * Returns List of Nepali date from database
-     *
-     * @param year parameter to return list of month in given year
-     */
-    NepaliMonth saveNepaliMonth(NepaliMonth nepaliMonth);
-
-    /**
-     * Returns Nepali date @parma date Date to convert
-     */
-    String getNepaliDate(Date date);
-
-    /**
-     * Returns Gregorian date @parma nepaliDate Nepali date
-     */
-    Date getGregorianDate(String nepaliDate);
-
-    /**
-     * Returns list of all users.
-     */
     List<User> getUsers();
 
     /**
@@ -180,23 +133,8 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
      */
     boolean checkUserFromOffice(String userId, String officeCode);
 
-    /**
-     * Returns list of District Names
-     */
-    List<Vdc> getVdcList();
-
-    /**
-     * RReturns Vdc according to given code.
-     */
-    Vdc getVdcByCode(String vdcCode);
-
-    /**
-     * Returns Vdc according to given Name.
-     */
-    Vdc getVdcByName(String vdcName);
-
     //<editor-fold defaultstate="collapsed" desc="By Dinesh">
-    Vdc saveVdc(Vdc vdc);    
+    Vdc saveVdc(Vdc vdc);
     //</editor-fold>
 
     /**
@@ -204,7 +142,69 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
      */
     List<Office> getOfficesByDistrict(String districtCode, String lang);
 
-    /** Returns office object related to the current user. */
+    /**
+     * Returns office object related to the current user.
+     */
     Office getCurrentOffice();
-}
 
+    //<editor-fold defaultstate="collapsed" desc="By Kumar ">
+    //***************************************************************************************
+    /**
+     * List of nepali year from database with out any parameter given
+     */
+    List<Integer> getNepaliYear();
+    
+    /**
+     * Returns List of Nepali date from database with out any parameter given
+     */
+    List<NepaliMonth> getNepaliMonths();
+    
+    /**
+     * Returns List of Nepali date from database
+     *
+     * @param year parameter to return list of month in given year
+     */
+    List<NepaliMonth> getNepaliMonths(int year);
+    
+    /**
+     * Returns the entity NepaliMonth
+     *
+     * @param year nepali year
+     * @param month nepali month
+     */
+    NepaliMonth getNepaliMonth(int year, int month);
+    
+    /**
+     * Returns List of Nepali date from database
+     *
+     * @param year parameter to return list of month in given year
+     */
+    NepaliMonth saveNepaliMonth(NepaliMonth nepaliMonth);
+    
+    /**
+     * Returns Nepali date @parma date Date to convert
+     */
+    String getNepaliDate(Date date);
+    
+    /**
+     * Returns Gregorian date @parma nepaliDate Nepali date
+     */
+    Date getGregorianDate(String nepaliDate);
+    
+    /**
+     * Returns list of vdc Names
+     */
+    List<Vdc> getVdcList();
+    
+    /**
+     * RReturns Vdc according to given code.
+     */
+    Vdc getVdcByCode(String vdcCode);
+    
+    /**
+     * Returns Vdc according to given Name.
+     */
+    Vdc getVdcByName(String vdcName);
+    //***************************************************************************************
+    //</editor-fold>
+}

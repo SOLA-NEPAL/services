@@ -138,7 +138,7 @@ public class PartyEJBIT extends AbstractEJBTest {
      * Test of saveParty method, of class PartyEJB.
      */
 
-  @Ignore
+ @Ignore
     @Test
     public void testSaveParty() throws Exception {
         System.out.println(">>> Testing saving land owner");
@@ -149,12 +149,14 @@ public class PartyEJBIT extends AbstractEJBTest {
             Party owner = new Party();
            // owner.setId("pqr11");
             owner.setTypeCode("baunit");
-            owner.setName("sfdf");
-            owner.setLastName("sfdf");
+            owner.setName("Kumar");
+            owner.setLastName("Khadka");
 
             //owner.setAddressId("myIdsd");
             Address add = new Address();
-            add.setDescription("dfof");
+            add.setDescription("Testing");
+            add.setVdcCode("43055");
+            add.setDistrictCode("25");            
             owner.setAddress(add);
 //            List<PartyRole> roleList = new ArrayList<PartyRole>();
 //            PartyRole role = new PartyRole();

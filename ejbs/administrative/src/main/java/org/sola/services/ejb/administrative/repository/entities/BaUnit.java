@@ -41,6 +41,8 @@ import org.sola.services.common.repository.RepositoryUtility;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
 import org.sola.services.ejb.cadastre.businesslogic.CadastreEJBLocal;
 import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
+import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
+import org.sola.services.ejb.party.repository.entities.Party;
 import org.sola.services.ejb.source.businesslogic.SourceEJBLocal;
 import org.sola.services.ejb.source.repository.entities.Source;
 import org.sola.services.ejb.system.br.Result;
@@ -112,12 +114,46 @@ public class BaUnit extends AbstractVersionedEntity {
     private List<ParentBaUnitInfo> parentBaUnits;
     @Column(insertable = false, updatable = false, name = "pending_action_code")
     @AccessFunctions(onSelect = "administrative.get_ba_unit_pending_action(id)")
-    private String pendingActionCode;
-
+    private String pendingActionCode;    
+    //modified by Kumar
+    @ExternalEJB(ejbLocalClass = PartyEJBLocal.class,
+    loadMethod = "getParties", saveMethod = "saveParty")
+    @ChildEntityList(parentIdField = "baUnitId", childIdField = "partyId",
+    manyToManyClass = BaUnitAsParty.class)
+    private List<Party> parties;    
+    @Column(name = "office_code")
+    private String officeCode;
+    
     public BaUnit() {
         super();
     }
 
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public List<Party> getParties() {
+        return parties;
+    }
+
+    public void setParties(List<Party> parties) {
+        this.parties = parties;
+    }
+
+    
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
+
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public void setOfficeCode(String officeCode) {
+        this.officeCode = officeCode;
+    }
+
+    
     public String getLocId() {
         return locId;
     }

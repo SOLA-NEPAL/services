@@ -18,11 +18,10 @@ import org.sola.services.common.repository.entities.AbstractVersionedEntity;
  */
 @Table(name = "land_owner_certificate", schema = "administrative")
 public class Loc extends AbstractVersionedEntity {
-    
+
     public static final String PANA_NO_PARAM = "panaNo";
     public static final String MOTH_ID_PARAM = "mothId";
     public static final String GET_BY_MOTH_ID_AND_PANA_NO = "pana_no=#{" + PANA_NO_PARAM + "} and moth_id=#{" + MOTH_ID_PARAM + "}";
-    
     @Id
     @Column(name = "id")
     private String id;
@@ -36,11 +35,22 @@ public class Loc extends AbstractVersionedEntity {
     private int propertyType;
     @Column(name = "oshp_type")
     private int oshpType;
-    @Column(name = "transaction_no")
-    private int transactionNo;
+    @Column(name = "transaction_id")
+    private String transactionId;
     @ChildEntityList(parentIdField = "locId")
     private List<BaUnit> baUnits;
+    @Column(name = "office_code")
+    private String officeCode;
 
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public void setOfficeCode(String officeCode) {
+        this.officeCode = officeCode;
+    }
+
+   
     public List<BaUnit> getBaUnits() {
         baUnits = baUnits == null ? new ArrayList<BaUnit>() : baUnits;
         return baUnits;
@@ -99,11 +109,11 @@ public class Loc extends AbstractVersionedEntity {
         this.tmpPanaNo = tmpPanaNo;
     }
 
-    public int getTransactionNo() {
-        return transactionNo;
+    public String getTransactionId() {
+        return transactionId;
     }
 
-    public void setTransactionNo(int transactionNo) {
-        this.transactionNo = transactionNo;
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
     }
 }

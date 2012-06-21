@@ -69,24 +69,28 @@ public interface AdministrativeEJBLocal extends AbstractSolaTransactionEJBLocal 
     //<editor-fold defaultstate="collapsed" desc="By Kumar">
     //***********************************************************************************************************
     Moth saveMoth(Moth moth);
-    
+
     Moth getMoth(String id);
-    
+
     List<Moth> getMoths(String vdcCode, String mothLuj);
-    
+
     Moth getMoth(String vdcCode, String mothLuj, String mothLujNumber);
-    
+
     Loc saveLoc(Loc loc);
-    
+
     Loc getLoc(String id);
-    
+
     BaUnit saveBaUnit(BaUnit baUnit);
-    
-    Loc getLocByPageNoAndMothId(int panaNo,String mothId);
-    
+
+    Loc getLocByPageNoAndMothId(int panaNo, String mothId);
+
     BaUnitContainsSpatialUnit saveBaUnitContainsSpatialUnit(BaUnitContainsSpatialUnit baUnitContainsSpatialUnit);
-    
+
     BaUnitContainsSpatialUnit getBaUnitContainsSpatialUnit(String id);
+
+    BaUnitAsParty getBaUnitAsParty(String id);
+
+    BaUnitAsParty saveBaUnitAsParty(BaUnitAsParty baUnitAsParty);
 }
 //***********************************************************************************************************
 //</editor-fold>
