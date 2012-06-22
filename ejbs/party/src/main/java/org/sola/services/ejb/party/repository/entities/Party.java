@@ -39,14 +39,14 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import org.sola.services.common.ejbs.AbstractEJB;
 import org.sola.services.common.repository.ChildEntity;
 import org.sola.services.common.repository.ChildEntityList;
 import org.sola.services.common.repository.DefaultSorter;
 import org.sola.services.common.repository.ExternalEJB;
-import org.sola.services.common.repository.entities.AbstractEntity;
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
+import org.sola.services.digitalarchive.businesslogic.DigitalArchiveEJBLocal;
+import org.sola.services.digitalarchive.repository.entities.Document;
 import org.sola.services.ejb.address.businesslogic.AddressEJBLocal;
 import org.sola.services.ejb.address.repository.entities.Address;
 
@@ -117,10 +117,119 @@ public class Party extends AbstractVersionedEntity {
     private String issuingOfficeCode;
     @Column(name = "id_issue_date")
     private Date idIssueDate;
-    @Column(name="office_code", updatable=false)
-    private String officeCode;
+    //additional fields for image storage.
+    @Column(name="photo_id")
+    private String photoId;
+    @Column(name="left_finger_id")
+    private String leftFingerId;
+    @Column(name="right_finger_id")
+    private String rightFingerId;
+    @Column(name="signature_id")
+    private String signatureId;
+    
+    @ExternalEJB(ejbLocalClass=DigitalArchiveEJBLocal.class,
+            loadMethod = "getDocument",
+            saveMethod= "saveDocument")
+    @ChildEntity(childIdField="photoId")
+    private Document photoDoc;
+    
+    @ExternalEJB(ejbLocalClass=DigitalArchiveEJBLocal.class,
+            loadMethod = "getDocument",
+            saveMethod= "saveDocument")
+    @ChildEntity(childIdField="leftFingerId")
+    private Document leftFingerDoc;
+    
+    @ExternalEJB(ejbLocalClass=DigitalArchiveEJBLocal.class,
+            loadMethod = "getDocument",
+            saveMethod= "saveDocument")
+    @ChildEntity(childIdField="rightFingerId")
+    private Document rightFingerDoc;
+    
+    @ExternalEJB(ejbLocalClass=DigitalArchiveEJBLocal.class,
+            loadMethod = "getDocument",
+            saveMethod= "saveDocument")
+    @ChildEntity(childIdField="signatureId")
+    private Document signatureDoc;
 
-    public Date getBirthDate() {
+    private String officeCode;
+    
+    public Document getLeftFingerDoc() {
+        return leftFingerDoc;
+    }
+
+    public void setLeftFingerDoc(Document leftFingerDoc) {
+        this.leftFingerDoc = leftFingerDoc;
+        if (this.leftFingerDoc!=null){
+            this.setLeftFingerId(leftFingerDoc.getId());
+        }
+    }
+
+    public String getLeftFingerId() {
+        return leftFingerId;
+    }
+
+    public void setLeftFingerId(String leftFingerId) {
+        this.leftFingerId = leftFingerId;
+    }
+
+    public Document getPhotoDoc() {
+        return photoDoc;
+    }
+
+    public void setPhotoDoc(Document photoDoc) {
+        this.photoDoc = photoDoc;
+        if (this.photoDoc!=null){
+            this.setPhotoId(photoDoc.getId());
+        }
+    }
+
+    public String getPhotoId() {
+        return photoId;
+    }
+
+    public void setPhotoId(String photoId) {
+        this.photoId = photoId;
+    }
+
+    public Document getRightFingerDoc() {
+        return rightFingerDoc;
+    }
+
+    public void setRightFingerDoc(Document rightFingerDoc) {
+        this.rightFingerDoc = rightFingerDoc;
+        if (this.rightFingerDoc!=null){
+            this.setRightFingerId(rightFingerDoc.getId());
+        }
+    }
+
+    public String getRightFingerId() {
+        return rightFingerId;
+    }
+
+    public void setRightFingerId(String rightFingerId) {
+        this.rightFingerId = rightFingerId;
+    }
+
+    public Document getSignatureDoc() {
+        return signatureDoc;
+    }
+
+    public void setSignatureDoc(Document signatureDoc) {
+        this.signatureDoc = signatureDoc;
+        if (this.signatureDoc!=null){
+            this.setSignatureId(signatureDoc.getId());
+        }
+    }
+
+    public String getSignatureId() {
+        return signatureId;
+    }
+
+    public void setSignatureId(String signatureId) {
+        this.signatureId = signatureId;
+    }
+    
+    public Date getBirthDate(){
         return birthDate;
     }
 
@@ -269,14 +378,6 @@ public class Party extends AbstractVersionedEntity {
         this.fax = fax;
     }
 
-    public String getAddressId() {
-        return addressId;
-    }
-
-    public void setAddressId(String addressId) {
-        this.addressId = addressId;
-    }
-
     public String getPreferredCommunicationCode() {
         return preferredCommunicationCode;
     }
@@ -293,6 +394,14 @@ public class Party extends AbstractVersionedEntity {
         this.typeCode = typeCode;
     }
 
+    public String getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(String addressId) {
+        this.addressId = addressId;
+    }
+    
     public Address getAddress() {
         return address;
     }

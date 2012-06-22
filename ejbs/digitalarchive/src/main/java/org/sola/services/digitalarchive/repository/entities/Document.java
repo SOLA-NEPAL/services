@@ -36,7 +36,10 @@ package org.sola.services.digitalarchive.repository.entities;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.sola.services.common.repository.RepositoryUtility;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
+import org.sola.services.ejb.system.br.Result;
+import org.sola.services.ejb.system.businesslogic.SystemEJBLocal;
 
 /**
  * Entity representing the document.document table.
@@ -113,5 +116,30 @@ public class Document extends AbstractVersionedEntity {
 
     public void setOfficeCode(String officeCode) {
         this.officeCode = officeCode;
+    }
+    
+    @Override
+    public void preSave() {
+        if (isNew() && getNr() == null) {
+            setNr(generateDocumentNumber());
+        }
+
+        super.preSave();
+    }
+    
+    private String generateDocumentNumber() {
+        String result = "";
+        SystemEJBLocal systemEJB = RepositoryUtility.tryGetEJB(SystemEJBLocal.class);
+        if (systemEJB != null) {
+            Result newNumberResult = systemEJB.checkRuleGetResultSingle("generate-document-nr", null);
+            if (newNumberResult != null && newNumberResult.getValue() != null) {
+                result = newNumberResult.getValue().toString();
+            }
+        }
+        return result;
+    }
+    
+    public void generateNr(){
+        setNr(generateDocumentNumber());
     }
 }
