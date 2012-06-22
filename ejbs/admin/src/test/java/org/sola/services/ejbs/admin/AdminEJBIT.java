@@ -628,36 +628,6 @@ public class AdminEJBIT extends AbstractEJBTest {
         }
     }
     
-    @Ignore
-    @Test
-    public void testSaveLandOwner() throws Exception {
-        System.out.println(">>> Testing saving land owner");
-        UserTransaction tx = getUserTransaction();
-        try {
-            AdminEJBLocal instance = (AdminEJBLocal) getEJBInstance(AdminEJB.class.getSimpleName());
-            List<LandOwner> list = new ArrayList<LandOwner>();
-            LandOwner owner = new LandOwner();
-            owner.setFirstName("Kumar");
-            owner.setLastName("Khadka");
-            list.add(owner);
-
-            owner = new LandOwner();
-            owner.setFirstName("KK");
-            owner.setLastName("Khadka");
-            list.add(owner);
-
-            tx.begin();
-            for (LandOwner onn : list) {
-                instance.saveLandOwner(onn);
-            }
-            tx.commit();
-
-        } catch (Exception e) {
-            tx.rollback();
-            fail(e.getMessage());
-        }
-    }
-    
     
     @Ignore
     @Test

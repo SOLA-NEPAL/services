@@ -35,38 +35,48 @@ public class Moth extends AbstractVersionedEntity {
     private String mothlujNumber;
     @Column(name = "vdc_code")
     private String vdcCode;
-    @Column(name = "ward_no")
-    private String wardNo;
     @Column(name = "moth_luj")
     private String mothLuj;
-    @Column(name = "financialyear")
-    private int financialYear;
-    @Column(name = "lmocd")
-    private int lmocd;
+    @Column(name = "financial_year")
+    private String financialYear;
+    @Column(name = "office_code")
+    private String officeCode;
+    @Column(name = "transaction_id")
+    private String transactionId;
     @ExternalEJB(ejbLocalClass = AdminEJBLocal.class, loadMethod = "getVdcByCode")
     @ChildEntity(childIdField = "vdcCode")
     private Vdc vdc;
     // @ExternalEJB(ejbLocalClass = AdministrativeEJBLocal.class, loadMethod = "getLOC")
     @ChildEntityList(parentIdField = "mothId")
     private List<Loc> locList;
-    @Column(name = "office_code", updatable = false)
-    private String officeCode;
 
     public List<Loc> getLocList() {
         locList = locList == null ? new ArrayList<Loc>() : locList;
         return locList;
     }
 
+    public void setFinancialYear(String financialYear) {
+        this.financialYear = financialYear;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public void setOfficeCode(String officeCode) {
+        this.officeCode = officeCode;
+    }
+
     public void setLocList(List<Loc> locList) {
         this.locList = locList;
-    }
-
-    public int getFinancialYear() {
-        return financialYear;
-    }
-
-    public void setFinancialYear(int financialYear) {
-        this.financialYear = financialYear;
     }
 
     public String getId() {
@@ -76,14 +86,6 @@ public class Moth extends AbstractVersionedEntity {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public int getLmocd() {
-        return lmocd;
-    }
-
-    public void setLmocd(int lmocd) {
-        this.lmocd = lmocd;
     }
 
     public String getMothLuj() {
@@ -119,21 +121,5 @@ public class Moth extends AbstractVersionedEntity {
 
     public void setVdcCode(String vdcCode) {
         this.vdcCode = vdcCode;
-    }
-
-    public String getWardNo() {
-        return wardNo;
-    }
-
-    public void setWardNo(String wardNo) {
-        this.wardNo = wardNo;
-    }
-    
-    public String getOfficeCode() {
-        return officeCode;
-    }
-
-    public void setOfficeCode(String officeCode) {
-        this.officeCode = officeCode;
     }
 }

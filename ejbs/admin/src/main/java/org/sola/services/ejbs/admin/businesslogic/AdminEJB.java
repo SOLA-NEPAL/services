@@ -211,6 +211,57 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     }
 
     @Override
+    public List<Department> getDepartments(String officeCode, String lang) {
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Department.WHERE_BY_OFFICE_CODE);
+        if (lang != null && !lang.isEmpty()) {
+            params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
+        }
+        params.put(Department.PARAM_OFFICE_CODE, officeCode);
+        return getRepository().getEntityList(Department.class, params);
+    }
+
+    @Override
+    public List<Office> getOfficesByDistrict(String districtCode, String lang) {
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Office.WHERE_BY_DISTRICT_CODE);
+        params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
+        params.put(Office.PARAM_DISTRICT_CODE, districtCode);
+        return getRepository().getEntityList(Office.class, params);
+    }
+
+    @Override
+    public List<Vdc> getVdcs(String districtCode, String lang) {
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Vdc.WHERE_BY_DISTRICT_CODE);
+        params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
+        params.put(Vdc.PARAM_DISTRICT_CODE, districtCode);
+        return getRepository().getEntityList(Vdc.class, params);
+    }
+
+    @Override
+    public boolean checkUserFromDepartment(String userId, String departmentCode) {
+        User user = getRepository().getEntity(User.class, userId);
+        if (user != null) {
+            return user.getDepartmentCode().equals(departmentCode);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean checkUserFromOffice(String userId, String officeCode) {
+        User user = getRepository().getEntity(User.class, userId);
+        if (user != null) {
+            return user.getDepartment().getOfficeCode().equals(officeCode);
+        } else {
+            return false;
+        }
+    }
+
+    //<editor-fold defaultstate="collapsed" desc="By Kumar">
+    //***************************************************************************************
+    @Override
     public String getNepaliDate(Date date) {
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_QUERY, TO_NEPALI_DATE_FUNCTION);
@@ -281,61 +332,6 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     }
 
     @Override
-    @RolesAllowed(RolesConstants.ADMIN_MANAGE_SETTINGS)
-    public LandOwner saveLandOwner(LandOwner owner) {
-        return getRepository().saveEntity(owner);
-    }
-
-    @Override
-    public List<Department> getDepartments(String officeCode, String lang) {
-        HashMap params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_WHERE_PART, Department.WHERE_BY_OFFICE_CODE);
-        if (lang != null && !lang.isEmpty()) {
-            params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
-        }
-        params.put(Department.PARAM_OFFICE_CODE, officeCode);
-        return getRepository().getEntityList(Department.class, params);
-    }
-    
-     @Override  
-    public List<Office> getOfficesByDistrict(String districtCode, String lang) {
-        HashMap params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_WHERE_PART, Office.WHERE_BY_DISTRICT_CODE);
-        params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
-        params.put(Office.PARAM_DISTRICT_CODE, districtCode);
-        return getRepository().getEntityList(Office.class, params);
-    }
-
-    @Override
-    public List<Vdc> getVdcs(String districtCode, String lang) {
-        HashMap params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_WHERE_PART, Vdc.WHERE_BY_DISTRICT_CODE);
-        params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
-        params.put(Vdc.PARAM_DISTRICT_CODE, districtCode);
-        return getRepository().getEntityList(Vdc.class, params);
-    }
-
-    @Override
-    public boolean checkUserFromDepartment(String userId, String departmentCode) {
-        User user = getRepository().getEntity(User.class, userId);
-        if (user != null) {
-            return user.getDepartmentCode().equals(departmentCode);
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public boolean checkUserFromOffice(String userId, String officeCode) {
-        User user = getRepository().getEntity(User.class, userId);
-        if (user != null) {
-            return user.getDepartment().getOfficeCode().equals(officeCode);
-        } else {
-            return false;
-        }
-    }
-
-    @Override
     public List<Vdc> getVdcList() {
         return getRepository().getEntityList(Vdc.class);
     }
@@ -355,6 +351,8 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
         params.put(Vdc.VDC_NAME_PARAM, vdcName);
         return getRepository().getEntity(Vdc.class, params);
     }
+    //***************************************************************************************
+    //</editor-fold>
 
     @Override
     public Office getCurrentOffice() {
@@ -387,13 +385,17 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
         return checkOfficeCode(officeCode, true);
     }
 
+
+    //<editor-fold defaultstate="collapsed" desc="By Dinesh">
     @Override
     public boolean checkOfficeCode(String officeCode, boolean throwException) {
         return checkOfficeCode(officeCode, getCurrentOfficeCode(), throwException);
     }
     
     @Override
+
     public Vdc saveVdc(Vdc vdc) {
         return getRepository().saveEntity(vdc);
     }
+    //</editor-fold>
 }

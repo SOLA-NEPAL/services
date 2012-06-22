@@ -388,6 +388,16 @@ public class AdministrativeEJB extends AbstractEJB
     public BaUnitContainsSpatialUnit getBaUnitContainsSpatialUnit(String id) {
         return getRepository().getEntity(BaUnitContainsSpatialUnit.class, id);
     }
+
+    @Override
+    public BaUnitAsParty getBaUnitAsParty(String id) {
+        return getRepository().getEntity(BaUnitAsParty.class, id);
+    }
+
+    @Override
+    public BaUnitAsParty saveBaUnitAsParty(BaUnitAsParty baUnitAsParty) {
+        return getRepository().saveEntity(baUnitAsParty);
+    }
     //***********************************************************************************************************
     //</editor-fold>
 }
