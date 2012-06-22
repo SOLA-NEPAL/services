@@ -307,25 +307,27 @@ public abstract class AbstractEJB implements AbstractEJBLocal {
      * Checks provided office codes to be equal, returns false if they are not.
      *
      * @param officeCode Office code to check
-     * @param officeCode1 Second office code to check against first
+     * @param userOfficeCode The office code of user
      * @param throwException Boolean flag indicating whether to throw an
      * exception in case of office codes difference.
      */
-    public boolean checkOfficeCode(String officeCode, String officeCode1, boolean throwException) {
+    public boolean checkOfficeCode(String officeCode, String userOfficeCode, boolean throwException) {
         boolean result;
 
-        if (officeCode == null && officeCode1 == null) {
+        if (officeCode == null && userOfficeCode == null) {
             result = true;
         } else {
-            if ((officeCode == null && officeCode1 != null) || (officeCode != null && officeCode1 == null)) {
+            if ((officeCode == null && userOfficeCode != null) || (officeCode != null && userOfficeCode == null)) {
+                result = true;
+            } else if (officeCode != null && userOfficeCode == null) {
                 result = false;
             } else {
-                result = officeCode.equalsIgnoreCase(officeCode1);
+                result = officeCode.equalsIgnoreCase(userOfficeCode);
             }
         }
         
         if(!result && throwException){
-            SOLAException ex = new SOLAException(ServiceMessage.EXCEPTION_OBJECT_OUT_OF_OFFICE);
+            throw new SOLAException(ServiceMessage.EXCEPTION_OBJECT_OUT_OF_OFFICE);
         }
         return result;
     }

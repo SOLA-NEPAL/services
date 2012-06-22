@@ -53,6 +53,8 @@ public class BaUnitBasic extends AbstractReadOnlyEntity {
     private String statusCode;
     @Column(name = "transaction_id", updatable = false)
     private String transactionId;
+    @Column(name="office_code", updatable=false)
+    private String officeCode;
     
     public BaUnitBasic(){
         super();
@@ -120,5 +122,13 @@ public class BaUnitBasic extends AbstractReadOnlyEntity {
 
     public void setTypeCode(String typeCode) {
         this.typeCode = typeCode;
+    }
+    
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public void setOfficeCode(String officeCode) {
+        this.officeCode = officeCode;
     }
 }

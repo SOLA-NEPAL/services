@@ -53,7 +53,9 @@ public class CadastreObjectStatusChanger extends AbstractStatusChangerEntity {
     @AccessFunctions(onSelect = "st_asewkb(geom_polygon)",
     onChange = "get_geometry_with_srid(#{geomPolygon})")
     private byte[] geomPolygon;
-
+    @Column(name="office_code", updatable=false)
+    private String officeCode;
+    
     public Date getApprovalDatetime() {
         return approvalDatetime;
     }
@@ -78,6 +80,13 @@ public class CadastreObjectStatusChanger extends AbstractStatusChangerEntity {
         this.geomPolygon = geomPolygon;
     }
 
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public void setOfficeCode(String officeCode) {
+        this.officeCode = officeCode;
+    }
     
     @Override
     public void preSave() {

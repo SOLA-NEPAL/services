@@ -1,28 +1,30 @@
 /**
  * ******************************************************************************************
- * Copyright (C) 2012 - Food and Agriculture Organization of the United Nations (FAO).
- * All rights reserved.
+ * Copyright (C) 2012 - Food and Agriculture Organization of the United Nations
+ * (FAO). All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- *    1. Redistributions of source code must retain the above copyright notice,this list
- *       of conditions and the following disclaimer.
- *    2. Redistributions in binary form must reproduce the above copyright notice,this list
- *       of conditions and the following disclaimer in the documentation and/or other
- *       materials provided with the distribution.
- *    3. Neither the name of FAO nor the names of its contributors may be used to endorse or
- *       promote products derived from this software without specific prior written permission.
+ * 1. Redistributions of source code must retain the above copyright notice,this
+ * list of conditions and the following disclaimer. 2. Redistributions in binary
+ * form must reproduce the above copyright notice,this list of conditions and
+ * the following disclaimer in the documentation and/or other materials provided
+ * with the distribution. 3. Neither the name of FAO nor the names of its
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
- * SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,PROCUREMENT
- * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,STRICT LIABILITY,OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT,STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * *********************************************************************************************
  */
 /*
@@ -57,6 +59,7 @@ import org.sola.services.ejb.system.repository.entities.BrValidation;
 import org.sola.services.ejb.transaction.businesslogic.TransactionEJBLocal;
 import org.sola.services.ejb.transaction.repository.entities.RegistrationStatusType;
 import org.sola.services.ejb.transaction.repository.entities.TransactionBasic;
+import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
 
 @Stateless
 @EJB(name = "java:global/SOLA/SourceEJBLocal", beanInterface = SourceEJBLocal.class)
@@ -68,13 +71,14 @@ public class SourceEJB extends AbstractEJB implements SourceEJBLocal {
     TransactionEJBLocal transactionEJB;
     @EJB
     SystemEJBLocal systemEJB;
+    @EJB
+    AdminEJBLocal adminEJB;
 
     @Override
     protected void postConstruct() {
         setEntityPackage(Source.class.getPackage().getName());
     }
-    
-    
+
     private List<Source> getSourceByTransactionId(String transactionId) {
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, Source.QUERY_WHERE_BYTRANSACTIONID);
@@ -85,6 +89,12 @@ public class SourceEJB extends AbstractEJB implements SourceEJBLocal {
     @Override
     @RolesAllowed(RolesConstants.SOURCE_SAVE)
     public Source saveSource(Source source) {
+        if (source.isNew()) {
+            source.setOfficeCode(adminEJB.getCurrentOfficeCode());
+        } else {
+            adminEJB.checkOfficeCode(source.getOfficeCode());
+        }
+        
         return getRepository().saveEntity(source);
     }
 
@@ -132,6 +142,9 @@ public class SourceEJB extends AbstractEJB implements SourceEJBLocal {
                     getRepository().getEntityList(SourceStatusChanger.class, params);
 
             for (SourceStatusChanger source : sourceList) {
+
+                adminEJB.checkOfficeCode(source.getOfficeCode());
+
                 source.setStatusCode(approvedStatus);
                 getRepository().saveEntity(source);
             }
@@ -140,9 +153,11 @@ public class SourceEJB extends AbstractEJB implements SourceEJBLocal {
     }
 
     /**
-     * Associates a source with a transaction and sets the source status to Pending. 
+     * Associates a source with a transaction and sets the source status to
+     * Pending.
+     *
      * @param serviceId
-     * @param sourceId 
+     * @param sourceId
      */
     @Override
     @RolesAllowed(RolesConstants.SOURCE_TRANSACTIONAL)
@@ -156,6 +171,9 @@ public class SourceEJB extends AbstractEJB implements SourceEJBLocal {
 
         // Search for the source
         Source source = this.getSourceById(sourceId);
+
+        adminEJB.checkOfficeCode(source.getOfficeCode());
+
         if (source == null) {
             throw new SOLAException(ServiceMessage.EJB_SOURCE_SOURCE_NOT_FOUND);
         }
@@ -171,7 +189,7 @@ public class SourceEJB extends AbstractEJB implements SourceEJBLocal {
 
 
         // Get the transaction. If transaction does not exist it will be created
-        TransactionBasic transaction = 
+        TransactionBasic transaction =
                 transactionEJB.getTransactionByServiceId(serviceId, true, TransactionBasic.class);
         source.setTransactionId(transaction.getId());
         source.setStatusCode(RegistrationStatusType.STATUS_PENDING);
@@ -184,6 +202,8 @@ public class SourceEJB extends AbstractEJB implements SourceEJBLocal {
         boolean success = false;
         Source source = this.getSourceById(sourceId);
 
+        adminEJB.checkOfficeCode(source.getOfficeCode());
+
         if (source != null) {
             if (!source.getStatusCode().equals(RegistrationStatusType.STATUS_PENDING)) {
                 throw new SOLAException(ServiceMessage.EJB_SOURCE_SOURCE_NOT_PENDING);
@@ -193,14 +213,13 @@ public class SourceEJB extends AbstractEJB implements SourceEJBLocal {
             saveSource(source);
             success = true;
         }
-
         return success;
     }
 
     @Override
     public List<Source> getSourcesByServiceId(String serviceId) {
         List<Source> sourceList = new ArrayList<Source>();
-        TransactionBasic transaction = 
+        TransactionBasic transaction =
                 transactionEJB.getTransactionByServiceId(serviceId, false, TransactionBasic.class);
         if (transaction != null) {
             sourceList = getSourceByTransactionId(transaction.getId());
@@ -210,9 +229,10 @@ public class SourceEJB extends AbstractEJB implements SourceEJBLocal {
 
     /**
      * It runs the business rules for validating the source.
+     *
      * @param sourceId The id of the source to be validated
      * @param languageCode
-     * @return 
+     * @return
      */
     private List<ValidationResult> validateSource(
             String sourceId, String momentCode, String languageCode) {
@@ -224,9 +244,10 @@ public class SourceEJB extends AbstractEJB implements SourceEJBLocal {
         return this.systemEJB.checkRulesGetValidation(
                 brValidationList, languageCode, params);
     }
-    
-    
-    /** Returns list of {@link Source} objects, by the given list of IDs. */
+
+    /**
+     * Returns list of {@link Source} objects, by the given list of IDs.
+     */
     @Override
     public List<Source> getSourcesByIds(List<String> sourceIds) {
         return getRepository().getEntityListByIds(Source.class, sourceIds);

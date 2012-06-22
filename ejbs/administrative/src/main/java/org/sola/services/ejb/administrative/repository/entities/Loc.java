@@ -40,7 +40,9 @@ public class Loc extends AbstractVersionedEntity {
     private int transactionNo;
     @ChildEntityList(parentIdField = "locId")
     private List<BaUnit> baUnits;
-
+    @Column(name = "office_code", updatable = false)
+    private String officeCode;
+    
     public List<BaUnit> getBaUnits() {
         baUnits = baUnits == null ? new ArrayList<BaUnit>() : baUnits;
         return baUnits;
@@ -105,5 +107,13 @@ public class Loc extends AbstractVersionedEntity {
 
     public void setTransactionNo(int transactionNo) {
         this.transactionNo = transactionNo;
+    }
+    
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public void setOfficeCode(String officeCode) {
+        this.officeCode = officeCode;
     }
 }

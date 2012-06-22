@@ -13,6 +13,12 @@
     <packaging>ejb</packaging>
     
     <name>EJB Digital archive</name>
-
+    <dependencies>
+        <dependency>
+            <groupId>org.sola.services.ejbs</groupId>
+            <artifactId>sola-admin</artifactId>
+            <version>${project.version}</version>   
+        </dependency>
+    </dependencies>
 
 </project>

@@ -49,7 +49,7 @@ public class SourceSearchResult extends AbstractReadOnlyEntity {
     public static final String SEARCH_QUERY =
             "SELECT id, la_nr, reference_nr, archive_id, ext_archive_id, type_code, "
             + " get_translation(st.display_value, #{" + CommonSqlProvider.PARAM_LANGUAGE_CODE + "}) AS typeDisplayValue, "
-            + " acceptance, recordation, submission, status_code, "
+            + " acceptance, recordation, submission, status_code, office_code, "
             + " get_translation(t.display_value, #{" + CommonSqlProvider.PARAM_LANGUAGE_CODE + "}) AS statusDisplayValue "
             + " FROM (source.source AS s LEFT JOIN transaction.reg_status_type AS t on s.status_code = t.code) "
             + " LEFT JOIN source.administrative_source_type AS st ON s.type_code = st.code "
@@ -89,7 +89,9 @@ public class SourceSearchResult extends AbstractReadOnlyEntity {
     private String statusDisplayValue;
     @Column(name = "status_code")
     private String statusCode;
-
+    @Column(name = "office_code", updatable = false)
+    private String officeCode;
+    
     public SourceSearchResult() {
         super();
     }
@@ -188,5 +190,13 @@ public class SourceSearchResult extends AbstractReadOnlyEntity {
 
     public void setArchiveDocumentId(String archiveDocumentId) {
         this.archiveDocumentId = archiveDocumentId;
+    }
+
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public void setOfficeCode(String officeCode) {
+        this.officeCode = officeCode;
     }
 }

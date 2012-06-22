@@ -113,7 +113,9 @@ public class BaUnit extends AbstractVersionedEntity {
     @Column(insertable = false, updatable = false, name = "pending_action_code")
     @AccessFunctions(onSelect = "administrative.get_ba_unit_pending_action(id)")
     private String pendingActionCode;
-
+    @Column(name="office_code", updatable=false)
+    private String officeCode;
+    
     public BaUnit() {
         super();
     }
@@ -265,6 +267,14 @@ public class BaUnit extends AbstractVersionedEntity {
             }
         }
         return locked;
+    }
+
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public void setOfficeCode(String officeCode) {
+        this.officeCode = officeCode;
     }
 
     private String generateBaUnitNumber() {

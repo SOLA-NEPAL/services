@@ -17,6 +17,11 @@
             <artifactId>sola-address</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.sola.services.ejbs</groupId>
+            <artifactId>sola-admin</artifactId>
+            <version>${project.version}</version>   
+        </dependency>
     </dependencies>
        
 </project>

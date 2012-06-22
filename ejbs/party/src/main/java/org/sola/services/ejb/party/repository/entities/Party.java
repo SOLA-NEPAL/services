@@ -39,10 +39,13 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.sola.services.common.ejbs.AbstractEJB;
 import org.sola.services.common.repository.ChildEntity;
 import org.sola.services.common.repository.ChildEntityList;
 import org.sola.services.common.repository.DefaultSorter;
 import org.sola.services.common.repository.ExternalEJB;
+import org.sola.services.common.repository.entities.AbstractEntity;
+import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
 import org.sola.services.ejb.address.businesslogic.AddressEJBLocal;
 import org.sola.services.ejb.address.repository.entities.Address;
@@ -53,10 +56,12 @@ import org.sola.services.ejb.address.repository.entities.Address;
 @Table(name = "party", schema = "party")
 @DefaultSorter(sortString = "name, last_name")
 public class Party extends AbstractVersionedEntity {
+
     public static final String TYPE_CODE_NON_NATURAL_PERSON = "nonNaturalPerson";
     public static final String TYPE_CODE_NATURAL_PERSON = "naturalPerson";
-    public static final String QUERY_WHERE_BYTYPECODE = "type_code = #{partyTypeCode}";
-    public static final String QUERY_WHERE_LODGING_AGENTS = "party.id in (select party_id from party.party_role where party.party_role.type_code = 'lodgingAgent')";
+    public static final String QUERY_WHERE_BYTYPECODE = "type_code = #{partyTypeCode} and office_code=#{" + AbstractReadOnlyEntity.PARAM_OFFICE_CODE + "}";
+    public static final String QUERY_WHERE_LODGING_AGENTS = "party.id in (select party_id from party.party_role where party.party_role.type_code = 'lodgingAgent') "
+            + "AND office_code=#{" + AbstractReadOnlyEntity.PARAM_OFFICE_CODE + "}";
     @Id
     @Column(name = "id")
     private String id;
@@ -68,7 +73,6 @@ public class Party extends AbstractVersionedEntity {
     private String fathersName;
     @Column(name = "fathers_last_name")
     private String fathersLastName;
-
     @Column(name = "alias")
     private String alias;
     @Column(name = "ext_id")
@@ -93,30 +97,30 @@ public class Party extends AbstractVersionedEntity {
     private String typeCode;
     @Column(name = "gender_code")
     private String genderCode;
-    
-    @ExternalEJB(ejbLocalClass = AddressEJBLocal.class,loadMethod = "getAddress", saveMethod = "saveAddress")
+    @ExternalEJB(ejbLocalClass = AddressEJBLocal.class, loadMethod = "getAddress", saveMethod = "saveAddress")
     @ChildEntity(childIdField = "addressId")
     private Address address;
     @ChildEntityList(parentIdField = "partyId")
     private List<PartyRole> roleList;
     @Column(name = "party.is_rightholder(id) AS is_rightholder", insertable = false, updatable = false)
     private boolean rightHolder;
-    
     //additional fields
-    @Column(name="grandfather_name")
+    @Column(name = "grandfather_name")
     private String grandfatherName;
-    @Column(name="grandfather_last_name")
+    @Column(name = "grandfather_last_name")
     private String grandFatherLastName;
-    @Column(name="date_of_birth")
+    @Column(name = "date_of_birth")
     private Date birthDate;
-    @Column(name="remarks")
+    @Column(name = "remarks")
     private String rmks;
-    @Column(name="id_provider_office_code")
+    @Column(name = "id_provider_office_code")
     private String issuingOfficeCode;
-    @Column(name="id_issue_date")
+    @Column(name = "id_issue_date")
     private Date idIssueDate;
-    
-    public Date getBirthDate(){
+    @Column(name="office_code", updatable=false)
+    private String officeCode;
+
+    public Date getBirthDate() {
         return birthDate;
     }
 
@@ -216,7 +220,7 @@ public class Party extends AbstractVersionedEntity {
     public void setFathersName(String fathersName) {
         this.fathersName = fathersName;
     }
-    
+
     public String getExtId() {
         return extId;
     }
@@ -331,5 +335,13 @@ public class Party extends AbstractVersionedEntity {
 
     public void setRightHolder(boolean rightHolder) {
         this.rightHolder = rightHolder;
+    }
+
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public void setOfficeCode(String officeCode) {
+        this.officeCode = officeCode;
     }
 }

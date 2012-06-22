@@ -46,6 +46,7 @@ import org.sola.services.common.repository.CommonSqlProvider;
 import org.sola.services.ejb.address.businesslogic.AddressEJBLocal;
 import org.sola.services.ejb.address.repository.entities.Address;
 import org.sola.services.ejb.party.repository.entities.*;
+import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
 
 /**
  *
@@ -54,12 +55,16 @@ import org.sola.services.ejb.party.repository.entities.*;
 @EJB(name = "java:global/SOLA/PartyEJBLocal", beanInterface = PartyEJBLocal.class)
 public class PartyEJB extends AbstractEJB implements PartyEJBLocal {
 
+    @EJB
+    private AdminEJBLocal adminEJB;
+    
+    @EJB
+    private AddressEJBLocal addressEJB;
+    
     @Override
     protected void postConstruct() {
         setEntityPackage(Party.class.getPackage().getName());
     }
-    @EJB
-    private AddressEJBLocal addressEJB;
 
     @Override
     public Party getParty(String id) {
@@ -77,6 +82,13 @@ public class PartyEJB extends AbstractEJB implements PartyEJBLocal {
         if (party.isRightHolder() && !isInRole(RolesConstants.PARTY_RIGHTHOLDERS_SAVE)) {
             throw new SOLAAccessException();
         }
+        
+        if(party.isNew()){
+            party.setOfficeCode(adminEJB.getCurrentOfficeCode());
+        } else {
+            adminEJB.checkOfficeCode(party.getOfficeCode());
+        }
+        
         return getRepository().saveEntity(party);
     }
 

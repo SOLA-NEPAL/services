@@ -49,6 +49,7 @@ public abstract class AbstractReadOnlyEntity implements Serializable {
 
     private boolean loaded = false;
     private boolean getValueException = false;
+    public static final String PARAM_OFFICE_CODE = "officeCode";
 
     /**
      * @return Generates and returns a new UUID value. 

@@ -33,6 +33,7 @@ package org.sola.services.ejb.administrative.repository.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
+import org.sola.services.common.repository.AccessFunctions;
 import org.sola.services.common.repository.entities.AbstractStatusChangerEntity;
 
 /**
@@ -45,6 +46,10 @@ public class RrrStatusChanger extends AbstractStatusChangerEntity {
     @Column(name = "type_code", updatable = false, insertable = false)
     private String typeCode;
 
+    @Column(name = "office_code", insertable=false, updatable=false)
+    @AccessFunctions(onSelect="(SELECT office_code FROM administrative.ba_unit b WHERE b.id = ba_unit_id)")
+    private String officeCode;
+    
     public RrrStatusChanger() {
         super();
     }
@@ -55,5 +60,13 @@ public class RrrStatusChanger extends AbstractStatusChangerEntity {
 
     public void setTypeCode(String typeCode) {
         this.typeCode = typeCode;
+    }
+    
+       public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public void setOfficeCode(String officeCode) {
+        this.officeCode = officeCode;
     }
 }

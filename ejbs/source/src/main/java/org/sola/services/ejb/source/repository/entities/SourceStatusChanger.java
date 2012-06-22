@@ -31,6 +31,7 @@
  */
 package org.sola.services.ejb.source.repository.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Table;
 import org.sola.services.common.repository.entities.AbstractStatusChangerEntity;
 
@@ -41,4 +42,18 @@ import org.sola.services.common.repository.entities.AbstractStatusChangerEntity;
  */
 @Table(name = "source", schema = "source")
 public class SourceStatusChanger extends AbstractStatusChangerEntity {
+    @Column(name="office_code", updatable=false)
+    private String officeCode;
+    
+    public SourceStatusChanger(){
+        super();
+    }
+
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public void setOfficeCode(String officeCode) {
+        this.officeCode = officeCode;
+    }
 }

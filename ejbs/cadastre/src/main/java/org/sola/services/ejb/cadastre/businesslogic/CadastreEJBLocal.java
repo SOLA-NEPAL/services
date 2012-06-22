@@ -104,7 +104,5 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
     List<CadastreObject> getCadastreObjectBy_Intersection(String geom, int srid);
 
     List<CadastreObject> getCadastreObjectBy_ByteIntersection(String geom, int srid);
-
-    List<HashMap> executeQuery(String cmd);
     //</editor-fold>
 }
