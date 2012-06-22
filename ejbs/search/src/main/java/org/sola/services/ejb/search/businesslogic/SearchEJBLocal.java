@@ -70,7 +70,7 @@ public interface SearchEJBLocal extends AbstractEJBLocal {
 
     List<ApplicationSearchResult> getAssignedApplications(String locale);
 
-    ResultForNavigationInfo getSpatialResult(QueryForNavigation spatialQuery);
+    ResultForNavigationInfo getSpatialResult(QueryForNavigation spatialQuery, String officeCode);
 
     List<ConfigMapLayer> getConfigMapLayerList(String languageCode);
 

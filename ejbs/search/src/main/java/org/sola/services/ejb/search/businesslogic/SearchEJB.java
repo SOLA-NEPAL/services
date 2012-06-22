@@ -338,14 +338,14 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
 
     @Override
     public ResultForNavigationInfo getSpatialResult(
-            QueryForNavigation spatialQuery) {
+            QueryForNavigation spatialQuery, String officeCode) {
         Map params = new HashMap<String, Object>();
         params.put("minx", spatialQuery.getWest());
         params.put("miny", spatialQuery.getSouth());
         params.put("maxx", spatialQuery.getEast());
         params.put("maxy", spatialQuery.getNorth());
         params.put("srid", spatialQuery.getSrid());
-        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, officeCode);
         ResultForNavigationInfo spatialResultInfo = new ResultForNavigationInfo();
         getRepository().setLoadInhibitors(new Class[]{DynamicQueryField.class});
         List<SpatialResult> result = executeDynamicQuery(SpatialResult.class,

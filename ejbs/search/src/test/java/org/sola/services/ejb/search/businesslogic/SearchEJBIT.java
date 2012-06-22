@@ -289,7 +289,7 @@ public class SearchEJBIT extends AbstractEJBTest {
             QueryForNavigation spatialQuery, String queryName) throws Exception {
         System.out.println("Testing query: " + queryName);
         spatialQuery.setQueryName(queryName);
-        ResultForNavigationInfo result = instance.getSpatialResult(spatialQuery);
+        ResultForNavigationInfo result = instance.getSpatialResult(spatialQuery, null);
         if (result != null) {
             System.out.println("Result has found: " + result.getToAdd().size());
             if (result.getToAdd().size() > 0) {
