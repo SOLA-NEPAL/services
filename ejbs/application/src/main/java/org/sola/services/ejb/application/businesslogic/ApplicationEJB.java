@@ -58,6 +58,7 @@ import org.sola.services.ejb.application.repository.entities.RequestType;
 import org.sola.services.ejb.application.repository.entities.Service;
 import org.sola.services.common.ejbs.AbstractEJB;
 import org.sola.common.RolesConstants;
+import org.sola.services.common.EntityAction;
 import org.sola.services.common.faults.SOLAValidationException;
 import org.sola.services.common.repository.CommonSqlProvider;
 import org.sola.services.ejb.application.repository.entities.*;
@@ -334,6 +335,8 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
         calculateLodgementFees(application);
 
         treatApplicationSources(application);
+        //reset the partybean attribute for readonly.
+        application.getContactPerson().setEntityAction(EntityAction.READ_ONLY);//Introduced by Kabindra
         application = getRepository().saveEntity(application);
 
         return application;

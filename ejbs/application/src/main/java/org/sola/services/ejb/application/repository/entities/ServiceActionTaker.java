@@ -35,8 +35,6 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.sola.services.common.repository.AccessFunctions;
-import org.sola.services.common.repository.ChildEntity;
-import org.sola.services.common.repository.ChildEntityList;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
 
 /**

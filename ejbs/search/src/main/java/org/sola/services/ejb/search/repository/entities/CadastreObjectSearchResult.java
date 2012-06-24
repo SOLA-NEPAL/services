@@ -49,13 +49,19 @@ public class CadastreObjectSearchResult extends AbstractReadOnlyEntity {
     public static final String SEARCH_BY_OWNER_OF_BAUNIT = "OWNER_OF_BAUNIT";
     public static final String SEARCH_BY_BAUNIT_ID = "BAUNIT_ID";
     
+    private static final String QUERY_WHERE_BY_OFFICE = "(office_code=#{"
+            + AbstractReadOnlyEntity.PARAM_OFFICE_CODE + "} OR office_code IS NULL)";
+    private static final String QUERY_WHERE_BY_OFFICE2 = "(co.office_code=#{"
+            + AbstractReadOnlyEntity.PARAM_OFFICE_CODE + "} OR co.office_code IS NULL)";
+    
     public static final String QUERY_WHERE_SEARCHBY_NUMBER = "status_code= 'current' and "
-            + "compare_strings(#{search_string}, name_firstpart || ' ' || name_lastpart)";
+            + "compare_strings(#{search_string}, name_firstpart || ' ' || name_lastpart) "
+            + "AND " + QUERY_WHERE_BY_OFFICE;
     
     public static final String QUERY_SELECT_SEARCHBY_BAUNIT = "distinct co.id, "
             + "ba_unit.name_firstpart || '/ ' || ba_unit.name_lastpart || "
             + "' > ' || co.name_firstpart || '/ ' || co.name_lastpart as label, "
-            + "st_asewkb(geom_polygon) as the_geom";
+            + "st_asewkb(geom_polygon) as the_geom, co.office_code";
 
     public static final String QUERY_FROM_SEARCHBY_BAUNIT = "cadastre.cadastre_object  co "
             + " inner join administrative.ba_unit_contains_spatial_unit bas "
@@ -65,12 +71,12 @@ public class CadastreObjectSearchResult extends AbstractReadOnlyEntity {
     public static final String QUERY_WHERE_SEARCHBY_BAUNIT = 
             "(co.status_code= 'current' or ba_unit.status_code= 'current')"
             + "and compare_strings(#{search_string}, "
-            + "ba_unit.name_firstpart || ' ' || ba_unit.name_lastpart)";
+            + "ba_unit.name_firstpart || ' ' || ba_unit.name_lastpart) AND " + QUERY_WHERE_BY_OFFICE2;
 
     public static final String QUERY_SELECT_SEARCHBY_OWNER_OF_BAUNIT = " distinct co.id, "
             + "coalesce(party.name, '') || ' ' || coalesce(party.last_name, '') || "
             + "' > ' || co.name_firstpart || '/ ' || co.name_lastpart as label, "
-            + "st_asewkb(co.geom_polygon) as the_geom";
+            + "st_asewkb(co.geom_polygon) as the_geom, co.office_code";
     
     public static final String QUERY_FROM_SEARCHBY_OWNER_OF_BAUNIT = "cadastre.cadastre_object co "
             + "inner join administrative.ba_unit_contains_spatial_unit bas "
@@ -86,7 +92,8 @@ public class CadastreObjectSearchResult extends AbstractReadOnlyEntity {
     public static final String QUERY_WHERE_SEARCHBY_OWNER_OF_BAUNIT = 
             "(co.status_code= 'current' or ba_unit.status_code= 'current') "
             + "and compare_strings(#{search_string}, "
-            + "coalesce(party.name, '') || ' ' || coalesce(party.last_name, ''))";
+            + "coalesce(party.name, '') || ' ' || coalesce(party.last_name, '')) "
+            + "AND " + QUERY_WHERE_BY_OFFICE2;
     
     public static final String QUERY_WHERE_GET_NEW_PARCELS = "transaction_id IN "
             + "(SELECT cot.transaction_id "
@@ -95,7 +102,7 @@ public class CadastreObjectSearchResult extends AbstractReadOnlyEntity {
             + "INNER JOIN cadastre.cadastre_object_target cot ON co.id = cot.cadastre_object_id "
             + "WHERE ba_su.ba_unit_id = #{search_string}) "
             + "AND (SELECT COUNT(1) FROM administrative.ba_unit_contains_spatial_unit WHERE spatial_unit_id = cadastre_object.id) = 0 "
-            + "AND status_code = 'current'";
+            + "AND status_code = 'current' AND " + QUERY_WHERE_BY_OFFICE;
     
     @Column(name = "id")
     private String id;
@@ -105,6 +112,8 @@ public class CadastreObjectSearchResult extends AbstractReadOnlyEntity {
     @Column(name = "the_geom")
     @AccessFunctions(onSelect = "st_asewkb(geom_polygon)")
     private byte[] theGeom;
+    @Column(name = "office_code", updatable = false)
+    private String officeCode;
 
     public String getId() {
         return id;
@@ -128,5 +137,13 @@ public class CadastreObjectSearchResult extends AbstractReadOnlyEntity {
 
     public void setTheGeom(byte[] theGeom) {
         this.theGeom = theGeom;
+    }
+
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public void setOfficeCode(String officeCode) {
+        this.officeCode = officeCode;
     }
 }

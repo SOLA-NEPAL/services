@@ -38,10 +38,7 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.sola.services.common.LocalInfo;
-import org.sola.services.common.repository.ChildEntity;
-import org.sola.services.common.repository.ChildEntityList;
-import org.sola.services.common.repository.ExternalEJB;
-import org.sola.services.common.repository.RepositoryUtility;
+import org.sola.services.common.repository.*;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
 import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
 import org.sola.services.ejb.party.repository.entities.Party;
@@ -51,7 +48,6 @@ import org.sola.services.ejb.system.br.Result;
 import org.sola.services.ejb.system.businesslogic.SystemEJBLocal;
 import org.sola.services.ejb.transaction.businesslogic.TransactionEJBLocal;
 import org.sola.services.ejb.transaction.repository.entities.Transaction;
-import org.sola.services.ejb.transaction.repository.entities.TransactionBasic;
 import org.sola.services.ejb.transaction.repository.entities.TransactionStatusType;
 
 /**
@@ -107,6 +103,7 @@ public class Rrr extends AbstractVersionedEntity {
     @ChildEntityList(parentIdField = "rrrId", childIdField = "partyId",
     manyToManyClass = PartyForRrr.class, readOnly = true)
     private List<Party> rightHolderList;
+        
     // Other fields
     private Boolean locked = null;
 
@@ -279,7 +276,7 @@ public class Rrr extends AbstractVersionedEntity {
     public void setRightHolderList(List<Party> rightHolderList) {
         this.rightHolderList = rightHolderList;
     }
-
+    
     public Boolean isLocked() {
         if (locked == null) {
             locked = false;

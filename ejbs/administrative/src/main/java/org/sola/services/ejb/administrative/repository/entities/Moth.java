@@ -46,11 +46,13 @@ public class Moth extends AbstractVersionedEntity {
     @ExternalEJB(ejbLocalClass = AdminEJBLocal.class, loadMethod = "getVdcByCode")
     @ChildEntity(childIdField = "vdcCode")
     private Vdc vdc;
+    // @ExternalEJB(ejbLocalClass = AdministrativeEJBLocal.class, loadMethod = "getLOC")
     @ChildEntityList(parentIdField = "mothId")
     private List<Loc> locList;
 
-    public String getFinancialYear() {
-        return financialYear;
+    public List<Loc> getLocList() {
+        locList = locList == null ? new ArrayList<Loc>() : locList;
+        return locList;
     }
 
     public void setFinancialYear(String financialYear) {
@@ -71,11 +73,6 @@ public class Moth extends AbstractVersionedEntity {
 
     public void setOfficeCode(String officeCode) {
         this.officeCode = officeCode;
-    }
-
-    public List<Loc> getLocList() {
-        locList = locList == null ? new ArrayList<Loc>() : locList;
-        return locList;
     }
 
     public void setLocList(List<Loc> locList) {

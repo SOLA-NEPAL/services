@@ -52,6 +52,8 @@ public class CadastreObjectTarget extends AbstractVersionedEntity{
     @Id
     @Column(name = "transaction_id")
     private String transactionId;
+    @Column(name="office_code", updatable=false)
+    private String officeCode;
 
     public String getCadastreObjectId() {
         return cadastreObjectId;
@@ -67,5 +69,13 @@ public class CadastreObjectTarget extends AbstractVersionedEntity{
 
     public void setTransactionId(String transactionId) {
         this.transactionId = transactionId;
-    }    
+    }
+
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public void setOfficeCode(String officeCode) {
+        this.officeCode = officeCode;
+    }
 }

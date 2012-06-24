@@ -37,7 +37,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import org.sola.services.common.repository.AccessFunctions;
 import org.sola.services.common.repository.CommonSqlProvider;
-import org.sola.services.common.repository.DefaultSorter;
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 
 /**
@@ -53,6 +52,7 @@ public class ApplicationSearchResult extends AbstractReadOnlyEntity {
     public static final String QUERY_PARAM_APP_NR = "appNr";
     public static final String QUERY_PARAM_AGENT_NAME = "agentName";
     public static final String QUERY_PARAM_CONTACT_NAME = "contactName";
+    public static final String QUERY_PARAM_OFFICE_CODE = "office_code";
     public static final String QUERY_FROM =
             "(application.application a LEFT JOIN application.application_status_type ast on a.status_code = ast.code) "
             + "LEFT JOIN system.appuser u ON a.assignee_id = u.id "
@@ -63,21 +63,20 @@ public class ApplicationSearchResult extends AbstractReadOnlyEntity {
             + QUERY_PARAM_USER_NAME + "} AND a.status_code in ('lodged', 'approved')";
     
     public static final String QUERY_WHERE_GET_ASSIGNED_ALL = "u.username IS NOT "
-            +"NULL AND a.status_code in ('lodged', 'approved')";
+            +"NULL AND a.status_code in ('lodged', 'approved') AND a.office_code = #{" + QUERY_PARAM_OFFICE_CODE + "}";
     
     public static final String QUERY_WHERE_GET_ASSIGNED_DEPARTMENT = "u.department_code = "
             + "(select department_code from system.appuser where username= #{" 
             + QUERY_PARAM_USER_NAME + "} limit 1) AND a.status_code in ('lodged', 'approved')";
     
-    public static final String QUERY_WHERE_GET_UNASSIGNED = "u.username IS NULL "
-            + " AND a.status_code in ('lodged', 'approved')";
     public static final String QUERY_WHERE_SEARCH_APPLICATIONS =
             "a.lodging_datetime BETWEEN #{" + QUERY_PARAM_FROM_LODGE_DATE + "} AND #{" + QUERY_PARAM_TO_LODGE_DATE + "} "
-            + "AND lower(a.nr) LIKE lower(#{" + QUERY_PARAM_APP_NR + "}) "
+            + "AND lower(a.nr) LIKE lower(#{" + QUERY_PARAM_APP_NR + "}) AND a.office_code = #{" + QUERY_PARAM_OFFICE_CODE + "}"
             + "AND lower(COALESCE(p2.name, '')) LIKE lower(#{" + QUERY_PARAM_AGENT_NAME + "}) "
             + "AND ((lower (COALESCE(p.name, '') || ' ' || COALESCE(p.last_name, '')) LIKE lower(#{" + QUERY_PARAM_CONTACT_NAME + "})) "
-            + "    OR (lower (COALESCE(p.name, '')) LIKE lower(#{" + QUERY_PARAM_CONTACT_NAME + "})) "
-            + "    OR (lower (COALESCE(p.last_name, '')) LIKE lower(#{" + QUERY_PARAM_CONTACT_NAME + "}))) ";
+            + "OR (lower (COALESCE(p.name, '')) LIKE lower(#{" + QUERY_PARAM_CONTACT_NAME + "})) "
+            + "OR (lower (COALESCE(p.last_name, '')) LIKE lower(#{" + QUERY_PARAM_CONTACT_NAME + "}))) ";
+    
     public static final String QUERY_ORDER_BY = "a.lodging_datetime desc";
     
     @Id
@@ -118,6 +117,8 @@ public class ApplicationSearchResult extends AbstractReadOnlyEntity {
     private String serviceList;
     @Column(name = "fee_paid")
     private Boolean feePaid;
+    @Column(name="a.office_code")
+    private String officeCode;
     @Column(name="a.rowversion")
     private int rowVersion;
     
@@ -235,6 +236,14 @@ public class ApplicationSearchResult extends AbstractReadOnlyEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public void setOfficeCode(String officeCode) {
+        this.officeCode = officeCode;
     }
 
     public int getRowVersion() {

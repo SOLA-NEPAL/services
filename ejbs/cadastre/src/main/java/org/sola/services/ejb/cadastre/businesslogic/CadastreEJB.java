@@ -32,11 +32,15 @@ package org.sola.services.ejb.cadastre.businesslogic;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import org.sola.common.RolesConstants;
 import org.sola.services.common.ejbs.AbstractEJB;
 import org.sola.services.common.repository.CommonSqlProvider;
+import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 import org.sola.services.ejb.cadastre.repository.entities.*;
+import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
 
 /**
  * Implementation of {
@@ -47,6 +51,9 @@ import org.sola.services.ejb.cadastre.repository.entities.*;
 @EJB(name = "java:global/SOLA/CadastreEJBLocal", beanInterface = CadastreEJBLocal.class)
 public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
 
+    @EJB
+    AdminEJBLocal adminEJB;
+    
     @Override
     public List<CadastreObjectType> getCadastreObjectTypes(String languageCode) {
         return getRepository().getCodeList(CadastreObjectType.class, languageCode);
@@ -68,6 +75,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         HashMap params = new HashMap();
         params.put("search_string", searchString);
         params.put(CommonSqlProvider.PARAM_LIMIT_PART, numberOfMaxRecordsReturned);
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntityList(CadastreObject.class,
                 CadastreObject.QUERY_WHERE_SEARCHBYPARTS, params);
     }
@@ -78,12 +86,18 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         params.put("x", x);
         params.put("y", y);
         params.put("srid", srid);
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntity(
                 CadastreObject.class, CadastreObject.QUERY_WHERE_SEARCHBYPOINT, params);
     }
 
     @Override
     public CadastreObject saveCadastreObject(CadastreObject cadastreObject) {
+        if(cadastreObject.isNew()){
+            cadastreObject.setOfficeCode(adminEJB.getCurrentOfficeCode());
+        } else {
+            adminEJB.checkOfficeCode(cadastreObject.getOfficeCode());
+        }
         return getRepository().saveEntity(cadastreObject);
     }
 
@@ -91,6 +105,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     public List<CadastreObject> getCadastreObjectsByBaUnit(String baUnitId) {
         HashMap params = new HashMap();
         params.put("ba_unit_id", baUnitId);
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntityList(CadastreObject.class,
                 CadastreObject.QUERY_WHERE_SEARCHBYBAUNIT, params);
     }
@@ -99,6 +114,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     public List<CadastreObject> getCadastreObjectsByService(String serviceId) {
         HashMap params = new HashMap();
         params.put("service_id", serviceId);
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntityList(CadastreObject.class,
                 CadastreObject.QUERY_WHERE_SEARCHBYSERVICE, params);
     }
@@ -116,6 +132,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         List<CadastreObjectStatusChanger> involvedCoList =
                 getRepository().getEntityList(CadastreObjectStatusChanger.class, filter, params);
         for (CadastreObjectStatusChanger involvedCo : involvedCoList) {
+            adminEJB.checkOfficeCode(involvedCo.getOfficeCode());
             involvedCo.setStatusCode(statusCode);
             getRepository().saveEntity(involvedCo);
         }
@@ -147,6 +164,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         params.put(
                 CommonSqlProvider.PARAM_WHERE_PART,
                 CadastreObject.QUERY_WHERE_SEARCHBYTRANSACTION);
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         params.put("transaction_id", transactionId);
         return getRepository().getEntityList(CadastreObject.class, params);
 
@@ -166,6 +184,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         params.put("maxx", xMax);
         params.put("maxy", yMax);
         params.put("srid", srid);
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         CadastreObjectNode cadastreObjectNode = getRepository().getEntity(
                 CadastreObjectNode.class, params);
         if (cadastreObjectNode != null) {
@@ -190,6 +209,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         params.put("maxx", xMax);
         params.put("maxy", yMax);
         params.put("srid", srid);
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         CadastreObjectNode cadastreObjectNode = getRepository().getEntity(
                 CadastreObjectNode.class, params);
         if (cadastreObjectNode != null) {
@@ -231,6 +251,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
             CadastreObjectStatusChanger cadastreObject =
                     this.getRepository().getEntity(CadastreObjectStatusChanger.class,
                     targetObject.getCadastreObjectId());
+            adminEJB.checkOfficeCode(cadastreObject.getOfficeCode());
             cadastreObject.setGeomPolygon(targetObject.getGeomPolygon());
             cadastreObject.setTransactionId(transactionId);
             cadastreObject.setApprovalDatetime(null);
@@ -245,6 +266,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         HashMap params = new HashMap();
         params.put("geom", geom);
         params.put("srid", srid);
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntityList(
                 CadastreObject.class, CadastreObject.QUERY_WHERE_SEARCHBY_STRING_INTERSECTION, params);
     }
@@ -254,15 +276,9 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         HashMap params = new HashMap();
         params.put("geom", geom);
         params.put("srid", srid);
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntityList(
                 CadastreObject.class, CadastreObject.QUERY_WHERE_SEARCHBY_BYTE_INTERSECTION, params);
-    }
-
-    @Override
-    public List<HashMap> executeQuery(String cmd) {
-        HashMap params = new HashMap();
-        params.put(CommonSqlProvider.PARAM_QUERY, cmd);
-        return getRepository().executeSql(params);
     }
     //</editor-fold>
 
@@ -274,6 +290,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     }
 
     @Override
+    @RolesAllowed(RolesConstants.ADMIN_MANAGE_SETTINGS)
     public MapSheet saveMapSheet(MapSheet mapSheet) {
         return getRepository().saveEntity(mapSheet);
     }
@@ -287,6 +304,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     public List<CadastreObject> loadCadastreObjectList(String mapSheetCode) {
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, CadastreObject.GET_CADASTRE_BY_MAPSHEET_CODE);
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         params.put(CadastreObject.MAP_SHEET_CODE_PARAM, mapSheetCode);
         return getRepository().getEntityList(CadastreObject.class, params);
     }
@@ -295,6 +313,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     public List<CadastreObject> getCadastreObjectList(String vdcCode, String wardNo) {
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, CadastreObject.GET_BY_VDC_AND_WARD_NO);
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         params.put(CadastreObject.VDC_PARAM, vdcCode);
         params.put(CadastreObject.WARD_NO_PARAM, wardNo);
         return getRepository().getEntityList(CadastreObject.class, params);
@@ -318,6 +337,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         params.put(CadastreObject.VDC_PARAM, vdcCode);
         params.put(CadastreObject.PARCEL_NO_PARAM, parcelNo);
         params.put(CadastreObject.WARD_NO_PARAM, wardNo);
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntity(CadastreObject.class, params);
     }
 
@@ -326,7 +346,8 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, CadastreObject.GET_BY_MAPSHEET_AND_PARCELNO);
         params.put(CadastreObject.MAP_SHEET_CODE_PARAM, mapSheetCode);
-        params.put(CadastreObject.PARCEL_NO_PARAM, parcelNo);        
+        params.put(CadastreObject.PARCEL_NO_PARAM, parcelNo);
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntity(CadastreObject.class, params);
     }
     //*****************************************************************************************************************************

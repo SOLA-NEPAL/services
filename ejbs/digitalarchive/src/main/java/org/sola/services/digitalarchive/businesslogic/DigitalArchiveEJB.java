@@ -51,6 +51,7 @@ import org.sola.services.digitalarchive.repository.entities.Document;
 import org.sola.services.digitalarchive.repository.entities.FileInfo;
 import org.sola.services.digitalarchive.repository.entities.FileBinary;
 import org.sola.services.common.repository.CommonSqlProvider; 
+import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
 
 /**
  * 
@@ -60,6 +61,9 @@ import org.sola.services.common.repository.CommonSqlProvider;
 @EJB(name = "java:global/SOLA/DigitalArchiveEJBLocal", beanInterface = DigitalArchiveEJBLocal.class)
 public class DigitalArchiveEJB extends AbstractEJB implements DigitalArchiveEJBLocal {
 
+    @EJB
+    AdminEJBLocal adminEJB;
+    
     private File scanFolder;
     private File thumbFolder;
     private int thumbWidth;
@@ -118,6 +122,13 @@ public class DigitalArchiveEJB extends AbstractEJB implements DigitalArchiveEJBL
     @Override
     @RolesAllowed(RolesConstants.SOURCE_SAVE)
     public Document saveDocument(Document document) {
+        
+        if(document.isNew()){
+            document.setOfficeCode(adminEJB.getCurrentOfficeCode());
+        } else {
+            adminEJB.checkOfficeCode(document.getOfficeCode());
+        }
+        
         return getRepository().saveEntity(document);
     }
 

@@ -33,8 +33,10 @@ import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 
 public class BaUnitSearchResult extends AbstractReadOnlyEntity {
 
+    public static final String SEARCH_PARAM_OFFICE_CODE = "officeCode";
+    
     public static final String SEARCH_QUERY =
-            "SELECT b.id, b.name, b.name_firstpart, b.name_lastpart, b.status_code, "
+            "SELECT b.id, b.name, b.name_firstpart, b.name_lastpart, b.status_code, b.office_code, "
             + "(SELECT string_agg(COALESCE(p.name, '') || ' ' || COALESCE(p.last_name, ''), '::::') "
             + "FROM administrative.rrr rrr INNER JOIN (administrative.party_for_rrr pr "
             + "INNER JOIN party.party p ON pr.party_id = p.id) ON rrr.id = pr.rrr_id "
@@ -44,8 +46,10 @@ public class BaUnitSearchResult extends AbstractReadOnlyEntity {
             + "FROM administrative.ba_unit b "
             + "WHERE POSITION(LOWER(#{nameFirstPart}) IN LOWER(COALESCE(b.name_firstpart, ''))) > 0 "
             + "AND POSITION(LOWER(#{nameLastPart}) IN LOWER(COALESCE(b.name_lastpart, ''))) > 0 "
+            + "AND b.office_code = #{" + SEARCH_PARAM_OFFICE_CODE + "}"
             + "ORDER BY b.name_firstpart, b.name_lastpart "
             + "LIMIT 101";
+    
     @Id
     @Column
     private String id;
@@ -59,6 +63,8 @@ public class BaUnitSearchResult extends AbstractReadOnlyEntity {
     private String statusCode;
     @Column
     private String rightholders;
+    @Column(name="office_code", updatable=false)
+    private String officeCode;
 
     public BaUnitSearchResult() {
         super();
@@ -110,5 +116,13 @@ public class BaUnitSearchResult extends AbstractReadOnlyEntity {
 
     public void setStatusCode(String statusCode) {
         this.statusCode = statusCode;
+    }
+
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public void setOfficeCode(String officeCode) {
+        this.officeCode = officeCode;
     }
 }

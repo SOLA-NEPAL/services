@@ -41,7 +41,6 @@ import javax.ejb.Stateless;
 import org.sola.common.RolesConstants;
 import org.sola.common.SOLAException;
 import org.sola.common.messaging.ServiceMessage;
-import org.sola.services.common.LocalInfo;
 import org.sola.services.common.ejbs.AbstractEJB;
 import org.sola.services.common.repository.CommonSqlProvider;
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
@@ -115,8 +114,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
     }
 
     @Override
-    public GenericResult getGenericResultList(
-            String queryName, Map params) {
+    public GenericResult getGenericResultList(String queryName, Map params) {
 
         GenericResult result = new GenericResult();
         DynamicQuery query = getDynamicQuery(queryName, params);
@@ -205,7 +203,9 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
                 params.getFromDate() == null ? new GregorianCalendar(1, 1, 1).getTime() : params.getFromDate());
         queryParams.put(ApplicationSearchResult.QUERY_PARAM_TO_LODGE_DATE,
                 params.getToDate() == null ? new GregorianCalendar(2500, 1, 1).getTime() : params.getToDate());
-
+        queryParams.put(ApplicationSearchResult.QUERY_PARAM_OFFICE_CODE, 
+                adminEJB.getCurrentOfficeCode()==null ? "" : adminEJB.getCurrentOfficeCode());
+        
         queryParams.put(CommonSqlProvider.PARAM_WHERE_PART, ApplicationSearchResult.QUERY_WHERE_SEARCH_APPLICATIONS);
         queryParams.put(CommonSqlProvider.PARAM_ORDER_BY_PART, ApplicationSearchResult.QUERY_ORDER_BY);
         queryParams.put(CommonSqlProvider.PARAM_LIMIT_PART, "100");
@@ -282,13 +282,6 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
 
     @Override
     @RolesAllowed(RolesConstants.APPLICATION_VIEW_APPS)
-    @Deprecated
-    public List<ApplicationSearchResult> getUnassignedApplications(String locale) {
-        return new ArrayList<ApplicationSearchResult>();
-    }
-
-    @Override
-    @RolesAllowed(RolesConstants.APPLICATION_VIEW_APPS)
     public List<ApplicationSearchResult> getAssignedApplications(String locale) {
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_FROM_PART, ApplicationSearchResult.QUERY_FROM);
@@ -296,6 +289,8 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         
         if (isInRole(RolesConstants.APPLICATION_ASSIGN_TO_ALL)) {
             params.put(CommonSqlProvider.PARAM_WHERE_PART, ApplicationSearchResult.QUERY_WHERE_GET_ASSIGNED_ALL);
+            params.put(ApplicationSearchResult.QUERY_PARAM_OFFICE_CODE, 
+                adminEJB.getCurrentOfficeCode()==null ? "" : adminEJB.getCurrentOfficeCode());
         } else if (isInRole(RolesConstants.APPLICATION_ASSIGN_TO_DEPARTMENT)) {
             params.put(CommonSqlProvider.PARAM_WHERE_PART, ApplicationSearchResult.QUERY_WHERE_GET_ASSIGNED_DEPARTMENT);
             params.put(ApplicationSearchResult.QUERY_PARAM_USER_NAME, getUserName());
@@ -342,13 +337,14 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
 
     @Override
     public ResultForNavigationInfo getSpatialResult(
-            QueryForNavigation spatialQuery) {
+            QueryForNavigation spatialQuery, String officeCode) {
         Map params = new HashMap<String, Object>();
         params.put("minx", spatialQuery.getWest());
         params.put("miny", spatialQuery.getSouth());
         params.put("maxx", spatialQuery.getEast());
         params.put("maxy", spatialQuery.getNorth());
         params.put("srid", spatialQuery.getSrid());
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, officeCode);
         ResultForNavigationInfo spatialResultInfo = new ResultForNavigationInfo();
         getRepository().setLoadInhibitors(new Class[]{DynamicQueryField.class});
         List<SpatialResult> result = executeDynamicQuery(SpatialResult.class,
@@ -374,6 +370,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
             Map params = new HashMap<String, Object>();
             params.put(ResultForSelectionInfo.PARAM_GEOMETRY, queryInfo.getFilteringGeometry());
             params.put(ResultForSelectionInfo.PARAM_SRID, queryInfo.getSrid());
+            params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
             if (queryInfo.getLocale() != null) {
                 params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, queryInfo.getLocale());
             } else {
@@ -464,6 +461,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         params.put("ownerName", searchParams.getOwnerName());
         params.put("nameFirstPart", searchParams.getNameFirstPart());
         params.put("nameLastPart", searchParams.getNameLastPart());
+        params.put(BaUnitSearchResult.SEARCH_PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntityList(BaUnitSearchResult.class, params);
     }
 
@@ -502,6 +500,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
                 params.put(CommonSqlProvider.PARAM_SELECT_PART, selectPart);
             }
             params.put(CommonSqlProvider.PARAM_WHERE_PART, wherePart);
+            params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
             params.put(CadastreObjectSearchResult.SEARCH_STRING_PARAM, searchString);
             result = this.getRepository().getEntityList(CadastreObjectSearchResult.class, params);
         }

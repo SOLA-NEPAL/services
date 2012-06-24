@@ -53,6 +53,7 @@ import org.sola.services.ejb.transaction.businesslogic.TransactionEJBLocal;
 import org.sola.services.ejb.transaction.repository.entities.RegistrationStatusType;
 import org.sola.services.ejb.transaction.repository.entities.Transaction;
 import org.sola.services.ejb.transaction.repository.entities.TransactionBasic;
+import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
 
 /**
  *
@@ -72,6 +73,8 @@ public class AdministrativeEJB extends AbstractEJB
     private TransactionEJBLocal transactionEJB;
     @EJB
     private CadastreEJBLocal cadastreEJB;
+    @EJB
+    private AdminEJBLocal adminEJB;
 
     @Override
     protected void postConstruct() {
@@ -132,7 +135,8 @@ public class AdministrativeEJB extends AbstractEJB
         TransactionBasic transaction =
                 transactionEJB.getTransactionByServiceId(serviceId, true, TransactionBasic.class);
         LocalInfo.setTransactionId(transaction.getId());
-        return getRepository().saveEntity(baUnit);
+        
+        return saveBaUnit(baUnit);
     }
 
     @Override
@@ -158,6 +162,9 @@ public class AdministrativeEJB extends AbstractEJB
                 getRepository().getEntityList(BaUnitStatusChanger.class, params);
 
         for (BaUnitStatusChanger baUnit : baUnitList) {
+            
+            adminEJB.checkOfficeCode(baUnit.getOfficeCode());
+            
             validationResult.addAll(this.validateBaUnit(baUnit, languageCode));
             if (systemEJB.validationSucceeded(validationResult) && !validateOnly) {
                 baUnit.setStatusCode(approvedStatus);
@@ -172,6 +179,9 @@ public class AdministrativeEJB extends AbstractEJB
         List<RrrStatusChanger> rrrStatusChangerList =
                 getRepository().getEntityList(RrrStatusChanger.class, params);
         for (RrrStatusChanger rrr : rrrStatusChangerList) {
+            
+            adminEJB.checkOfficeCode(rrr.getOfficeCode());
+            
             validationResult.addAll(this.validateRrr(rrr, languageCode));
             if (systemEJB.validationSucceeded(validationResult) && !validateOnly) {
                 rrr.setStatusCode(approvedStatus);
@@ -271,9 +281,10 @@ public class AdministrativeEJB extends AbstractEJB
         if (baUnitId == null) {
             return null;
         }
-
-        //TODO: Put BR check to have only one pending transaction for the BaUnit and BaUnit to be with "current" status.
-
+        
+        BaUnitBasic baUnit = getRepository().getEntity(BaUnitBasic.class, baUnitId);
+        adminEJB.checkOfficeCode(baUnit.getOfficeCode());
+        
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, BaUnitTarget.QUERY_WHERE_GET_BY_BAUNITID);
         params.put(BaUnitTarget.PARAM_BAUNIT_ID, baUnitId);
@@ -282,6 +293,7 @@ public class AdministrativeEJB extends AbstractEJB
 
         if (targets != null || targets.size() > 0) {
             for (BaUnitTarget baUnitTarget : targets) {
+                
                 Transaction transaction = transactionEJB.getTransactionById(
                         baUnitTarget.getTransactionId(), Transaction.class);
                 if (transaction != null
@@ -300,6 +312,11 @@ public class AdministrativeEJB extends AbstractEJB
 
     @Override
     public Moth saveMoth(Moth moth) {
+        if(moth.isNew()){
+            moth.setOfficeCode(adminEJB.getCurrentOfficeCode());
+        } else {
+            adminEJB.checkOfficeCode(moth.getOfficeCode());
+        }
         return getRepository().saveEntity(moth);
     }
 
@@ -330,6 +347,11 @@ public class AdministrativeEJB extends AbstractEJB
 
     @Override
     public Loc saveLoc(Loc loc) {
+        if(loc.isNew()){
+            loc.setOfficeCode(adminEJB.getCurrentOfficeCode());
+        } else {
+            adminEJB.checkOfficeCode(loc.getOfficeCode());
+        }
         return getRepository().saveEntity(loc);
     }
 
@@ -340,6 +362,11 @@ public class AdministrativeEJB extends AbstractEJB
 
     @Override
     public BaUnit saveBaUnit(BaUnit baUnit) {
+        if(baUnit.isNew()){
+            baUnit.setOfficeCode(adminEJB.getCurrentOfficeCode());
+        }else{
+            adminEJB.checkOfficeCode(baUnit.getOfficeCode());
+        }
         return getRepository().saveEntity(baUnit);
     }
 
