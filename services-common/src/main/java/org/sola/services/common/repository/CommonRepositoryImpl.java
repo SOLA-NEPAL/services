@@ -329,6 +329,11 @@ public class CommonRepositoryImpl implements CommonRepository {
         if (entity == null) {
             return null;
         }
+        //Addition by Kabindra
+        if (entity.getEntityAction()==EntityAction.READ_ONLY) {
+            return entity;
+        }
+        //--------------------
 
         if (entity.isLoaded() && entity.hasIdChanged()) {
             // The Id of the entity has changed since it was loaded. This probably means that 

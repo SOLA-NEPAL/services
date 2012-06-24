@@ -98,7 +98,7 @@ public class Application extends AbstractVersionedEntity {
     private boolean feePaid;
     @ExternalEJB(ejbLocalClass = PartyEJBLocal.class,
     loadMethod = "getParty", saveMethod = "saveParty")
-    @ChildEntity(childIdField = "contactPersonId")
+    @ChildEntity(childIdField = "contactPersonId",readOnly=true)
     private Party contactPerson;
     @ExternalEJB(ejbLocalClass = PartyEJBLocal.class, loadMethod = "getParty")
     @ChildEntity(childIdField = "agentId")

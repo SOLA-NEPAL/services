@@ -127,7 +127,7 @@ public class Document extends AbstractVersionedEntity {
         super.preSave();
     }
     
-    private String generateDocumentNumber() {
+    public static String generateDocumentNumber() {
         String result = "";
         SystemEJBLocal systemEJB = RepositoryUtility.tryGetEJB(SystemEJBLocal.class);
         if (systemEJB != null) {

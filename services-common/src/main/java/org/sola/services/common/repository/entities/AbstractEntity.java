@@ -245,6 +245,8 @@ public abstract class AbstractEntity extends AbstractReadOnlyEntity {
                 markForDelete();
             } else if (entityAction == EntityAction.DISASSOCIATE) {
                 markForDisassociate();
+            } else if (entityAction == EntityAction.READ_ONLY) {
+                markFor_No_update_Save();
             } else {
                 markForSave();
             }
@@ -326,6 +328,13 @@ public abstract class AbstractEntity extends AbstractReadOnlyEntity {
      */
     public void markForDelete() {
         this.entityAction = EntityAction.DELETE;
+    }
+    
+    /**
+     * Sets the entity action to ReadOnly. 
+     */
+    public void markFor_No_update_Save() {
+        this.entityAction = EntityAction.READ_ONLY;
     }
 
     /** 
