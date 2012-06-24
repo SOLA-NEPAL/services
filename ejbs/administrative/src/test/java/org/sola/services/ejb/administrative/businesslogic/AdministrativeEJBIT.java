@@ -388,8 +388,8 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
             tx.begin();
             Moth result = instance.getMoth("1", "M", "test1");
-            Vdc vdc = result.getVdc();
-            System.out.println(">>> Found " + vdc.getDisplayValue());
+//           // Vdc vdc = result.getVdc();
+//            System.out.println(">>> Found " + vdc.getDisplayValue());
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
@@ -508,12 +508,12 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             cobj.setTransactionId("cadastre-transaction");
             cobj.setParcelno(1501);
             cobj.setParcelType(0);
-            MapSheet mapSheet = new MapSheet();
-            mapSheet.setMapNumber("M0002");
-            mapSheet.setSheetType(0);
-            //mapSheet.setAlphaCode("1");
-            cobj.setMapSheet(mapSheet);
-            cobj.setMapSheetCode(mapSheet.getId());
+//            MapSheet mapSheet = new MapSheet();
+//            mapSheet.setMapNumber("M0002");
+//            mapSheet.setSheetType(0);
+//            //mapSheet.setAlphaCode("1");
+//            cobj.setMapSheet(mapSheet);
+//            cobj.setMapSheetCode(mapSheet.getId());
             
             SpatialValueArea spValA = new SpatialValueArea();
             spValA.setSpatialUnitId(moth.getId());

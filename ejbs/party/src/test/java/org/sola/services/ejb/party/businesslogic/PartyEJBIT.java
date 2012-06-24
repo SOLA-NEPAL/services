@@ -116,8 +116,7 @@ public class PartyEJBIT extends AbstractEJBTest {
 
     }
 
- @Ignore
-
+    @Ignore
     @Test
     public void testGetParty() throws Exception {
 //        System.out.println("get party");
@@ -125,20 +124,19 @@ public class PartyEJBIT extends AbstractEJBTest {
 //        Class<?> clazz = c.get(0).getEntityClass();
 //        Class<?> clazz2 = c.get(1).getEntityClass();
 //        System.out.println("do nothing");
-        
-        
-            PartyEJBLocal instance = (PartyEJBLocal) getEJBInstance(PartyEJB.class.getSimpleName());
-             Party owner = new Party();
-            Party list = instance.getParty("55929c04-7a8b-4e5e-b5c8-f43af1dc415a");
-            
-           
+
+
+        PartyEJBLocal instance = (PartyEJBLocal) getEJBInstance(PartyEJB.class.getSimpleName());
+        Party owner = new Party();
+        Party list = instance.getParty("55929c04-7a8b-4e5e-b5c8-f43af1dc415a");
+
+
     }
 
     /**
      * Test of saveParty method, of class PartyEJB.
      */
-
- @Ignore
+    @Ignore
     @Test
     public void testSaveParty() throws Exception {
         System.out.println(">>> Testing saving land owner");
@@ -147,17 +145,29 @@ public class PartyEJBIT extends AbstractEJBTest {
             PartyEJBLocal instance = (PartyEJBLocal) getEJBInstance(PartyEJB.class.getSimpleName());
             List<Party> list = new ArrayList<Party>();
             Party owner = new Party();
-           // owner.setId("pqr11");
+            // owner.setId("pqr11");
             owner.setTypeCode("baunit");
-            owner.setName("Kumar");
-            owner.setLastName("Khadka");
+            owner.setName("Ishwary");
+            owner.setLastName("Kandel");
 
             //owner.setAddressId("myIdsd");
             Address add = new Address();
             add.setDescription("Testing");
             add.setVdcCode("43055");
-            add.setDistrictCode("25");            
+            add.setDistrictCode("25");
             owner.setAddress(add);
+//            
+////            // owner.setId("pqr11");
+////            owner.setTypeCode("baunit");
+////            owner.setName("Dinesh");
+////            owner.setLastName("Tuitui");
+//
+//            //owner.setAddressId("myIdsd");
+//            add = new Address();
+//            add.setDescription("Testing");
+//            add.setVdcCode("43055");
+//            add.setDistrictCode("25");            
+//            owner.setAddress(add);
 //            List<PartyRole> roleList = new ArrayList<PartyRole>();
 //            PartyRole role = new PartyRole();
 //            role.setPartyId("ofikf55i");
@@ -177,5 +187,4 @@ public class PartyEJBIT extends AbstractEJBTest {
             fail(e.getMessage());
         }
     }
-
 }
