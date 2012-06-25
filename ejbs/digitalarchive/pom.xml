@@ -15,10 +15,15 @@
     <name>EJB Digital archive</name>
     <dependencies>
         <dependency>
-            <groupId>org.sola.services.ejbs</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>sola-admin</artifactId>
             <version>${project.version}</version>   
         </dependency>
+        <dependency>
+             <groupId>${project.groupId}</groupId>
+            <artifactId>sola-system</artifactId>
+            <version>1.1-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
-
 </project>

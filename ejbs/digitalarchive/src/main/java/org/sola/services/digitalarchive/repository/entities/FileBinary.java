@@ -27,8 +27,6 @@
  */
 package org.sola.services.digitalarchive.repository.entities;
 
-import org.sola.services.digitalarchive.repository.entities.FileInfo;
-
 /**
  *
  * Represents meta data and binary content of the file, stored in the shared folder

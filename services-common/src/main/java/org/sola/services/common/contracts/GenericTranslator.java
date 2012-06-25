@@ -112,8 +112,8 @@ public final class GenericTranslator {
      *
      * @param <T> The generic type of the entity class to translate to. Must
      * extend AbstractTO
-     * @param resultTO The TO object to translate from.
-     * @param entityClass The concrete type of the entity class to translate to.
+     * @param resultTO The TO object to translate from (source).
+     * @param entityClass The concrete type of the entity class to translate to(destination class).
      * Must extend AbstractEntity to match the requirements for T. e.g.
      * Party.class.
      * @param entity Should be a reference to an attached entity but can be
