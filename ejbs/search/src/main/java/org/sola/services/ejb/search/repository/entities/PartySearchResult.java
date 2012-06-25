@@ -38,7 +38,7 @@ import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 public class PartySearchResult extends AbstractReadOnlyEntity {
 
     public static final String SEARCH_QUERY =
-            "SELECT distinct p.id, p.name, p.last_name, p.ext_id, p.type_code, p.office_code "
+            "SELECT distinct p.id, p.name, p.last_name, p.ext_id, p.type_code, p.office_code, "
             + "(SELECT CASE (SELECT COUNT(1) FROM administrative.party_for_rrr ap " 
             + "WHERE ap.party_id = p.id) WHEN 0 THEN false ELSE true END) AS is_rightholder "
             + "FROM party.party p LEFT JOIN party.party_role pr ON p.id = pr.party_id "
