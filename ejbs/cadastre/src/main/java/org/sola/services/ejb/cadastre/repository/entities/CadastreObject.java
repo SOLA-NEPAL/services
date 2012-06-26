@@ -302,7 +302,6 @@ public class CadastreObject extends AbstractVersionedEntity {
         if (this.isNew() && this.getTransactionId() == null) {
             setTransactionId(LocalInfo.getTransactionId());
         }
-
         super.preSave();
     }
 }

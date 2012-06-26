@@ -105,7 +105,7 @@ public class BaUnit extends AbstractVersionedEntity {
     @ExternalEJB(ejbLocalClass = CadastreEJBLocal.class,
     loadMethod = "getCadastreObjects", saveMethod = "saveCadastreObject")
     @ChildEntityList(parentIdField = "baUnitId", childIdField = "spatialUnitId",
-    manyToManyClass = BaUnitContainsSpatialUnit.class)
+    manyToManyClass = BaUnitContainsSpatialUnit.class,readOnly=true)
     private List<CadastreObject> cadastreObjectList;
     private Boolean locked;
     @ChildEntityList(parentIdField = "baUnitId")
@@ -119,7 +119,7 @@ public class BaUnit extends AbstractVersionedEntity {
     @ExternalEJB(ejbLocalClass = PartyEJBLocal.class,
     loadMethod = "getParties", saveMethod = "saveParty")
     @ChildEntityList(parentIdField = "baUnitId", childIdField = "partyId",
-    manyToManyClass = BaUnitAsParty.class)
+    manyToManyClass = BaUnitAsParty.class,readOnly=true)
     private List<Party> parties;    
     @Column(name = "office_code")
     private String officeCode;

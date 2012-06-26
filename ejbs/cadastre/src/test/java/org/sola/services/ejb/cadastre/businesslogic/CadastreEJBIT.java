@@ -134,7 +134,7 @@ public class CadastreEJBIT extends AbstractEJBTest {
             CadastreEJBLocal instance=(CadastreEJBLocal) getEJBInstance(CadastreEJB.class.getSimpleName());
             CadastreObject cobj=new CadastreObject();                     
             cobj.setTransactionId("cadastre-transaction");
-            cobj.setMapSheetCode("ab6d2a4d-ccec-4ab2-91ee-701dbe3ecd42");
+            cobj.setMapSheetCode("87f66dde-7fc6-4ba5-aadd-252344ae0418");
             cobj.setParcelno(1500);
             cobj.setParcelType(0);
             instance.saveCadastreObject(cobj);

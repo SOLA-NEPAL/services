@@ -59,6 +59,10 @@ public class Moth extends AbstractVersionedEntity {
         this.financialYear = financialYear;
     }
 
+    public String getFinancialYear() {
+        return financialYear;
+    }
+
     public String getTransactionId() {
         return transactionId;
     }
