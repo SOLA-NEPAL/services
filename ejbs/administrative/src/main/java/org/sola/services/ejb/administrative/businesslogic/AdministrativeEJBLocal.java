@@ -86,7 +86,9 @@ public interface AdministrativeEJBLocal extends AbstractSolaTransactionEJBLocal 
     
     List<Loc> getLocList(String mothId);   
     
-    List<BaUnitAsParty> getBaUnitAsPartyList(String partyId);   
+    List<BaUnitAsParty> getBaUnitAsPartyList(String partyId); 
+    
+    List<BaUnitContainsSpatialUnit> getBaUnitContainsSpatialUnitsList(String spatiaUnitId);  
 }
 //***********************************************************************************************************
 //</editor-fold>
