@@ -377,27 +377,25 @@ public class AdministrativeEJB extends AbstractEJB
         params.put(Loc.MOTH_ID_PARAM, mothId);
         params.put((Loc.PANA_NO_PARAM), panaNo);
         return getRepository().getEntity(Loc.class, params);
-    }
-
+    }   
+    
     @Override
-    public BaUnitContainsSpatialUnit saveBaUnitContainsSpatialUnit(BaUnitContainsSpatialUnit baUnitContainsSpatialUnit) {
-        return getRepository().saveEntity(baUnitContainsSpatialUnit);
+    public List<Loc> getLocList(String mothId) {
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Loc.GET_BY_MOTH_ID);
+        params.put(Loc.MOTH_ID_PARAM, mothId);        
+        List<Loc> loc = getRepository().getEntityList(Loc.class, params);
+        return loc;
     }
-
-    @Override
-    public BaUnitContainsSpatialUnit getBaUnitContainsSpatialUnit(String id) {
-        return getRepository().getEntity(BaUnitContainsSpatialUnit.class, id);
-    }
-
-    @Override
-    public BaUnitAsParty getBaUnitAsParty(String id) {
-        return getRepository().getEntity(BaUnitAsParty.class, id);
-    }
-
-    @Override
-    public BaUnitAsParty saveBaUnitAsParty(BaUnitAsParty baUnitAsParty) {
-        return getRepository().saveEntity(baUnitAsParty);
+    
+     @Override
+    public List<BaUnitAsParty> getBaUnitAsPartyList(String partyId) {
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, BaUnitAsParty.GET_BY_PARTY_ID);
+        params.put(BaUnitAsParty.PARTY_ID_PARAM, partyId);        
+        List<BaUnitAsParty> bau = getRepository().getEntityList(BaUnitAsParty.class, params);
+        return bau;
     }
     //***********************************************************************************************************
-    //</editor-fold>
+    //</editor-fold>    
 }

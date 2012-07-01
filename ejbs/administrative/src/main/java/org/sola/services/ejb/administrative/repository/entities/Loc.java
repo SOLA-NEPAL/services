@@ -22,6 +22,8 @@ public class Loc extends AbstractVersionedEntity {
     public static final String PANA_NO_PARAM = "panaNo";
     public static final String MOTH_ID_PARAM = "mothId";
     public static final String GET_BY_MOTH_ID_AND_PANA_NO = "pana_no=#{" + PANA_NO_PARAM + "} and moth_id=#{" + MOTH_ID_PARAM + "}";
+    public static final String GET_BY_MOTH_ID = "moth_id=#{" + MOTH_ID_PARAM + "}";
+    
     @Id
     @Column(name = "id")
     private String id;
