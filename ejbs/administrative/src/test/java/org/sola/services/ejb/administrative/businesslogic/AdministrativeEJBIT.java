@@ -92,7 +92,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
 
         AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
 
-        
+
         // Manage the scope of the transction 
         UserTransaction tx = getUserTransaction();
         try {
@@ -357,11 +357,11 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
 
     //<editor-fold defaultstate="collapsed" desc="By Kumar">
     //***********************************************************************************************************
-   @Ignore
+    @Ignore
     @Test
     public void getMoths() throws Exception {
         System.out.println(">>> Testing getting moths");
-        
+
         UserTransaction tx = getUserTransaction();
         try {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
@@ -378,7 +378,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             fail(e.getMessage());
         }
     }
-    
+
     @Ignore
     @Test
     public void getMoth() throws Exception {
@@ -388,15 +388,15 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
             tx.begin();
             Moth result = instance.getMoth("1", "M", "test1");
-            Vdc vdc = result.getVdc();
-            System.out.println(">>> Found " + vdc.getDisplayValue());
+//           // Vdc vdc = result.getVdc();
+//            System.out.println(">>> Found " + vdc.getDisplayValue());
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
         }
     }
-    
+
     @Ignore
     @Test
     public void saveLOC() throws Exception {
@@ -415,7 +415,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             fail(e.getMessage());
         }
     }
-    
+
     @Ignore
     @Test
     public void getLOC() throws Exception {
@@ -427,32 +427,32 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             Loc loc = instance.getLoc("8cbe76be-b7e6-4aa9-8ea7-64bd9e19f217");
             //System.out.println(loc.getPanaNo());
             tx.commit();
-            
+
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
         }
     }
-    
-  @Ignore
+
+    @Ignore
     @Test
     public void getMothById() throws Exception {
         System.out.println(">>> Testing getting moth by id");
-        
+
         UserTransaction tx = getUserTransaction();
         try {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
             tx.begin();
             Moth result = instance.getMoth("032a8c58-a7a6-4831-aeab-1b0d93849e0e");
-            
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
         }
     }
-    
-   @Ignore
+
+    @Ignore
     @Test
     public void saveBaUnit() throws Exception {
         System.out.println(">>> Testing saving Bauint");
@@ -472,10 +472,10 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
-            
+
         }
     }
-    
+
     @Ignore
     @Test
     public void testSaveMoth() throws Exception {
@@ -486,14 +486,14 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             List<Moth> mothList = new ArrayList<Moth>();
             Moth moth = new Moth();
             moth.setMothlujNumber("MOOO2");
-            moth.setVdcCode("43055");          
+            moth.setVdcCode("43055");
             moth.setMothLuj("M");
-            moth.setFinancialYear("69");          
+            moth.setFinancialYear("69");
 
             Loc loc = new Loc();
             loc.setMothId(moth.getId());
             loc.setPanaNo(1);
-           
+
             BaUnit baUnit = new BaUnit();
             baUnit.setLocId(loc.getId());
             baUnit.setTypeCode("administrativeUnit");
@@ -501,47 +501,47 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             baUnit.setNameFirstpart("TestBaunit");
             baUnit.setNameLastpart("TestBaunit");
             baUnit.setStatusCode("current");
-            
+
             CadastreObject cobj = new CadastreObject();
             cobj.setTypeCode("parcel");
             cobj.setStatusCode("pending");
             cobj.setTransactionId("cadastre-transaction");
             cobj.setParcelno(1501);
             cobj.setParcelType(0);
-            MapSheet mapSheet = new MapSheet();
-            mapSheet.setMapNumber("M0002");
-            mapSheet.setSheetType(0);
-            //mapSheet.setAlphaCode("1");
-            cobj.setMapSheet(mapSheet);
-            cobj.setMapSheetCode(mapSheet.getId());
-            
+//            MapSheet mapSheet = new MapSheet();
+//            mapSheet.setMapNumber("M0002");
+//            mapSheet.setSheetType(0);
+//            //mapSheet.setAlphaCode("1");
+//            cobj.setMapSheet(mapSheet);
+//            cobj.setMapSheetCode(mapSheet.getId());
+
             SpatialValueArea spValA = new SpatialValueArea();
             spValA.setSpatialUnitId(moth.getId());
             spValA.setTypeCode("officialArea");
             BigDecimal bigVal = new BigDecimal(1526836);
             spValA.setSize(bigVal);
-            
-            
+
+
             List< SpatialValueArea> spatialValAreaList = new ArrayList<SpatialValueArea>();
             spatialValAreaList.add(spValA);
             cobj.setSpatialValueAreaList(spatialValAreaList);
             List<CadastreObject> cadObjList = new ArrayList<CadastreObject>();
             cadObjList.add(cobj);
             baUnit.setCadastreObjectList(cadObjList);
-            
+
             Party owner = new Party();
             owner.setTypeCode("baunit");
             owner.setName("Kumar");
-            owner.setLastName("Khadka");            
+            owner.setLastName("Khadka");
             Address add = new Address();
             add.setDescription("Testing");
             add.setVdcCode("43055");
-            add.setDistrictCode("25");            
+            add.setDistrictCode("25");
             owner.setAddress(add);
-            List<Party> partyList=new ArrayList<Party>();
+            List<Party> partyList = new ArrayList<Party>();
             partyList.add(owner);
             baUnit.setParties(partyList);
-            
+
             List<BaUnit> baUnitList = new ArrayList<BaUnit>();
             baUnitList.add(baUnit);
             loc.setBaUnits(baUnitList);
@@ -554,13 +554,13 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
                 instance.saveMoth(mh);
             }
             tx.commit();
-            
+
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
         }
     }
-    
+
     @Test
     @Ignore
     public void getLOCByMothIdAndPanaNo() throws Exception {
@@ -576,27 +576,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             fail(e.getMessage());
         }
     }
-    
-    @Ignore
-    @Test
-    public void saveBaUnitContainsSpatialUnit() throws Exception {
-        System.out.println(">>> Testing saving BaUnitContainsSpatialUnit");
-        UserTransaction tx = getUserTransaction();
-        try {
-            AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
-            BaUnitContainsSpatialUnit baUnitContains = new BaUnitContainsSpatialUnit();
-            tx.begin();
-            baUnitContains.setBaUnitId("a0c54e1c-d655-49ce-8f13-c4d9e06eac45");
-            baUnitContains.setSpatialUnitId("17988e25-4424-4f45-9a0d-7eb5d4d671ca");            
-            instance.saveBaUnitContainsSpatialUnit(baUnitContains);
-            tx.commit();
-        } catch (Exception e) {
-            tx.rollback();
-            fail(e.getMessage());
-            
-        }
-    }
-    
+
     @Ignore
     @Test
     public void saveBaUnitAsParty() throws Exception {
@@ -608,12 +588,12 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             tx.begin();
             baUnitContains.setBaUnitId("a0c54e1c-d655-49ce-8f13-c4d9e06eac45");
             baUnitContains.setPartyId("");
-          //  instance.saveBaUnitAsParty(baUnitContains);
+            //  instance.saveBaUnitAsParty(baUnitContains);
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
             fail(e.getMessage());
-            
+
         }
     }
     //***********************************************************************************************************

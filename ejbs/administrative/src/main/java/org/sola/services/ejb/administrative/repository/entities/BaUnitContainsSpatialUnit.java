@@ -47,6 +47,8 @@ import org.sola.services.common.repository.entities.AbstractVersionedEntity;
  */
 @Table(schema = "administrative", name = "ba_unit_contains_spatial_unit")
 public class BaUnitContainsSpatialUnit extends AbstractVersionedEntity {
+    public static final String SPATIAL_ID_PARAM = "spatialUnitId";
+    public static final String GET_BY_SPATIAL_ID = "spatial_unit_id=#{" + SPATIAL_ID_PARAM + "}";
     @Id
     @Column(name = "ba_unit_id")
     private String baUnitId;

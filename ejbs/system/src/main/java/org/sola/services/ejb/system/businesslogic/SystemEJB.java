@@ -43,10 +43,7 @@ import org.sola.services.common.br.ValidationResult;
 import org.sola.services.common.ejbs.AbstractEJB;
 import org.sola.services.common.repository.CommonSqlProvider;
 import org.sola.services.ejb.system.br.Result;
-import org.sola.services.ejb.system.repository.entities.Br;
-import org.sola.services.ejb.system.repository.entities.BrCurrent;
-import org.sola.services.ejb.system.repository.entities.BrReport;
-import org.sola.services.ejb.system.repository.entities.BrValidation;
+import org.sola.services.ejb.system.repository.entities.*;
 
 @Stateless
 @EJB(name = "java:global/SOLA/SystemEJBLocal", beanInterface = SystemEJBLocal.class)
@@ -257,6 +254,26 @@ public class SystemEJB extends AbstractEJB implements SystemEJBLocal {
             }
         }
         return true;
+    }
+
+    @Override
+    public List<RestrictionType> getRestrictionTypes(String languageCode) {
+        return getRepository().getCodeList(RestrictionType.class, languageCode);
+    }
+
+    @Override
+    public List<RestrictionReason> getRestrictionReasons(String languageCode) {
+        return getRepository().getCodeList(RestrictionReason.class, languageCode);
+    }
+
+    @Override
+    public List<RestrictionReleaseReason> getRestrictionReleaseReasons(String languageCode) {
+        return getRepository().getCodeList(RestrictionReleaseReason.class, languageCode);
+    }
+
+    @Override
+    public List<RestrictionOffice> getRestrictionOffices(String languageCode) {
+        return getRepository().getCodeList(RestrictionOffice.class, languageCode);
     }
     
     

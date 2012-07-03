@@ -135,7 +135,7 @@ public class AdministrativeEJB extends AbstractEJB
         TransactionBasic transaction =
                 transactionEJB.getTransactionByServiceId(serviceId, true, TransactionBasic.class);
         LocalInfo.setTransactionId(transaction.getId());
-        
+
         return saveBaUnit(baUnit);
     }
 
@@ -162,9 +162,9 @@ public class AdministrativeEJB extends AbstractEJB
                 getRepository().getEntityList(BaUnitStatusChanger.class, params);
 
         for (BaUnitStatusChanger baUnit : baUnitList) {
-            
+
             adminEJB.checkOfficeCode(baUnit.getOfficeCode());
-            
+
             validationResult.addAll(this.validateBaUnit(baUnit, languageCode));
             if (systemEJB.validationSucceeded(validationResult) && !validateOnly) {
                 baUnit.setStatusCode(approvedStatus);
@@ -179,9 +179,9 @@ public class AdministrativeEJB extends AbstractEJB
         List<RrrStatusChanger> rrrStatusChangerList =
                 getRepository().getEntityList(RrrStatusChanger.class, params);
         for (RrrStatusChanger rrr : rrrStatusChangerList) {
-            
+
             adminEJB.checkOfficeCode(rrr.getOfficeCode());
-            
+
             validationResult.addAll(this.validateRrr(rrr, languageCode));
             if (systemEJB.validationSucceeded(validationResult) && !validateOnly) {
                 rrr.setStatusCode(approvedStatus);
@@ -281,10 +281,10 @@ public class AdministrativeEJB extends AbstractEJB
         if (baUnitId == null) {
             return null;
         }
-        
+
         BaUnitBasic baUnit = getRepository().getEntity(BaUnitBasic.class, baUnitId);
         adminEJB.checkOfficeCode(baUnit.getOfficeCode());
-        
+
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, BaUnitTarget.QUERY_WHERE_GET_BY_BAUNITID);
         params.put(BaUnitTarget.PARAM_BAUNIT_ID, baUnitId);
@@ -293,7 +293,7 @@ public class AdministrativeEJB extends AbstractEJB
 
         if (targets != null || targets.size() > 0) {
             for (BaUnitTarget baUnitTarget : targets) {
-                
+
                 Transaction transaction = transactionEJB.getTransactionById(
                         baUnitTarget.getTransactionId(), Transaction.class);
                 if (transaction != null
@@ -312,7 +312,7 @@ public class AdministrativeEJB extends AbstractEJB
 
     @Override
     public Moth saveMoth(Moth moth) {
-        if(moth.isNew()){
+        if (moth.isNew()) {
             moth.setOfficeCode(adminEJB.getCurrentOfficeCode());
         } else {
             adminEJB.checkOfficeCode(moth.getOfficeCode());
@@ -347,7 +347,7 @@ public class AdministrativeEJB extends AbstractEJB
 
     @Override
     public Loc saveLoc(Loc loc) {
-        if(loc.isNew()){
+        if (loc.isNew()) {
             loc.setOfficeCode(adminEJB.getCurrentOfficeCode());
         } else {
             adminEJB.checkOfficeCode(loc.getOfficeCode());
@@ -362,9 +362,9 @@ public class AdministrativeEJB extends AbstractEJB
 
     @Override
     public BaUnit saveBaUnit(BaUnit baUnit) {
-        if(baUnit.isNew()){
+        if (baUnit.isNew()) {
             baUnit.setOfficeCode(adminEJB.getCurrentOfficeCode());
-        }else{
+        } else {
             adminEJB.checkOfficeCode(baUnit.getOfficeCode());
         }
         return getRepository().saveEntity(baUnit);
@@ -380,24 +380,31 @@ public class AdministrativeEJB extends AbstractEJB
     }
 
     @Override
-    public BaUnitContainsSpatialUnit saveBaUnitContainsSpatialUnit(BaUnitContainsSpatialUnit baUnitContainsSpatialUnit) {
-        return getRepository().saveEntity(baUnitContainsSpatialUnit);
+    public List<Loc> getLocList(String mothId) {
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Loc.GET_BY_MOTH_ID);
+        params.put(Loc.MOTH_ID_PARAM, mothId);
+        List<Loc> loc = getRepository().getEntityList(Loc.class, params);
+        return loc;
     }
 
     @Override
-    public BaUnitContainsSpatialUnit getBaUnitContainsSpatialUnit(String id) {
-        return getRepository().getEntity(BaUnitContainsSpatialUnit.class, id);
+    public List<BaUnitAsParty> getBaUnitAsPartyList(String partyId) {
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, BaUnitAsParty.GET_BY_PARTY_ID);
+        params.put(BaUnitAsParty.PARTY_ID_PARAM, partyId);
+        List<BaUnitAsParty> bau = getRepository().getEntityList(BaUnitAsParty.class, params);
+        return bau;
     }
 
     @Override
-    public BaUnitAsParty getBaUnitAsParty(String id) {
-        return getRepository().getEntity(BaUnitAsParty.class, id);
-    }
-
-    @Override
-    public BaUnitAsParty saveBaUnitAsParty(BaUnitAsParty baUnitAsParty) {
-        return getRepository().saveEntity(baUnitAsParty);
+    public List<BaUnitContainsSpatialUnit> getBaUnitContainsSpatialUnitsList(String spatiaUnitId) {
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, BaUnitContainsSpatialUnit.GET_BY_SPATIAL_ID);
+        params.put(BaUnitContainsSpatialUnit.SPATIAL_ID_PARAM, spatiaUnitId);
+        List<BaUnitContainsSpatialUnit> bau = getRepository().getEntityList(BaUnitContainsSpatialUnit.class, params);
+        return bau;
     }
     //***********************************************************************************************************
-    //</editor-fold>
+    //</editor-fold>    
 }

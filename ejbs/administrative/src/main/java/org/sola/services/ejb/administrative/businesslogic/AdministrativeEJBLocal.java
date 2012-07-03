@@ -83,14 +83,12 @@ public interface AdministrativeEJBLocal extends AbstractSolaTransactionEJBLocal 
     BaUnit saveBaUnit(BaUnit baUnit);
 
     Loc getLocByPageNoAndMothId(int panaNo, String mothId);
-
-    BaUnitContainsSpatialUnit saveBaUnitContainsSpatialUnit(BaUnitContainsSpatialUnit baUnitContainsSpatialUnit);
-
-    BaUnitContainsSpatialUnit getBaUnitContainsSpatialUnit(String id);
-
-    BaUnitAsParty getBaUnitAsParty(String id);
-
-    BaUnitAsParty saveBaUnitAsParty(BaUnitAsParty baUnitAsParty);
+    
+    List<Loc> getLocList(String mothId);   
+    
+    List<BaUnitAsParty> getBaUnitAsPartyList(String partyId); 
+    
+    List<BaUnitContainsSpatialUnit> getBaUnitContainsSpatialUnitsList(String spatiaUnitId);  
 }
 //***********************************************************************************************************
 //</editor-fold>

@@ -90,7 +90,7 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
 
     List<CadastreObject> getCadastreObjectList(String vdcCode, String wardNo);
 
-    List<MapSheet> loadMapSheet(String mapSheetType);
+    List<MapSheet> loadMapSheet(int mapSheetType);
 
     CadastreObject getCadastreObject(String vdcCode, String wardNo, int parcelNo);
 

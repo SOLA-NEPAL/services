@@ -320,7 +320,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     }
 
     @Override
-    public List<MapSheet> loadMapSheet(String mapSheetType) {
+    public List<MapSheet> loadMapSheet(int mapSheetType) {
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, MapSheet.GET_BY_MAYSHEET_TYPE);
         params.put(MapSheet.MAPSHEET_TYPE_PARAM, mapSheetType);
