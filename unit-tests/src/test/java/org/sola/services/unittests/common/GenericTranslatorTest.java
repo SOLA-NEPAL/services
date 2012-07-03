@@ -31,6 +31,7 @@ import org.sola.services.boundary.transferobjects.referencedata.RequestTypeTO;
 import org.sola.services.ejb.address.repository.entities.Address;
 import java.util.ArrayList;
 import java.util.List;
+import org.dozer.Mapper;
 import org.sola.services.ejb.application.repository.entities.RequestType;
 import org.sola.services.boundary.transferobjects.casemanagement.ServiceTO;
 import org.sola.services.ejb.application.repository.entities.Service;
@@ -52,6 +53,9 @@ import org.sola.common.DateUtility;
 import org.sola.services.common.EntityAction;
 import org.sola.services.common.contracts.GenericTranslator;
 import static org.junit.Assert.*;
+import org.sola.common.MappingManager;
+import org.sola.services.boundary.transferobjects.digitalarchive.DocumentTO;
+import org.sola.services.digitalarchive.repository.entities.Document;
 
 /**
  *
@@ -83,6 +87,26 @@ public class GenericTranslatorTest {
     public void tearDown() {
     }
 
+    @Test
+    public void testDozerMapByteArray() {
+        Document photoDocBean = new Document();
+        photoDocBean.setBody("abc".getBytes());
+        
+        DocumentTO photoDocTO2 = new DocumentTO();
+        photoDocTO2.setBody("abc".getBytes());
+        
+        PartyTO partyTO = new PartyTO();
+        partyTO.setPhotoDoc(photoDocTO2);
+        
+        Party party = new Party();
+        party.setPhotoDoc(photoDocBean);
+        
+        GenericTranslator.fromTO(partyTO, Party.class, party);
+        
+        assertTrue("Party is oversized = " + party.getPhotoDoc().getBody().length, 
+                party.getPhotoDoc().getBody().length==3);
+    }
+    
     private void assertApplication(Application app, ApplicationTO appTO, Application outApp) {
         assertEquals(appTO.getActionCode(), outApp.getActionCode());
         assertEquals(appTO.getActionNotes(), outApp.getActionNotes());
