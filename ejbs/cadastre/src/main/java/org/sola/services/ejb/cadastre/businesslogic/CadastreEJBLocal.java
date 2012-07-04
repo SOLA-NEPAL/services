@@ -29,7 +29,6 @@
  */
 package org.sola.services.ejb.cadastre.businesslogic;
 
-import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Local;
 import org.sola.services.common.ejbs.AbstractEJBLocal;
@@ -104,5 +103,7 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
     List<CadastreObject> getCadastreObjectBy_Intersection(String geom, int srid);
 
     List<CadastreObject> getCadastreObjectBy_ByteIntersection(String geom, int srid);
+    
+    public List<CadastreObject> getPendingParcelByParts(String searchString);
     //</editor-fold>
 }
