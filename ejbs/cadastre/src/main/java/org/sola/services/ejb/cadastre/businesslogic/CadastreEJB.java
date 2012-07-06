@@ -79,6 +79,17 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         return getRepository().getEntityList(CadastreObject.class,
                 CadastreObject.QUERY_WHERE_SEARCHBYPARTS, params);
     }
+    
+    @Override
+    public List<CadastreObject> getPendingParcelByParts(String searchString) {
+        Integer numberOfMaxRecordsReturned = 10;
+        HashMap params = new HashMap();
+        params.put("search_string", searchString);
+        params.put(CommonSqlProvider.PARAM_LIMIT_PART, numberOfMaxRecordsReturned);
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(CadastreObject.class,
+                CadastreObject.QUERY_WHERE_SEARCHBYPARTS_PENDING, params);
+    }
 
     @Override
     public CadastreObject getCadastreObjectByPoint(double x, double y, int srid) {
