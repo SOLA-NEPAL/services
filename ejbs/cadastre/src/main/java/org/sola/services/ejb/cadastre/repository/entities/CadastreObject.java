@@ -149,7 +149,7 @@ public class CadastreObject extends AbstractVersionedEntity {
     @Column(name = "parcel_note")
     private String parcelNote;
     @Column(name = "parcel_type")
-    private int parcelType;
+    private String parcelType;
     @ChildEntity(childIdField = "mapSheetCode")
     private MapSheet mapSheet;
     @Column(name = "office_code", updatable = false)
@@ -171,11 +171,11 @@ public class CadastreObject extends AbstractVersionedEntity {
         this.parcelNote = parcelNote;
     }
 
-    public int getParcelType() {
+    public String getParcelType() {
         return parcelType;
     }
 
-    public void setParcelType(int parcelType) {
+    public void setParcelType(String parcelType) {
         this.parcelType = parcelType;
     }
 

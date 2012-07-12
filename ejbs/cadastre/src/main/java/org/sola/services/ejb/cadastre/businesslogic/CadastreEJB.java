@@ -292,6 +292,17 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         return getRepository().getEntityList(
                 CadastreObject.class, CadastreObject.QUERY_WHERE_SEARCHBY_BYTE_INTERSECTION, params);
     }
+    
+    @Override
+    public List<ParcelType> getParcelTypeList(){
+        return getRepository().getEntityList(ParcelType.class);
+    }
+    
+     @Override
+    public List<ParcelType> getParcelTypeList(String languageCode){
+        //return getRepository().getEntityList(ParcelType.class);
+        return getRepository().getCodeList(ParcelType.class, languageCode);
+    }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="By Kumar">
