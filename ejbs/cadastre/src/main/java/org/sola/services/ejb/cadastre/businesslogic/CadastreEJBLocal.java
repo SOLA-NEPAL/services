@@ -76,6 +76,7 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
             String transactionId);
 
     void approveCadastreRedefinition(String transactionId);
+    
     //<editor-fold defaultstate="collapsed" desc="By Kumar">
     //*****************************************************************************************************************************
 
@@ -97,13 +98,17 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
 
     //*****************************************************************************************************************************
     //</editor-fold>
-    //For segment selection.
+  
     // <editor-fold defaultstate="collapsed" desc="By Kabindra">
     //--------------------------------------------------------------------------
     List<CadastreObject> getCadastreObjectBy_Intersection(String geom, int srid);
 
     List<CadastreObject> getCadastreObjectBy_ByteIntersection(String geom, int srid);
     
-    public List<CadastreObject> getPendingParcelByParts(String searchString);
+    List<CadastreObject> getPendingParcelByParts(String searchString);
+    
+    List<ParcelType> getParcelTypeList();
+    
+    List<ParcelType> getParcelTypeList(String languageCode);
     //</editor-fold>
 }

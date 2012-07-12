@@ -50,12 +50,10 @@ import org.sola.services.common.test.AbstractEJBTest;
 import org.sola.services.ejb.address.repository.entities.Address;
 import org.sola.services.ejb.administrative.repository.entities.*;
 import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
-import org.sola.services.ejb.cadastre.repository.entities.MapSheet;
 import org.sola.services.ejb.cadastre.repository.entities.SpatialValueArea;
 import org.sola.services.ejb.party.businesslogic.PartyEJB;
 import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
 import org.sola.services.ejb.party.repository.entities.Party;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.Vdc;
 
 /**
  *
@@ -507,7 +505,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             cobj.setStatusCode("pending");
             cobj.setTransactionId("cadastre-transaction");
             cobj.setParcelno(1501);
-            cobj.setParcelType(0);
+            //cobj.setParcelType(0);
 //            MapSheet mapSheet = new MapSheet();
 //            mapSheet.setMapNumber("M0002");
 //            mapSheet.setSheetType(0);
