@@ -85,7 +85,9 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
     MapSheet saveMapSheet(MapSheet mapSheet);
 
     List<MapSheet> getMapSheetList();
-
+    
+    List<MapSheet> getMapSheetListByOffice(String districtCode,String language);
+    
     List<CadastreObject> loadCadastreObjectList(String mapSheetCode);
 
     List<CadastreObject> getCadastreObjectList(String vdcCode, String wardNo);
