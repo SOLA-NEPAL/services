@@ -18,6 +18,10 @@ public class MapSheet extends AbstractEntity {
 
     public static final String MAPSHEET_TYPE_PARAM = "sheetType";    
     public static final String GET_BY_MAYSHEET_TYPE= "sheet_type=#{" + MAPSHEET_TYPE_PARAM + "}";
+    //public static final String PARAM_OFFICE_CODE = "officeCode";
+    public static final String WHERE_BY_OFFICE_CODE = "office_code = #{" + PARAM_OFFICE_CODE + "}";
+    
+    
     @Id
     @Column(name = "id")
     private String id;
@@ -27,6 +31,8 @@ public class MapSheet extends AbstractEntity {
     private int sheetType;
     @Column(name="office_code")
     private String officeCode;
+    @Column (name="srid")
+    private int srid;
             
 //    @Column(name = "alpha_code")
 //    private String alphaCode;
@@ -70,6 +76,14 @@ public class MapSheet extends AbstractEntity {
 
     public void setOfficeCode(String officeCode) {
         this.officeCode = officeCode;
+    }
+
+    public int getSrid() {
+        return srid;
+    }
+
+    public void setSrid(int srid) {
+        this.srid = srid;
     }
     
 }

@@ -41,6 +41,7 @@ import org.sola.services.common.repository.CommonSqlProvider;
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 import org.sola.services.ejb.cadastre.repository.entities.*;
 import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
+import org.sola.services.ejbs.admin.businesslogic.repository.entities.Vdc;
 
 /**
  * Implementation of {
@@ -78,6 +79,17 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntityList(CadastreObject.class,
                 CadastreObject.QUERY_WHERE_SEARCHBYPARTS, params);
+    }
+    
+    @Override
+    public List<CadastreObject> getPendingParcelByParts(String searchString) {
+        Integer numberOfMaxRecordsReturned = 10;
+        HashMap params = new HashMap();
+        params.put("search_string", searchString);
+        params.put(CommonSqlProvider.PARAM_LIMIT_PART, numberOfMaxRecordsReturned);
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(CadastreObject.class,
+                CadastreObject.QUERY_WHERE_SEARCHBYPARTS_PENDING, params);
     }
 
     @Override
@@ -352,4 +364,13 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     }
     //*****************************************************************************************************************************
     //</editor-fold>
+
+    @Override
+    public List<MapSheet> getMapSheetListByOffice(String officeCode, String lang) {
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, MapSheet.WHERE_BY_OFFICE_CODE);
+        params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
+        params.put(MapSheet.PARAM_OFFICE_CODE, officeCode);
+        return getRepository().getEntityList(MapSheet.class, params);
+    }
 }

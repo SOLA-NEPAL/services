@@ -487,6 +487,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
             wherePart = CadastreObjectSearchResult.QUERY_WHERE_GET_NEW_PARCELS;
             numberOfMaxRecordsReturned = 0;
         }
+        
         List<CadastreObjectSearchResult> result = new ArrayList<CadastreObjectSearchResult>();
         if (wherePart != null) {
             Map params = new HashMap<String, Object>();

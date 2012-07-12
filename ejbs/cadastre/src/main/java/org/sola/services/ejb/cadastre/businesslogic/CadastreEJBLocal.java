@@ -84,7 +84,9 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
     MapSheet saveMapSheet(MapSheet mapSheet);
 
     List<MapSheet> getMapSheetList();
-
+    
+    List<MapSheet> getMapSheetListByOffice(String districtCode,String language);
+    
     List<CadastreObject> loadCadastreObjectList(String mapSheetCode);
 
     List<CadastreObject> getCadastreObjectList(String vdcCode, String wardNo);
@@ -103,5 +105,7 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
     List<CadastreObject> getCadastreObjectBy_Intersection(String geom, int srid);
 
     List<CadastreObject> getCadastreObjectBy_ByteIntersection(String geom, int srid);
+    
+    public List<CadastreObject> getPendingParcelByParts(String searchString);
     //</editor-fold>
 }
