@@ -150,7 +150,7 @@ public class CadastreObject extends AbstractVersionedEntity {
     private String parcelNote;
     @Column(name = "parcel_type")
     private String parcelType;
-    @ChildEntity(childIdField = "mapSheetCode")
+    @ChildEntity(childIdField = "mapSheetCode",readOnly=true)
     private MapSheet mapSheet;
     @Column(name = "office_code", updatable = false)
     private String officeCode;

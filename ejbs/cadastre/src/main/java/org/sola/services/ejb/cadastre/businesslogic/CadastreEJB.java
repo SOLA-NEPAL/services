@@ -29,6 +29,7 @@
  */
 package org.sola.services.ejb.cadastre.businesslogic;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,6 @@ import org.sola.services.common.repository.CommonSqlProvider;
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 import org.sola.services.ejb.cadastre.repository.entities.*;
 import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.Vdc;
 
 /**
  * Implementation of {
@@ -302,6 +302,17 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     public List<ParcelType> getParcelTypeList(String languageCode){
         //return getRepository().getEntityList(ParcelType.class);
         return getRepository().getCodeList(ParcelType.class, languageCode);
+    }
+     
+    @Override
+    public List<CadastreObject> getCadastreObjectListMem(List<String> mapSheetCode) {
+        List<CadastreObject> CadObjs=new ArrayList<CadastreObject>();
+        for (int i=0;i<mapSheetCode.size();i++){
+            List<CadastreObject> tmpCadObjs= this.loadCadastreObjectList(mapSheetCode.get(i));
+            CadObjs.addAll(tmpCadObjs);
+        }
+        
+        return CadObjs;
     }
     //</editor-fold>
 
