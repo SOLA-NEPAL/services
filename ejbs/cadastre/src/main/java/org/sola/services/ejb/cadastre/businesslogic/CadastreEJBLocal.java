@@ -112,5 +112,7 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
     List<ParcelType> getParcelTypeList();
     
     List<ParcelType> getParcelTypeList(String languageCode);
+    
+    List<CadastreObject> getCadastreObjectListMem(List<String> mapSheetCode);
     //</editor-fold>
 }
