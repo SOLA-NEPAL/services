@@ -110,10 +110,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             rrrs.add(this.getRrr("createbaunit-2", "mortgage"));
             baUnit.setRrrList(rrrs);
 
-            List<CadastreObject> objs = new ArrayList<CadastreObject>();
-            objs.add(this.getCadastreObject("part1", "part1"));
-            objs.add(this.getCadastreObject("part2", "part2"));
-            baUnit.setCadastreObjectList(objs);
+            baUnit.setCadastreObject(this.getCadastreObject("part1", "part1"));
             BaUnit result = instance.createBaUnit(null, baUnit);
             assertNotNull(result);
             System.out.println("Creation of baunit succeeded.");
@@ -124,7 +121,6 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             assertNotNull(result);
             System.out.println("Succeeded.");
             System.out.println("Update ba unit. Adding a new rrrShare to existing rrr");
-            result.getRrrList().get(1).getRrrShareList().add(this.getRrrShare("1002"));
             result = instance.saveBaUnit(null, result);
             assertNotNull(result);
             System.out.println("Succeeded.");
@@ -151,21 +147,14 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         Rrr rrr = new Rrr();
         rrr.setTypeCode(type);
         //rrr.setNr("test-nr");
-
-        rrr.setNotation(this.getNotation(notationText));
-        //Source doc = new Source();
-        //doc.setId("bb0573c6-87ed-4db7-b2ff-18da874664c1");
-
-        //RrrSource rrrDoc = new RrrSource(doc, null);
-
-        //rrr.getRrrSourceList().add(rrrDoc);
-
+        BaUnitNotation notation = new BaUnitNotation();
+        notation.setNotationText(notationText);
+        notation.setRrrId(rrr.getId());
+        
+        rrr.setNotation(notation);
 
         if (type.equals("ownership")) {
             RrrShare rrrShare = this.getRrrShare("1000");
-
-            rrr.setRrrShareList(new ArrayList<RrrShare>());
-            rrr.getRrrShareList().add(rrrShare);
         } else {
 
 
@@ -324,15 +313,6 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
                                 party.getId(), party.getName()));
                     }
                 }
-                System.out.println("Nr of shares in rrr:" + rrr.getRrrShareList().size());
-                if (rrr.getRrrShareList().size() > 0) {
-                    System.out.println("Print party information related with the first Share");
-                    for (Party party : rrr.getRrrShareList().get(0).getRightHolderList()) {
-                        System.out.println(String.format("Party information id:%s and name: %s",
-                                party.getId(), party.getName()));
-                    }
-                }
-
                 System.out.println("Deleting the first rrr in the list.");
                 //LocalInfo.setUserName("test4");
                 rrr.setEntityAction(EntityAction.DELETE);
@@ -459,7 +439,6 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
             BaUnit baUnit = new BaUnit();
             tx.begin();
-            baUnit.setLocId("5063d6e3-c48d-4465-b268-8dd52defd2cc");
             baUnit.setTypeCode("administrativeUnit");
             baUnit.setName("TestBaunit");
             baUnit.setNameFirstpart("TestBaunit");
@@ -493,7 +472,6 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             loc.setPanaNo(1);
 
             BaUnit baUnit = new BaUnit();
-            baUnit.setLocId(loc.getId());
             baUnit.setTypeCode("administrativeUnit");
             baUnit.setName("TestBaunit");
             baUnit.setNameFirstpart("TestBaunit");
@@ -520,12 +498,12 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             spValA.setSize(bigVal);
 
 
-            List< SpatialValueArea> spatialValAreaList = new ArrayList<SpatialValueArea>();
+            List<SpatialValueArea> spatialValAreaList = new ArrayList<SpatialValueArea>();
             spatialValAreaList.add(spValA);
             cobj.setSpatialValueAreaList(spatialValAreaList);
             List<CadastreObject> cadObjList = new ArrayList<CadastreObject>();
             cadObjList.add(cobj);
-            baUnit.setCadastreObjectList(cadObjList);
+            baUnit.setCadastreObject(cobj);
 
             Party owner = new Party();
             owner.setTypeCode("baunit");
@@ -538,11 +516,9 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             owner.setAddress(add);
             List<Party> partyList = new ArrayList<Party>();
             partyList.add(owner);
-            baUnit.setParties(partyList);
 
             List<BaUnit> baUnitList = new ArrayList<BaUnit>();
             baUnitList.add(baUnit);
-            loc.setBaUnits(baUnitList);
             List<Loc> locList = new ArrayList<Loc>();
             locList.add(loc);
             moth.setLocList(locList);

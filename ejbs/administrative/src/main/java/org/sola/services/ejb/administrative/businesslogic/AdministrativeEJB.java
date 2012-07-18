@@ -388,23 +388,6 @@ public class AdministrativeEJB extends AbstractEJB
         return loc;
     }
 
-    @Override
-    public List<BaUnitAsParty> getBaUnitAsPartyList(String partyId) {
-        HashMap params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_WHERE_PART, BaUnitAsParty.GET_BY_PARTY_ID);
-        params.put(BaUnitAsParty.PARTY_ID_PARAM, partyId);
-        List<BaUnitAsParty> bau = getRepository().getEntityList(BaUnitAsParty.class, params);
-        return bau;
-    }
-
-    @Override
-    public List<BaUnitContainsSpatialUnit> getBaUnitContainsSpatialUnitsList(String spatiaUnitId) {
-        HashMap params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_WHERE_PART, BaUnitContainsSpatialUnit.GET_BY_SPATIAL_ID);
-        params.put(BaUnitContainsSpatialUnit.SPATIAL_ID_PARAM, spatiaUnitId);
-        List<BaUnitContainsSpatialUnit> bau = getRepository().getEntityList(BaUnitContainsSpatialUnit.class, params);
-        return bau;
-    }
     //***********************************************************************************************************
     //</editor-fold>    
 }

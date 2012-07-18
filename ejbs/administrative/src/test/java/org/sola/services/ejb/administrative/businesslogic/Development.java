@@ -146,9 +146,7 @@ public class Development extends AbstractEJBTest {
             baUnit.setRrrList(rrrs);
 
             List<CadastreObject> objs = new ArrayList<CadastreObject>();
-            objs.add(this.getCadastreObject("part1", "part1"));
-            objs.add(this.getCadastreObject("part2", "part2"));
-            baUnit.setCadastreObjectList(objs);
+            baUnit.setCadastreObject(this.getCadastreObject("part1", "part1"));
             return baUnit;
         
     }
@@ -156,14 +154,15 @@ public class Development extends AbstractEJBTest {
     private Rrr getRrr(String notationText, String type) throws Exception {
         Rrr rrr = new Rrr();
         rrr.setTypeCode(type);
-
-        rrr.setNotation(this.getNotation(notationText));
+        
+        BaUnitNotation notation = new BaUnitNotation();
+        notation.setNotationText(notationText);
+        notation.setRrrId(rrr.getId());
+        
+        rrr.setNotation(notation);
 
         if (type.equals("ownership")) {
             RrrShare rrrShare = this.getRrrShare("1000");
-
-            rrr.setRrrShareList(new ArrayList<RrrShare>());
-            rrr.getRrrShareList().add(rrrShare);
         } else {
             Party party = this.getParty("1001");
             rrr.setRightHolderList(new ArrayList<Party>());

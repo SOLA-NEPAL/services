@@ -79,8 +79,6 @@ public class Rrr extends AbstractVersionedEntity {
     private String transactionId;
     @Column(name = "expiration_date")
     private Date expirationDate;
-    @Column(name = "share")
-    private Double share;
     @Column(name = "mortgage_amount")
     private BigDecimal mortgageAmount;
     @Column(name = "mortgage_interest_rate")
@@ -89,11 +87,12 @@ public class Rrr extends AbstractVersionedEntity {
     private Integer mortgageRanking;
     @Column(name = "mortgage_type_code")
     private String mortgageTypeCode;
+    @Column(name="loc_id")
+    private String locId;
+    
     // Child entity fields
     @ChildEntity(insertBeforeParent = false, parentIdField = "rrrId")
     private BaUnitNotation notation;
-    @ChildEntityList(parentIdField = "rrrId", cascadeDelete = true)
-    private List<RrrShare> rrrShareList;
     @ExternalEJB(ejbLocalClass = SourceEJBLocal.class,
     loadMethod = "getSources", saveMethod = "saveSource")
     @ChildEntityList(parentIdField = "rrrId", childIdField = "sourceId",
@@ -103,6 +102,8 @@ public class Rrr extends AbstractVersionedEntity {
     @ChildEntityList(parentIdField = "rrrId", childIdField = "partyId",
     manyToManyClass = PartyForRrr.class, readOnly = true)
     private List<Party> rightHolderList;
+    @ChildEntity(childIdField="locId",insertBeforeParent=true)
+    private Loc loc;
         
     // Other fields
     private Boolean locked = null;
@@ -213,14 +214,6 @@ public class Rrr extends AbstractVersionedEntity {
         this.registrationDate = registrationDate;
     }
 
-    public Double getShare() {
-        return share;
-    }
-
-    public void setShare(Double share) {
-        this.share = share;
-    }
-
     public String getStatusCode() {
         return statusCode;
     }
@@ -253,14 +246,6 @@ public class Rrr extends AbstractVersionedEntity {
         this.notation = notation;
     }
 
-    public List<RrrShare> getRrrShareList() {
-        return rrrShareList;
-    }
-
-    public void setRrrShareList(List<RrrShare> rrrShareList) {
-        this.rrrShareList = rrrShareList;
-    }
-
     public List<Source> getSourceList() {
         return sourceList;
     }
@@ -287,6 +272,22 @@ public class Rrr extends AbstractVersionedEntity {
             }
         }
         return locked;
+    }
+
+    public Loc getLoc() {
+        return loc;
+    }
+
+    public void setLoc(Loc loc) {
+        this.loc = loc;
+    }
+
+    public String getLocId() {
+        return locId;
+    }
+
+    public void setLocId(String locId) {
+        this.locId = locId;
     }
 
     @Override

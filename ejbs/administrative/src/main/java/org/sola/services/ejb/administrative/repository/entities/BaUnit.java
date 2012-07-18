@@ -29,20 +29,16 @@
  */
 package org.sola.services.ejb.administrative.repository.entities;
 
+import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.sola.services.common.LocalInfo;
-import org.sola.services.common.repository.AccessFunctions;
-import org.sola.services.common.repository.ChildEntityList;
-import org.sola.services.common.repository.ExternalEJB;
-import org.sola.services.common.repository.RepositoryUtility;
+import org.sola.services.common.repository.*;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
 import org.sola.services.ejb.cadastre.businesslogic.CadastreEJBLocal;
 import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
-import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
-import org.sola.services.ejb.party.repository.entities.Party;
 import org.sola.services.ejb.source.businesslogic.SourceEJBLocal;
 import org.sola.services.ejb.source.repository.entities.Source;
 import org.sola.services.ejb.system.br.Result;
@@ -79,8 +75,6 @@ public class BaUnit extends AbstractVersionedEntity {
     @Id
     @Column(name = "id")
     private String id;
-    @Column(name = "loc_id")
-    private String locId;
     @Column(name = "type_code")
     private String typeCode;
     @Column(name = "name")
@@ -89,7 +83,7 @@ public class BaUnit extends AbstractVersionedEntity {
     private String nameFirstpart;
     @Column(name = "name_lastpart")
     private String nameLastpart;
-    @Column(name = "status_code", updatable = false)
+    @Column(name = "status_code", insertable = false, updatable = false)
     private String statusCode;
     @Column(name = "transaction_id", updatable = false)
     private String transactionId;
@@ -102,11 +96,14 @@ public class BaUnit extends AbstractVersionedEntity {
     @ChildEntityList(parentIdField = "baUnitId", childIdField = "sourceId",
     manyToManyClass = SourceDescribesBaUnit.class)
     private List<Source> sourceList;
+    
+    @Column(name="cadastre_object_id")
+    private String cadastreObjectId;
     @ExternalEJB(ejbLocalClass = CadastreEJBLocal.class,
-    loadMethod = "getCadastreObjects", saveMethod = "saveCadastreObject")
-    @ChildEntityList(parentIdField = "baUnitId", childIdField = "spatialUnitId",
-    manyToManyClass = BaUnitContainsSpatialUnit.class,readOnly=true)
-    private List<CadastreObject> cadastreObjectList;
+    loadMethod= "getCadastreObject")
+    @ChildEntity(childIdField = "cadastreObjectId", readOnly=true)
+    private CadastreObject cadastreObject;
+    
     private Boolean locked;
     @ChildEntityList(parentIdField = "baUnitId")
     private List<ChildBaUnitInfo> childBaUnits;
@@ -115,14 +112,10 @@ public class BaUnit extends AbstractVersionedEntity {
     @Column(insertable = false, updatable = false, name = "pending_action_code")
     @AccessFunctions(onSelect = "administrative.get_ba_unit_pending_action(id)")
     private String pendingActionCode;    
-    //modified by Kumar
-    @ExternalEJB(ejbLocalClass = PartyEJBLocal.class,
-    loadMethod = "getParties", saveMethod = "saveParty")
-    @ChildEntityList(parentIdField = "baUnitId", childIdField = "partyId",
-    manyToManyClass = BaUnitAsParty.class,readOnly=true)
-    private List<Party> parties;    
-    @Column(name = "office_code")
+    @Column(name = "office_code", updatable=false)
     private String officeCode;
+    @Column
+    private BigDecimal area;
     
     public BaUnit() {
         super();
@@ -131,15 +124,6 @@ public class BaUnit extends AbstractVersionedEntity {
     public Boolean getLocked() {
         return locked;
     }
-
-    public List<Party> getParties() {
-        return parties;
-    }
-
-    public void setParties(List<Party> parties) {
-        this.parties = parties;
-    }
-
     
     public void setLocked(Boolean locked) {
         this.locked = locked;
@@ -153,15 +137,22 @@ public class BaUnit extends AbstractVersionedEntity {
         this.officeCode = officeCode;
     }
 
+    public CadastreObject getCadastreObject() {
+        return cadastreObject;
+    }
+
+    public void setCadastreObject(CadastreObject cadastreObject) {
+        this.cadastreObject = cadastreObject;
+    }
+
+    public String getCadastreObjectId() {
+        return cadastreObjectId;
+    }
+
+    public void setCadastreObjectId(String cadastreObjectId) {
+        this.cadastreObjectId = cadastreObjectId;
+    }
     
-    public String getLocId() {
-        return locId;
-    }
-
-    public void setLocId(String locId) {
-        this.locId = locId;
-    }
-
     private Transaction getTransaction() {
         Transaction result = null;
         TransactionEJBLocal transactionEJB = RepositoryUtility.tryGetEJB(TransactionEJBLocal.class);
@@ -169,6 +160,14 @@ public class BaUnit extends AbstractVersionedEntity {
             result = transactionEJB.getTransactionById(getTransactionId(), Transaction.class);
         }
         return result;
+    }
+
+    public BigDecimal getArea() {
+        return area;
+    }
+
+    public void setArea(BigDecimal area) {
+        this.area = area;
     }
 
     public String getId() {
@@ -243,14 +242,6 @@ public class BaUnit extends AbstractVersionedEntity {
         this.baUnitNotationList = baUnitNotationList;
     }
 
-    public List<CadastreObject> getCadastreObjectList() {
-        return cadastreObjectList;
-    }
-
-    public void setCadastreObjectList(List<CadastreObject> cadastreObjectList) {
-        this.cadastreObjectList = cadastreObjectList;
-    }
-
     public List<Rrr> getRrrList() {
         return rrrList;
     }
@@ -290,7 +281,7 @@ public class BaUnit extends AbstractVersionedEntity {
     public void setPendingActionCode(String pendingActionCode) {
         this.pendingActionCode = pendingActionCode;
     }
-
+    
     public Boolean isLocked() {
         if (locked == null) {
             locked = false;

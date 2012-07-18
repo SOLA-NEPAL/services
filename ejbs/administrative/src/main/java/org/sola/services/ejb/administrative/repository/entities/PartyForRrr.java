@@ -49,8 +49,6 @@ public class PartyForRrr extends AbstractVersionedEntity {
     @Id
     @Column(name = "party_id")
     private String partyId;
-    @Column(name = "share_id")
-    private String shareId;
 
     public PartyForRrr() {
         super();
@@ -71,13 +69,4 @@ public class PartyForRrr extends AbstractVersionedEntity {
     public void setRrrId(String rrrId) {
         this.rrrId = rrrId;
     }
-
-    public String getShareId() {
-        return shareId;
-    }
-
-    public void setShareId(String shareId) {
-        this.shareId = shareId;
-    }  
-    
 }
