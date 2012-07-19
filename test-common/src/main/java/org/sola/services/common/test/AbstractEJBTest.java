@@ -212,7 +212,12 @@ public abstract class AbstractEJBTest {
                 configVersion = tempProp;
             }
         }
-        String tempDir = System.getProperty("java.io.tmpdir") + "/TestUtilities/";
+        String tempDir = System.getProperty("java.io.tmpdir");
+        if(tempDir.endsWith("\\") || tempDir.endsWith("/")){
+            tempDir=tempDir.substring(0, tempDir.length()-1);
+        }
+        tempDir += "/TestUtilities/";
+        
         String tempDirVersion = tempDir + configVersion + "/";
         String installRootDir = tempDirVersion + GLASSFISH_RESOURCE_NAME;
         installRootDir = installRootDir.replace("%20", " ");
