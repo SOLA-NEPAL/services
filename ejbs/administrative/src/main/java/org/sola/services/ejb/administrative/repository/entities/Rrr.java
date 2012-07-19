@@ -103,7 +103,7 @@ public class Rrr extends AbstractVersionedEntity {
     manyToManyClass = PartyForRrr.class, readOnly = true)
     private List<Party> rightHolderList;
     @ChildEntity(childIdField="locId",insertBeforeParent=true)
-    private Loc loc;
+    private LocWithMoth loc;
         
     // Other fields
     private Boolean locked = null;
@@ -274,11 +274,11 @@ public class Rrr extends AbstractVersionedEntity {
         return locked;
     }
 
-    public Loc getLoc() {
+    public LocWithMoth getLoc() {
         return loc;
     }
 
-    public void setLoc(Loc loc) {
+    public void setLoc(LocWithMoth loc) {
         this.loc = loc;
     }
 
