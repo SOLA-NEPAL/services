@@ -195,6 +195,24 @@ public class CadastreEJBIT extends AbstractEJBTest {
         }
 
     }
+    
+    @Test
+    @Ignore
+    public void testGetParcel() throws Exception {
+        System.out.println(">>> Testing getting Map Sheet list");
+        UserTransaction tx = getUserTransaction();
+        try {
+            tx.begin();
+            CadastreEJBLocal instance = (CadastreEJBLocal) getEJBInstance(CadastreEJB.class.getSimpleName());
+            CadastreObject Parcel = instance.getCadastreObject("27009", "5", 5);
+
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            fail(e.getMessage());
+        }
+
+    }   
     //***********************************************************************************************************
     //</editor-fold>
 

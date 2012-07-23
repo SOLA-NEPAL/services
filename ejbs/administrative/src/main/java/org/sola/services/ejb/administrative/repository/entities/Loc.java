@@ -33,12 +33,8 @@ public class Loc extends AbstractVersionedEntity {
     private int panaNo;
     @Column(name = "tmp_pana_no")
     private int tmpPanaNo;
-    @Column(name = "property_type")
-    private int propertyType;
-    @Column(name = "oshp_type")
-    private int oshpType;
-    @Column(name = "transaction_id")
-    private String transactionId;
+    @Column(name = "status_code", updatable = false)
+    private String statusCode;   
     @ChildEntityList(parentIdField = "locId")
     private List<BaUnit> baUnits;
     @Column(name = "office_code")
@@ -79,28 +75,12 @@ public class Loc extends AbstractVersionedEntity {
         this.mothId = mothId;
     }
 
-    public int getOshpType() {
-        return oshpType;
-    }
-
-    public void setOshpType(int oshpType) {
-        this.oshpType = oshpType;
-    }
-
     public int getPanaNo() {
         return panaNo;
     }
 
     public void setPanaNo(int panaNo) {
         this.panaNo = panaNo;
-    }
-
-    public int getPropertyType() {
-        return propertyType;
-    }
-
-    public void setPropertyType(int propertyType) {
-        this.propertyType = propertyType;
     }
 
     public int getTmpPanaNo() {
@@ -111,11 +91,12 @@ public class Loc extends AbstractVersionedEntity {
         this.tmpPanaNo = tmpPanaNo;
     }
 
-    public String getTransactionId() {
-        return transactionId;
+    public String getStatusCode() {
+        return statusCode;
     }
 
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
+    public void setStatusCode(String statusCode) {
+        this.statusCode = statusCode;
     }
+    
 }

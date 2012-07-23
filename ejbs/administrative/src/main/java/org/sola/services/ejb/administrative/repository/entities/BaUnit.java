@@ -79,8 +79,6 @@ public class BaUnit extends AbstractVersionedEntity {
     @Id
     @Column(name = "id")
     private String id;
-    @Column(name = "loc_id")
-    private String locId;
     @Column(name = "type_code")
     private String typeCode;
     @Column(name = "name")
@@ -105,7 +103,7 @@ public class BaUnit extends AbstractVersionedEntity {
     @ExternalEJB(ejbLocalClass = CadastreEJBLocal.class,
     loadMethod = "getCadastreObjects", saveMethod = "saveCadastreObject")
     @ChildEntityList(parentIdField = "baUnitId", childIdField = "spatialUnitId",
-    manyToManyClass = BaUnitContainsSpatialUnit.class,readOnly=true)
+    manyToManyClass = BaUnitContainsSpatialUnit.class, readOnly = true)
     private List<CadastreObject> cadastreObjectList;
     private Boolean locked;
     @ChildEntityList(parentIdField = "baUnitId")
@@ -114,16 +112,16 @@ public class BaUnit extends AbstractVersionedEntity {
     private List<ParentBaUnitInfo> parentBaUnits;
     @Column(insertable = false, updatable = false, name = "pending_action_code")
     @AccessFunctions(onSelect = "administrative.get_ba_unit_pending_action(id)")
-    private String pendingActionCode;    
+    private String pendingActionCode;
     //modified by Kumar
     @ExternalEJB(ejbLocalClass = PartyEJBLocal.class,
     loadMethod = "getParties", saveMethod = "saveParty")
     @ChildEntityList(parentIdField = "baUnitId", childIdField = "partyId",
-    manyToManyClass = BaUnitAsParty.class,readOnly=true)
-    private List<Party> parties;    
+    manyToManyClass = BaUnitAsParty.class, readOnly = true)
+    private List<Party> parties;
     @Column(name = "office_code")
     private String officeCode;
-    
+
     public BaUnit() {
         super();
     }
@@ -140,7 +138,6 @@ public class BaUnit extends AbstractVersionedEntity {
         this.parties = parties;
     }
 
-    
     public void setLocked(Boolean locked) {
         this.locked = locked;
     }
@@ -151,15 +148,6 @@ public class BaUnit extends AbstractVersionedEntity {
 
     public void setOfficeCode(String officeCode) {
         this.officeCode = officeCode;
-    }
-
-    
-    public String getLocId() {
-        return locId;
-    }
-
-    public void setLocId(String locId) {
-        this.locId = locId;
     }
 
     private Transaction getTransaction() {
