@@ -438,7 +438,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         try {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
             BaUnit baUnit = new BaUnit();
-            tx.begin();
+            tx.begin();           
             baUnit.setTypeCode("administrativeUnit");
             baUnit.setName("TestBaunit");
             baUnit.setNameFirstpart("TestBaunit");
@@ -471,7 +471,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             loc.setMothId(moth.getId());
             loc.setPanaNo(1);
 
-            BaUnit baUnit = new BaUnit();
+            BaUnit baUnit = new BaUnit();         
             baUnit.setTypeCode("administrativeUnit");
             baUnit.setName("TestBaunit");
             baUnit.setNameFirstpart("TestBaunit");

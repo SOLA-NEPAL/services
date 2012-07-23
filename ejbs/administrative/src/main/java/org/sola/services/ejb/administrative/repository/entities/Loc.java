@@ -26,6 +26,13 @@ public class Loc extends AbstractVersionedEntity {
     private int panaNo;
     @Column(name = "tmp_pana_no")
     private int tmpPanaNo;
+<<<<<<< HEAD
+=======
+    @Column(name = "status_code", updatable = false)
+    private String statusCode;   
+    @ChildEntityList(parentIdField = "locId")
+    private List<BaUnit> baUnits;
+>>>>>>> dateTestbranch
     @Column(name = "office_code")
     private String officeCode;
 
@@ -69,4 +76,16 @@ public class Loc extends AbstractVersionedEntity {
     public void setTmpPanaNo(int tmpPanaNo) {
         this.tmpPanaNo = tmpPanaNo;
     }
+<<<<<<< HEAD
+=======
+
+    public String getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(String statusCode) {
+        this.statusCode = statusCode;
+    }
+    
+>>>>>>> dateTestbranch
 }

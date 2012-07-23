@@ -39,10 +39,10 @@ public class Moth extends AbstractVersionedEntity {
     private String mothLuj;
     @Column(name = "financial_year")
     private String financialYear;
+    @Column(name = "status_code", updatable = false)
+    private String statusCode;
     @Column(name = "office_code")
     private String officeCode;
-    @Column(name = "transaction_id")
-    private String transactionId;
     @ExternalEJB(ejbLocalClass = AdminEJBLocal.class, loadMethod = "getVdcByCode")
     @ChildEntity(childIdField = "vdcCode")
     private Vdc vdc;
@@ -63,13 +63,13 @@ public class Moth extends AbstractVersionedEntity {
         return financialYear;
     }
 
-    public String getTransactionId() {
-        return transactionId;
+    public String getStatusCode() {
+        return statusCode;
     }
 
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
-    }
+    public void setStatusCode(String statusCode) {
+        this.statusCode = statusCode;
+    }    
 
     public String getOfficeCode() {
         return officeCode;

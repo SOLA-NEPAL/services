@@ -100,10 +100,17 @@ public class BaUnit extends AbstractVersionedEntity {
     @Column(name="cadastre_object_id")
     private String cadastreObjectId;
     @ExternalEJB(ejbLocalClass = CadastreEJBLocal.class,
+<<<<<<< HEAD
     loadMethod= "getCadastreObject")
     @ChildEntity(childIdField = "cadastreObjectId", readOnly=true)
     private CadastreObject cadastreObject;
     
+=======
+    loadMethod = "getCadastreObjects", saveMethod = "saveCadastreObject")
+    @ChildEntityList(parentIdField = "baUnitId", childIdField = "spatialUnitId",
+    manyToManyClass = BaUnitContainsSpatialUnit.class, readOnly = true)
+    private List<CadastreObject> cadastreObjectList;
+>>>>>>> dateTestbranch
     private Boolean locked;
     @ChildEntityList(parentIdField = "baUnitId")
     private List<ChildBaUnitInfo> childBaUnits;
@@ -111,12 +118,25 @@ public class BaUnit extends AbstractVersionedEntity {
     private List<ParentBaUnitInfo> parentBaUnits;
     @Column(insertable = false, updatable = false, name = "pending_action_code")
     @AccessFunctions(onSelect = "administrative.get_ba_unit_pending_action(id)")
+<<<<<<< HEAD
     private String pendingActionCode;    
     @Column(name = "office_code", updatable=false)
     private String officeCode;
     @Column
     private BigDecimal area;
     
+=======
+    private String pendingActionCode;
+    //modified by Kumar
+    @ExternalEJB(ejbLocalClass = PartyEJBLocal.class,
+    loadMethod = "getParties", saveMethod = "saveParty")
+    @ChildEntityList(parentIdField = "baUnitId", childIdField = "partyId",
+    manyToManyClass = BaUnitAsParty.class, readOnly = true)
+    private List<Party> parties;
+    @Column(name = "office_code")
+    private String officeCode;
+
+>>>>>>> dateTestbranch
     public BaUnit() {
         super();
     }
@@ -124,7 +144,19 @@ public class BaUnit extends AbstractVersionedEntity {
     public Boolean getLocked() {
         return locked;
     }
+<<<<<<< HEAD
     
+=======
+
+    public List<Party> getParties() {
+        return parties;
+    }
+
+    public void setParties(List<Party> parties) {
+        this.parties = parties;
+    }
+
+>>>>>>> dateTestbranch
     public void setLocked(Boolean locked) {
         this.locked = locked;
     }
@@ -137,6 +169,7 @@ public class BaUnit extends AbstractVersionedEntity {
         this.officeCode = officeCode;
     }
 
+<<<<<<< HEAD
     public CadastreObject getCadastreObject() {
         return cadastreObject;
     }
@@ -153,6 +186,8 @@ public class BaUnit extends AbstractVersionedEntity {
         this.cadastreObjectId = cadastreObjectId;
     }
     
+=======
+>>>>>>> dateTestbranch
     private Transaction getTransaction() {
         Transaction result = null;
         TransactionEJBLocal transactionEJB = RepositoryUtility.tryGetEJB(TransactionEJBLocal.class);
