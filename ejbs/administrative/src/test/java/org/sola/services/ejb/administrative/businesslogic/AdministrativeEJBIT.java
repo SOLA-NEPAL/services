@@ -385,7 +385,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             tx.begin();
             Loc loc = new Loc();
             loc.setMothId("240237f8-f677-4df6-9a4d-94484f6a1d7f");
-            loc.setPanaNo(1);
+            loc.setPanaNo("1");
             instance.saveLoc(loc);
             tx.commit();
         } catch (Exception e) {
@@ -469,7 +469,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
 
             Loc loc = new Loc();
             loc.setMothId(moth.getId());
-            loc.setPanaNo(1);
+            loc.setPanaNo("1");
 
             BaUnit baUnit = new BaUnit();
             baUnit.setTypeCode("administrativeUnit");
@@ -543,7 +543,13 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         try {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
             tx.begin();
-            Loc loc = instance.getLocByPageNoAndMothId(1, "9a4915ec-765e-4d1b-9e0a-0a73204cea5f");
+            MothBasic moth = new MothBasic();
+            moth.setId("9a4915ec-765e-4d1b-9e0a-0a73204cea5f");
+            moth.setMothLuj("M");
+            LocSearchByMothParams params = new LocSearchByMothParams();
+            params.setMoth(moth);
+            params.setPageNumber("1");
+            Loc loc = instance.getLocByPageNoAndMoth(params);
             tx.commit();
         } catch (Exception e) {
             tx.rollback();

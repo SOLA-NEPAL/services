@@ -38,11 +38,14 @@ import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import org.sola.common.RolesConstants;
+import org.sola.common.SOLAException;
+import org.sola.common.messaging.ServiceMessage;
 import org.sola.services.common.EntityAction;
 import org.sola.services.common.LocalInfo;
 import org.sola.services.common.br.ValidationResult;
 import org.sola.services.common.ejbs.AbstractEJB;
 import org.sola.services.common.repository.CommonSqlProvider;
+import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 import org.sola.services.ejb.administrative.repository.entities.*;
 import org.sola.services.ejb.cadastre.businesslogic.CadastreEJBLocal;
 import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
@@ -311,6 +314,7 @@ public class AdministrativeEJB extends AbstractEJB
     //***********************************************************************************************************
 
     @Override
+    @RolesAllowed(RolesConstants.ADMINISTRATIVE_BA_UNIT_SAVE)
     public Moth saveMoth(Moth moth) {
         if (moth.isNew()) {
             moth.setOfficeCode(adminEJB.getCurrentOfficeCode());
@@ -322,7 +326,7 @@ public class AdministrativeEJB extends AbstractEJB
 
     @Override
     public Moth getMoth(String id) {
-        return getRepository().getEntity(Moth.class, id);
+        return getRepository().getEntityByOffice(Moth.class, id, adminEJB.getCurrentOfficeCode());
     }
 
     @Override
@@ -331,6 +335,7 @@ public class AdministrativeEJB extends AbstractEJB
         params.put(CommonSqlProvider.PARAM_WHERE_PART, Moth.GET_BY_VDC_AND_MOTHLUJ);
         params.put(Moth.VDC_PARAM, vdcCode);
         params.put(Moth.MOTH_LUJ_PARAM, mothLuj);
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         List<Moth> mth = getRepository().getEntityList(Moth.class, params);
         return mth;
     }
@@ -342,12 +347,17 @@ public class AdministrativeEJB extends AbstractEJB
         params.put(Moth.VDC_PARAM, vdcCode);
         params.put(Moth.MOTH_LUJ_PARAM, mothLuj);
         params.put(Moth.MOTH_LUJ_NUMBER_PARAM, mothLujNumber);
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntity(Moth.class, params);
     }
 
     @Override
+    @RolesAllowed(RolesConstants.ADMINISTRATIVE_BA_UNIT_SAVE)
     public Loc saveLoc(Loc loc) {
         if (loc.isNew()) {
+            if(getMoth(loc.getMothId())==null){
+                throw new SOLAException(ServiceMessage.EXCEPTION_OBJECT_OUT_OF_OFFICE);
+            }
             loc.setOfficeCode(adminEJB.getCurrentOfficeCode());
         } else {
             adminEJB.checkOfficeCode(loc.getOfficeCode());
@@ -357,10 +367,16 @@ public class AdministrativeEJB extends AbstractEJB
 
     @Override
     public Loc getLoc(String id) {
-        return getRepository().getEntity(Loc.class, id);
+        return getRepository().getEntityByOffice(Loc.class, id, adminEJB.getCurrentOfficeCode());
+    }
+    
+    @Override
+    public LocWithMoth getLocWithMoth(String id) {
+        return getRepository().getEntityByOffice(LocWithMoth.class, id, adminEJB.getCurrentOfficeCode());
     }
 
     @Override
+    @RolesAllowed(RolesConstants.ADMINISTRATIVE_BA_UNIT_SAVE)
     public BaUnit saveBaUnit(BaUnit baUnit) {
         if (baUnit.isNew()) {
             baUnit.setOfficeCode(adminEJB.getCurrentOfficeCode());
@@ -371,12 +387,32 @@ public class AdministrativeEJB extends AbstractEJB
     }
 
     @Override
-    public Loc getLocByPageNoAndMothId(int panaNo, String mothId) {
+    public LocWithMoth getLocByPageNoAndMoth(LocSearchByMothParams searchParams) {
+        if(searchParams.getMoth()==null || searchParams.getPageNumber() == null 
+                || searchParams.getPageNumber().length()<1){
+            return null;
+        }
+        
+        if(searchParams.getMoth().getMothLuj() == null){
+            searchParams.getMoth().setMothLuj("M");
+        }
+        
+        String tmpPageNumber = "";
+        String pageNumber = "";
+        
+        if(searchParams.getMoth().getMothLuj().equalsIgnoreCase("M")){
+            pageNumber = searchParams.getPageNumber();
+        } else {
+            tmpPageNumber = searchParams.getPageNumber();
+        }
+        
         HashMap params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, Loc.GET_BY_MOTH_ID_AND_PANA_NO);
-        params.put(Loc.MOTH_ID_PARAM, mothId);
-        params.put((Loc.PANA_NO_PARAM), panaNo);
-        return getRepository().getEntity(Loc.class, params);
+        params.put(Loc.MOTH_ID_PARAM, searchParams.getMoth().getId());
+        params.put((Loc.PANA_NO_PARAM), pageNumber);
+        params.put((Loc.TMP_PANA_NO_PARAM), tmpPageNumber);
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntity(LocWithMoth.class, params);
     }
 
     @Override

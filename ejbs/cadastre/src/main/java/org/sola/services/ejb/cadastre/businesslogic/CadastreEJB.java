@@ -114,11 +114,11 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     }
 
     @Override
-    public List<CadastreObject> getCadastreObjectsByBaUnit(String baUnitId) {
+    public CadastreObject getCadastreObjectByBaUnit(String baUnitId) {
         HashMap params = new HashMap();
         params.put("ba_unit_id", baUnitId);
         params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
-        return getRepository().getEntityList(CadastreObject.class,
+        return getRepository().getEntity(CadastreObject.class,
                 CadastreObject.QUERY_WHERE_SEARCHBYBAUNIT, params);
     }
 

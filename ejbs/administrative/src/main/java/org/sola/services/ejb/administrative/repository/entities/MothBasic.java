@@ -32,8 +32,6 @@ public class MothBasic extends AbstractVersionedEntity {
     private String financialYear;
     @Column(name = "office_code")
     private String officeCode;
-    @Column(name = "transaction_id")
-    private String transactionId;
     @ExternalEJB(ejbLocalClass = AdminEJBLocal.class, loadMethod = "getVdcByCode")
     @ChildEntity(childIdField = "vdcCode")
     private Vdc vdc;
@@ -48,14 +46,6 @@ public class MothBasic extends AbstractVersionedEntity {
 
     public String getFinancialYear() {
         return financialYear;
-    }
-
-    public String getTransactionId() {
-        return transactionId;
-    }
-
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
     }
 
     public String getOfficeCode() {
