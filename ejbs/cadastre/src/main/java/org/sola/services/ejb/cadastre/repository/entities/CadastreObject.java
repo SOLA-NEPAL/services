@@ -64,8 +64,8 @@ public class CadastreObject extends AbstractVersionedEntity {
             + "ST_Intersects(geom_polygon, SetSRID(ST_Point(#{x}, #{y}), #{srid})) "
             + "AND " + QUERY_WHERE_BY_OFFICE;
     public static final String QUERY_WHERE_SEARCHBYBAUNIT = "status_code= 'current' and id in "
-            + " (select spatial_unit_id from administrative.ba_unit_contains_spatial_unit "
-            + "where ba_unit_id = #{ba_unit_id}) AND " + QUERY_WHERE_BY_OFFICE;
+            + " (select cadastre_object_id from administrative.ba_unit "
+            + "where id = #{ba_unit_id}) AND " + QUERY_WHERE_BY_OFFICE;
     public static final String QUERY_WHERE_SEARCHBYSERVICE = "status_code= 'current' "
             + "and transaction_id in "
             + " (select id from transaction.transaction where from_service_id = #{service_id}) "

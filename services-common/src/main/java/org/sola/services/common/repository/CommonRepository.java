@@ -61,6 +61,8 @@ public interface CommonRepository {
      <T extends AbstractReadOnlyEntity> T getEntity(Class<T> entityClass, Map params);
 
      <T extends AbstractReadOnlyEntity> T getEntity(Class<T> entityClass, String id);
+     
+     <T extends AbstractReadOnlyEntity> T getEntityByOffice(Class<T> entityClass, String id, String officeCode);
 
      <T extends AbstractReadOnlyEntity> T getEntity(Class<T> entityClass, String id, String lang);
 

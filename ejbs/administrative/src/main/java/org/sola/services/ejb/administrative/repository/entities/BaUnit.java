@@ -1,32 +1,32 @@
 /**
- * ******************************************************************************************
- * Copyright (C) 2012 - Food and Agriculture Organization of the United Nations
- * (FAO). All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,this
- * list of conditions and the following disclaimer. 2. Redistributions in binary
- * form must reproduce the above copyright notice,this list of conditions and
- * the following disclaimer in the documentation and/or other materials provided
- * with the distribution. 3. Neither the name of FAO nor the names of its
- * contributors may be used to endorse or promote products derived from this
- * software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT,STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
- * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- * *********************************************************************************************
- */
+* ******************************************************************************************
+* Copyright (C) 2012 - Food and Agriculture Organization of the United Nations
+* (FAO). All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*
+* 1. Redistributions of source code must retain the above copyright notice,this
+* list of conditions and the following disclaimer. 2. Redistributions in binary
+* form must reproduce the above copyright notice,this list of conditions and
+* the following disclaimer in the documentation and/or other materials provided
+* with the distribution. 3. Neither the name of FAO nor the names of its
+* contributors may be used to endorse or promote products derived from this
+* software without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+* ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+* LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+* CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,PROCUREMENT OF
+* SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+* INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+* CONTRACT,STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+* IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+* POSSIBILITY OF SUCH DAMAGE.
+* *********************************************************************************************
+*/
 package org.sola.services.ejb.administrative.repository.entities;
 
 import java.math.BigDecimal;
@@ -48,9 +48,9 @@ import org.sola.services.ejb.transaction.repository.entities.Transaction;
 import org.sola.services.ejb.transaction.repository.entities.TransactionStatusType;
 
 /**
- *
- * @author soladev
- */
+*
+* @author soladev
+*/
 @Table(schema = "administrative", name = "ba_unit")
 public class BaUnit extends AbstractVersionedEntity {
 
@@ -63,7 +63,7 @@ public class BaUnit extends AbstractVersionedEntity {
             + "transaction_id = #{" + QUERY_PARAMETER_TRANSACTIONID + "})";
     public static final String QUERY_WHERE_BY_TRANSACTION_ID_EXTENDED =
             "transaction_id = #{" + QUERY_PARAMETER_TRANSACTIONID + "} OR id IN "
-            + "(SELECT rrr.ba_unit_id FROM administrative.rrr rrr  "
+            + "(SELECT rrr.ba_unit_id FROM administrative.rrr rrr "
             + "WHERE rrr.transaction_id = #{" + QUERY_PARAMETER_TRANSACTIONID + "} "
             + "UNION "
             + "SELECT n.ba_unit_id FROM administrative.notation n "
@@ -100,17 +100,10 @@ public class BaUnit extends AbstractVersionedEntity {
     @Column(name="cadastre_object_id")
     private String cadastreObjectId;
     @ExternalEJB(ejbLocalClass = CadastreEJBLocal.class,
-<<<<<<< HEAD
     loadMethod= "getCadastreObject")
     @ChildEntity(childIdField = "cadastreObjectId", readOnly=true)
     private CadastreObject cadastreObject;
     
-=======
-    loadMethod = "getCadastreObjects", saveMethod = "saveCadastreObject")
-    @ChildEntityList(parentIdField = "baUnitId", childIdField = "spatialUnitId",
-    manyToManyClass = BaUnitContainsSpatialUnit.class, readOnly = true)
-    private List<CadastreObject> cadastreObjectList;
->>>>>>> dateTestbranch
     private Boolean locked;
     @ChildEntityList(parentIdField = "baUnitId")
     private List<ChildBaUnitInfo> childBaUnits;
@@ -118,25 +111,12 @@ public class BaUnit extends AbstractVersionedEntity {
     private List<ParentBaUnitInfo> parentBaUnits;
     @Column(insertable = false, updatable = false, name = "pending_action_code")
     @AccessFunctions(onSelect = "administrative.get_ba_unit_pending_action(id)")
-<<<<<<< HEAD
-    private String pendingActionCode;    
+    private String pendingActionCode;
     @Column(name = "office_code", updatable=false)
     private String officeCode;
     @Column
     private BigDecimal area;
     
-=======
-    private String pendingActionCode;
-    //modified by Kumar
-    @ExternalEJB(ejbLocalClass = PartyEJBLocal.class,
-    loadMethod = "getParties", saveMethod = "saveParty")
-    @ChildEntityList(parentIdField = "baUnitId", childIdField = "partyId",
-    manyToManyClass = BaUnitAsParty.class, readOnly = true)
-    private List<Party> parties;
-    @Column(name = "office_code")
-    private String officeCode;
-
->>>>>>> dateTestbranch
     public BaUnit() {
         super();
     }
@@ -144,19 +124,7 @@ public class BaUnit extends AbstractVersionedEntity {
     public Boolean getLocked() {
         return locked;
     }
-<<<<<<< HEAD
     
-=======
-
-    public List<Party> getParties() {
-        return parties;
-    }
-
-    public void setParties(List<Party> parties) {
-        this.parties = parties;
-    }
-
->>>>>>> dateTestbranch
     public void setLocked(Boolean locked) {
         this.locked = locked;
     }
@@ -169,7 +137,6 @@ public class BaUnit extends AbstractVersionedEntity {
         this.officeCode = officeCode;
     }
 
-<<<<<<< HEAD
     public CadastreObject getCadastreObject() {
         return cadastreObject;
     }
@@ -186,8 +153,6 @@ public class BaUnit extends AbstractVersionedEntity {
         this.cadastreObjectId = cadastreObjectId;
     }
     
-=======
->>>>>>> dateTestbranch
     private Transaction getTransaction() {
         Transaction result = null;
         TransactionEJBLocal transactionEJB = RepositoryUtility.tryGetEJB(TransactionEJBLocal.class);
@@ -219,7 +184,7 @@ public class BaUnit extends AbstractVersionedEntity {
     }
 
     public void setStatusCode(String statusCode) {
-        // Prevent changes to the status code if the value has been loaded from the database. 
+        // Prevent changes to the status code if the value has been loaded from the database.
         // Updates to the status code are made via the BaUnitStatusChanger
         if (isNew()) {
             this.statusCode = statusCode;

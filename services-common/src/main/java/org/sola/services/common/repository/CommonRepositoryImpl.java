@@ -923,17 +923,29 @@ public class CommonRepositoryImpl implements CommonRepository {
     }
 
     @Override
-    public <T extends AbstractReadOnlyEntity> T getEntity(Class<T> entityClass, String id) {
-
-        ArrayList<ColumnInfo> ids = (ArrayList<ColumnInfo>) RepositoryUtility.getIdColumns(entityClass, RepositoryUtility.getColumns(entityClass));
-
+    public <T extends AbstractReadOnlyEntity> T getEntityByOffice(Class<T> entityClass, String id, String officeCode){
         HashMap<String, Object> params = new HashMap<String, Object>();
+        putIdParams(entityClass, id, params);
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, officeCode);
+        return getEntity(entityClass, params);
+    }
+    
+    @Override
+    public <T extends AbstractReadOnlyEntity> T getEntity(Class<T> entityClass, String id) {
+        return getEntity(entityClass, putIdParams(entityClass, id, new HashMap<String, Object>()));
+    }
+
+    private <T extends AbstractReadOnlyEntity> HashMap<String, Object> putIdParams(Class<T> entityClass, 
+            String id, HashMap<String, Object> params){
+        ArrayList<ColumnInfo> ids = (ArrayList<ColumnInfo>) RepositoryUtility
+                .getIdColumns(entityClass, RepositoryUtility.getColumns(entityClass));
+
         String whereClause = ids.get(0).getColumnName() + " = #{idValue}";
         params.put(CommonSqlProvider.PARAM_WHERE_PART, whereClause);
         params.put("idValue", id);
-        return getEntity(entityClass, params);
+        return params;
     }
-
+    
     @Override
     public <T extends AbstractReadOnlyEntity> T getEntity(Class<T> entityClass, String id, String lang) {
 

@@ -29,6 +29,7 @@
  */
 package org.sola.services.common.ejbs;
 
+import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -47,6 +48,7 @@ import org.sola.services.common.repository.CommonRepository;
 import org.sola.services.common.repository.CommonRepositoryImpl;
 import org.sola.services.common.repository.DatabaseConnectionManager;
 import org.sola.services.common.repository.entities.AbstractEntity;
+import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 
 @DeclareRoles({
     RolesConstants.DASHBOARD_VIEW_ASSIGNED_APPS,

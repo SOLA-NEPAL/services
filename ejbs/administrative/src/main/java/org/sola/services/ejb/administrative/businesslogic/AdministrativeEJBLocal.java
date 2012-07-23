@@ -79,10 +79,12 @@ public interface AdministrativeEJBLocal extends AbstractSolaTransactionEJBLocal 
     Loc saveLoc(Loc loc);
 
     Loc getLoc(String id);
+    
+    LocWithMoth getLocWithMoth(String id);
 
     BaUnit saveBaUnit(BaUnit baUnit);
 
-    Loc getLocByPageNoAndMothId(int panaNo, String mothId);
+    LocWithMoth getLocByPageNoAndMoth(LocSearchByMothParams searchParams);
     
     List<Loc> getLocList(String mothId);   
     

@@ -52,7 +52,7 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
 
     CadastreObject getCadastreObjectByPoint(double x, double y, int srid);
 
-    List<CadastreObject> getCadastreObjectsByBaUnit(String baUnitId);
+    CadastreObject getCadastreObjectByBaUnit(String baUnitId);
 
     List<CadastreObject> getCadastreObjectsByService(String serviceId);
 
