@@ -38,16 +38,15 @@ import java.util.List;
 import javax.transaction.Status;
 import javax.transaction.UserTransaction;
 import org.junit.After;
+import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.sola.common.DateUtility;
 import org.sola.services.common.br.ValidationResult;
+import org.sola.services.common.test.AbstractEJBTest;
 import org.sola.services.ejb.administrative.businesslogic.AdministrativeEJB;
 import org.sola.services.ejb.administrative.businesslogic.AdministrativeEJBLocal;
-import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
-import static org.junit.Assert.*;
-import org.sola.services.common.test.AbstractEJBTest;
 import org.sola.services.ejb.administrative.repository.entities.BaUnit;
 import org.sola.services.ejb.administrative.repository.entities.BaUnitNotation;
 import org.sola.services.ejb.administrative.repository.entities.Rrr;
@@ -57,6 +56,7 @@ import org.sola.services.ejb.application.businesslogic.ApplicationEJBLocal;
 import org.sola.services.ejb.application.repository.entities.Application;
 import org.sola.services.ejb.application.repository.entities.ApplicationProperty;
 import org.sola.services.ejb.application.repository.entities.Service;
+import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
 import org.sola.services.ejb.party.businesslogic.PartyEJB;
 import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
 import org.sola.services.ejb.party.repository.entities.Party;
@@ -258,7 +258,7 @@ public class Development extends AbstractEJBTest{
             List<CadastreObject> objs = new ArrayList<CadastreObject>();
             objs.add(this.getCadastreObject("part1", "part1"));
             objs.add(this.getCadastreObject("part2", "part2"));
-            baUnit.setCadastreObject(this.getCadastreObject("part2", "part2"));
+           // baUnit.setCadastreObject(this.getCadastreObject("part2", "part2"));
             return baUnit;
     }
     
