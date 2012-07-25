@@ -33,6 +33,7 @@ import java.util.List;
 import javax.ejb.Local;
 import org.sola.services.common.ejbs.AbstractSolaTransactionEJBLocal;
 import org.sola.services.ejb.administrative.repository.entities.*;
+import org.sola.services.ejb.source.repository.entities.Source;
 
 /**
  * Provides local interface for administrative ejbs.
@@ -54,8 +55,6 @@ public interface AdministrativeEJBLocal extends AbstractSolaTransactionEJBLocal 
 
     BaUnit getBaUnitByCode(String nameFirstpart, String nameLastpart);
 
-    BaUnit createBaUnit(String serviceId, BaUnit baUnit);
-
     BaUnit saveBaUnit(String serviceId, BaUnit baUnit);
 
     List<BaUnit> getBaUnitsByTransactionId(String transactionId);
@@ -66,6 +65,8 @@ public interface AdministrativeEJBLocal extends AbstractSolaTransactionEJBLocal 
 
     BaUnit cancelBaUnitTermination(String baUnitId);
 
+    List<RrrLoc> getRrrLocsById(String locId);
+    
     //<editor-fold defaultstate="collapsed" desc="By Kumar">
     //***********************************************************************************************************
     Moth saveMoth(Moth moth);

@@ -220,7 +220,7 @@ public class Development extends AbstractEJBTest{
             Service firstService = result.getServiceList().get(0);
             System.out.println("Create new baUnit as started by the first service in the list.");
             BaUnit baUnit = this.getBaUnit();
-            baUnit = administrativeEJB.createBaUnit(firstService.getId(), baUnit);
+            baUnit = administrativeEJB.saveBaUnit(firstService.getId(), baUnit);
             System.out.println("Succeeded");
             System.out.println("Complete first service");
             instance.serviceActionComplete(firstService.getId(), "en", firstService.getRowVersion());

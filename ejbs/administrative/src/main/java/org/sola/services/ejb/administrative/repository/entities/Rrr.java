@@ -38,6 +38,7 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.sola.services.common.LocalInfo;
+import org.sola.services.common.StatusConstants;
 import org.sola.services.common.repository.*;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
 import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
@@ -60,6 +61,11 @@ public class Rrr extends AbstractVersionedEntity {
     public static final String QUERY_PARAMETER_TRANSACTIONID = "transactionId";
     public static final String QUERY_WHERE_BYTRANSACTIONID = "transaction_id = "
             + "#{" + QUERY_PARAMETER_TRANSACTIONID + "}";
+    public static final String QUERY_WHERE_BY_LOCID = "loc_id = "
+            + "#{" + RrrLoc.PARAM_LOC_ID + "} and (status_code = '" + StatusConstants.PENDING 
+            + "' or status_code = '" + StatusConstants.CURRENT + "') and is_terminating = 'f'";
+    public static final String ORDER_BY_BAUNIT_ID = "ba_unit_id";
+    
     @Id
     @Column(name = "id")
     private String id;
@@ -89,6 +95,8 @@ public class Rrr extends AbstractVersionedEntity {
     private String mortgageTypeCode;
     @Column(name="loc_id")
     private String locId;
+    @Column(name="office_code", updatable=false)
+    private String officeCode;
     
     // Child entity fields
     @ChildEntity(insertBeforeParent = false, parentIdField = "rrrId")
@@ -288,6 +296,14 @@ public class Rrr extends AbstractVersionedEntity {
 
     public void setLocId(String locId) {
         this.locId = locId;
+    }
+
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public void setOfficeCode(String officeCode) {
+        this.officeCode = officeCode;
     }
 
     @Override

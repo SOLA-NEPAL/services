@@ -30,18 +30,17 @@
 package org.sola.services.ejb.administrative.businesslogic;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import org.sola.common.DateUtility;
 import org.sola.common.RolesConstants;
 import org.sola.common.SOLAException;
 import org.sola.common.messaging.ServiceMessage;
 import org.sola.services.common.EntityAction;
 import org.sola.services.common.LocalInfo;
+import org.sola.services.common.StatusConstants;
 import org.sola.services.common.br.ValidationResult;
 import org.sola.services.common.ejbs.AbstractEJB;
 import org.sola.services.common.repository.CommonSqlProvider;
@@ -49,7 +48,9 @@ import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 import org.sola.services.ejb.administrative.repository.entities.*;
 import org.sola.services.ejb.cadastre.businesslogic.CadastreEJBLocal;
 import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
+import org.sola.services.ejb.party.repository.entities.Party;
 import org.sola.services.ejb.source.businesslogic.SourceEJBLocal;
+import org.sola.services.ejb.source.repository.entities.Source;
 import org.sola.services.ejb.system.businesslogic.SystemEJBLocal;
 import org.sola.services.ejb.system.repository.entities.BrValidation;
 import org.sola.services.ejb.transaction.businesslogic.TransactionEJBLocal;
@@ -116,17 +117,6 @@ public class AdministrativeEJB extends AbstractEJB
         params.put(BaUnit.QUERY_PARAMETER_FIRSTPART, nameFirstpart);
         params.put(BaUnit.QUERY_PARAMETER_LASTPART, nameLastpart);
         return getRepository().getEntity(BaUnit.class, params);
-    }
-
-    @Override
-    @RolesAllowed(RolesConstants.ADMINISTRATIVE_BA_UNIT_SAVE)
-    public BaUnit createBaUnit(String serviceId, BaUnit baUnit) {
-        if (baUnit == null) {
-            return null;
-        }
-        baUnit.setStatusCode("pending");
-        baUnit.setTypeCode("administrativeUnit");
-        return saveBaUnit(serviceId, baUnit);
     }
 
     @Override
@@ -355,7 +345,7 @@ public class AdministrativeEJB extends AbstractEJB
     @RolesAllowed(RolesConstants.ADMINISTRATIVE_BA_UNIT_SAVE)
     public Loc saveLoc(Loc loc) {
         if (loc.isNew()) {
-            if(getMoth(loc.getMothId())==null){
+            if (getMoth(loc.getMothId()) == null) {
                 throw new SOLAException(ServiceMessage.EXCEPTION_OBJECT_OUT_OF_OFFICE);
             }
             loc.setOfficeCode(adminEJB.getCurrentOfficeCode());
@@ -369,7 +359,7 @@ public class AdministrativeEJB extends AbstractEJB
     public Loc getLoc(String id) {
         return getRepository().getEntityByOffice(Loc.class, id, adminEJB.getCurrentOfficeCode());
     }
-    
+
     @Override
     public LocWithMoth getLocWithMoth(String id) {
         return getRepository().getEntityByOffice(LocWithMoth.class, id, adminEJB.getCurrentOfficeCode());
@@ -378,34 +368,252 @@ public class AdministrativeEJB extends AbstractEJB
     @Override
     @RolesAllowed(RolesConstants.ADMINISTRATIVE_BA_UNIT_SAVE)
     public BaUnit saveBaUnit(BaUnit baUnit) {
+        Object statusCode;
+
         if (baUnit.isNew()) {
+            baUnit.setStatusCode(StatusConstants.PENDING);
+            baUnit.setTypeCode("administrativeUnit");
             baUnit.setOfficeCode(adminEJB.getCurrentOfficeCode());
         } else {
+            statusCode = baUnit.getOriginalValue("statusCode");
+            if (statusCode != null) {
+                if (!statusCode.toString().equals(StatusConstants.PENDING) && baUnit.isModified()) {
+                    throw new SOLAException(ServiceMessage.EJB_ADMINISTRATIVE_BAUNIT_MODIFICATION_NOT_ALLOWED);
+                }
+            }
             adminEJB.checkOfficeCode(baUnit.getOfficeCode());
         }
-        return getRepository().saveEntity(baUnit);
+        for (Rrr rrr : baUnit.getRrrList()) {
+            if (rrr.isNew()) {
+                rrr.setOfficeCode(adminEJB.getCurrentOfficeCode());
+            } else {
+                adminEJB.checkOfficeCode(rrr.getOfficeCode());
+                statusCode = rrr.getOriginalValue("statusCode");
+                if (statusCode != null) {
+                    if (!statusCode.toString().equals(StatusConstants.PENDING) && rrr.isModified()) {
+                        throw new SOLAException(ServiceMessage.EJB_ADMINISTRATIVE_BAUNIT_MODIFICATION_NOT_ALLOWED);
+                    }
+                }
+            }
+        }
+
+        BaUnit newBaUnit = getBaUnitById(getRepository().saveEntity(baUnit).getId());
+        synchronizeBaUnits(newBaUnit);
+        return newBaUnit;
+    }
+
+    /**
+     * Propagates ownership values of the given BaUnit over other BaUnit,
+     * belonging to the same LOC.
+     */
+    private void synchronizeBaUnits(BaUnit baUnit) {
+
+        Rrr tmpRrr = null;
+
+        // Search for pending RRR
+        for (Rrr rrr : baUnit.getRrrList()) {
+            if (rrr.getStatusCode().equals(StatusConstants.PENDING) && rrr.getLocId() != null) {
+                tmpRrr = rrr;
+                break;
+            }
+        }
+
+        // Search for current RRR
+        if (tmpRrr == null) {
+            for (Rrr rrr : baUnit.getRrrList()) {
+                if (rrr.getStatusCode().equals(StatusConstants.CURRENT) && rrr.getLocId() != null) {
+                    tmpRrr = rrr;
+                    break;
+                }
+            }
+        }
+
+        if (tmpRrr == null) {
+            return;
+        }
+
+        RrrLoc pendingRrrLoc = null;
+
+        if (tmpRrr.getStatusCode().equals(StatusConstants.PENDING)) {
+            // Use pending RRR from the provided BaUnit
+            pendingRrrLoc = new RrrLoc();
+            pendingRrrLoc.setLocId(tmpRrr.getLocId());
+            pendingRrrLoc.setRegistrationDate(tmpRrr.getRegistrationDate());
+            pendingRrrLoc.setRightHolderList(tmpRrr.getRightHolderList());
+            pendingRrrLoc.setSourceList(tmpRrr.getSourceList());
+            pendingRrrLoc.setStatusCode(tmpRrr.getStatusCode());
+            pendingRrrLoc.setTypeCode(tmpRrr.getTypeCode());
+        } else {
+            // Pick up pending from the common LOC
+            List<RrrLoc> rrrLocs = getRrrLocsById(tmpRrr.getLocId());
+            for (RrrLoc rrrLoc : rrrLocs) {
+                if (rrrLoc.getStatusCode().equals(StatusConstants.PENDING)) {
+                    pendingRrrLoc = rrrLoc;
+                    break;
+                }
+            }
+        }
+
+        // If no pending RRR on the provided BaUnit and no pending on the common LOC, than exit.
+        if (pendingRrrLoc == null) {
+            return;
+        }
+
+        // Get RRRs by LOC for synchronizing
+        List<Rrr> rrrs = getRrrsByLoc(pendingRrrLoc.getLocId());
+        List<Rrr> newRrrs = new ArrayList<Rrr>();
+
+        for (Rrr rrr : rrrs) {
+            if (rrr.getStatusCode().equals(StatusConstants.PENDING)) {
+                if (compareRrrAndLoc(rrr, pendingRrrLoc) == false) {
+                    // Update rrr if it is different from pending 
+                    createUpdateRrrByRrrLoc(rrr, pendingRrrLoc);
+                }
+            }
+            if (rrr.getStatusCode().equals(StatusConstants.CURRENT)) {
+
+                // Check if there is corresponding pending
+                boolean isPending = false;
+                for (Rrr rrr2 : rrrs) {
+                    if (rrr2.getNr() != null && rrr.getNr() != null && !rrr2.getId().equals(rrr.getId())
+                            && rrr2.getNr().equals(rrr.getNr())
+                            && rrr2.getStatusCode().equals(StatusConstants.PENDING)) {
+                        isPending = true;
+                        break;
+                    }
+                }
+
+                if (!isPending && compareRrrAndLoc(rrr, pendingRrrLoc) == false) {
+                    // Create pending
+                    Rrr newRrr = createUpdateRrrByRrrLoc(null, pendingRrrLoc);
+                    newRrr.setBaUnitId(rrr.getBaUnitId());
+                    newRrr.setOfficeCode(rrr.getOfficeCode());
+                    newRrr.setNr(rrr.getNr());
+                    newRrrs.add(newRrr);
+                }
+            }
+
+        }
+
+        rrrs.addAll(newRrrs);
+
+        for (Rrr rrr : rrrs) {
+            getRepository().saveEntity(rrr);
+        }
+    }
+
+    private Rrr createUpdateRrrByRrrLoc(Rrr rrr, RrrLoc rrrLoc) {
+        if (rrrLoc == null) {
+            return rrr;
+        }
+
+        if (rrr == null) {
+            rrr = new Rrr();
+        }
+
+        rrr.setLocId(rrrLoc.getLocId());
+        rrr.setRegistrationDate(rrrLoc.getRegistrationDate());
+        rrr.setRightHolderList(rrrLoc.getRightHolderList());
+        rrr.setSourceList(rrrLoc.getSourceList());
+        rrr.setStatusCode(rrrLoc.getStatusCode());
+        rrr.setTypeCode(rrrLoc.getTypeCode());
+        return rrr;
+    }
+
+    /**
+     * Returns true if RRR and RrrLoc are equal.
+     */
+    private boolean compareRrrAndLoc(Rrr rrr, RrrLoc rrrLoc) {
+        if (rrr == null || rrrLoc == null) {
+            return false;
+        }
+        if (!DateUtility.areEqual(rrr.getRegistrationDate(), rrrLoc.getRegistrationDate())) {
+            return false;
+        }
+
+        if (!rrrLoc.getTypeCode().equals(rrr.getStatusCode())) {
+            return false;
+        }
+
+        // Check rightholders
+        if ((rrr.getRightHolderList() == null && rrrLoc.getRightHolderList() != null)
+                || (rrr.getRightHolderList() != null && rrrLoc.getRightHolderList() == null)) {
+            return false;
+        }
+        if (rrr.getRightHolderList() != null && rrrLoc.getRightHolderList() != null) {
+            if (rrr.getRightHolderList().size() != rrrLoc.getRightHolderList().size()) {
+                return false;
+            }
+
+            for (Party rrrParty : rrr.getRightHolderList()) {
+                boolean partyFound = false;
+                for (Party rrrLocParty : rrrLoc.getRightHolderList()) {
+                    if (rrrParty.getId().equals(rrrLocParty.getId())) {
+                        partyFound = true;
+                        break;
+                    }
+                }
+                if (!partyFound) {
+                    return false;
+                }
+            }
+        }
+
+        // Check sources
+        if ((rrr.getSourceList() == null && rrrLoc.getSourceList() != null)
+                || (rrr.getSourceList() != null && rrrLoc.getSourceList() == null)) {
+            return false;
+        }
+        if (rrr.getSourceList() != null && rrrLoc.getSourceList() != null) {
+            if (rrr.getSourceList().size() != rrrLoc.getSourceList().size()) {
+                return false;
+            }
+
+            for (Source rrrSource : rrr.getSourceList()) {
+                boolean sourceFound = false;
+                for (Source rrrLocSource : rrrLoc.getSourceList()) {
+                    if (rrrSource.getId().equals(rrrLocSource.getId())) {
+                        sourceFound = true;
+                        break;
+                    }
+                }
+                if (!sourceFound) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private List<Rrr> getRrrsByLoc(String locId) {
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Rrr.QUERY_WHERE_BY_LOCID);
+        params.put(CommonSqlProvider.PARAM_ORDER_BY_PART, Rrr.ORDER_BY_BAUNIT_ID);
+        params.put(RrrLoc.PARAM_LOC_ID, locId);
+        return getRepository().getEntityList(Rrr.class, params);
     }
 
     @Override
     public LocWithMoth getLocByPageNoAndMoth(LocSearchByMothParams searchParams) {
-        if(searchParams.getMoth()==null || searchParams.getPageNumber() == null 
-                || searchParams.getPageNumber().length()<1){
+        if (searchParams.getMoth() == null || searchParams.getPageNumber() == null
+                || searchParams.getPageNumber().length() < 1) {
             return null;
         }
-        
-        if(searchParams.getMoth().getMothLuj() == null){
+
+        if (searchParams.getMoth().getMothLuj() == null) {
             searchParams.getMoth().setMothLuj("M");
         }
-        
+
         String tmpPageNumber = "";
         String pageNumber = "";
-        
-        if(searchParams.getMoth().getMothLuj().equalsIgnoreCase("M")){
+
+        if (searchParams.getMoth().getMothLuj().equalsIgnoreCase("M")) {
             pageNumber = searchParams.getPageNumber();
         } else {
             tmpPageNumber = searchParams.getPageNumber();
         }
-        
+
         HashMap params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, Loc.GET_BY_MOTH_ID_AND_PANA_NO);
         params.put(Loc.MOTH_ID_PARAM, searchParams.getMoth().getId());
@@ -423,7 +631,65 @@ public class AdministrativeEJB extends AbstractEJB
         List<Loc> loc = getRepository().getEntityList(Loc.class, params);
         return loc;
     }
-
     //***********************************************************************************************************
     //</editor-fold>    
+
+    private List<Source> getSourcesByLocAndStatus(String locId, String status) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, RrrLoc.SELECT_GET_SOURCE_IDS);
+        params.put(RrrLoc.PARAM_LOC_ID, locId);
+        params.put(RrrLoc.PARAM_STATUS, status);
+
+        ArrayList<HashMap> rawSourceIds = getRepository().executeSql(params);
+        ArrayList<Source> sources = new ArrayList<Source>();
+
+        if (rawSourceIds != null) {
+            ArrayList<String> sourceIds = new ArrayList<String>();
+            for (HashMap hashMap : rawSourceIds) {
+                sourceIds.add(hashMap.get("id").toString());
+            }
+            sources = (ArrayList<Source>) sourceEJB.getSources(sourceIds);
+        }
+
+        return sources;
+    }
+
+    private List<Party> getPartiesByLocAndStatus(String locId, String status) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, RrrLoc.SELECT_GET_PARTY_IDS);
+        params.put(RrrLoc.PARAM_LOC_ID, locId);
+        params.put(RrrLoc.PARAM_STATUS, status);
+
+        ArrayList<HashMap> rawPartyIds = getRepository().executeSql(params);
+        ArrayList<Party> parties = new ArrayList<Party>();
+
+        if (rawPartyIds != null) {
+            ArrayList<String> partyIds = new ArrayList<String>();
+            for (HashMap hashMap : rawPartyIds) {
+                partyIds.add(hashMap.get("id").toString());
+            }
+            parties = (ArrayList<Party>) partyEJB.getParties(partyIds);
+        }
+
+        return parties;
+    }
+
+    @Override
+    public List<RrrLoc> getRrrLocsById(String locId) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, RrrLoc.SELECT_RRR_LOCS);
+        params.put(RrrLoc.PARAM_LOC_ID, locId);
+        params.put(RrrLoc.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        ArrayList<RrrLoc> rrrLocs = (ArrayList<RrrLoc>) getRepository().getEntityList(RrrLoc.class, params);
+        if (rrrLocs != null) {
+            for (RrrLoc rrrLoc : rrrLocs) {
+                rrrLoc.setSourceList(getSourcesByLocAndStatus(locId, rrrLoc.getStatusCode()));
+                rrrLoc.setRightHolderList(getPartiesByLocAndStatus(locId, rrrLoc.getStatusCode()));
+            }
+            if (rrrLocs.size() > 2) {
+                throw new SOLAException(ServiceMessage.EJB_ADMINISTRATIVE_LOC_CURRUPTED);
+            }
+        }
+        return rrrLocs;
+    }
 }

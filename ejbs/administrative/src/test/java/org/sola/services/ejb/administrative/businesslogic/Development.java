@@ -91,7 +91,7 @@ public class Development extends AbstractEJBTest {
             tx.begin();
             System.out.println("Create new baunit with 2 rrrs, 2 cadastre objects");
             BaUnit baUnit = this.getBaUnit();
-            BaUnit result = instance.createBaUnit(null, baUnit);
+            BaUnit result = instance.saveBaUnit(null, baUnit);
             assertNotNull(result);
             System.out.println("Creation of baunit succeeded.");
             baUnitId = result.getId();

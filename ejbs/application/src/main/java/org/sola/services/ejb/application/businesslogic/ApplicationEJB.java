@@ -335,8 +335,6 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
         calculateLodgementFees(application);
 
         treatApplicationSources(application);
-        //reset the partybean attribute for readonly.
-        application.getContactPerson().setEntityAction(EntityAction.READ_ONLY);//Introduced by Kabindra
         application = getRepository().saveEntity(application);
 
         return application;
