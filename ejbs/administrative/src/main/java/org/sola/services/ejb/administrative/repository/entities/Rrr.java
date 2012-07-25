@@ -110,9 +110,12 @@ public class Rrr extends AbstractVersionedEntity {
     @ChildEntityList(parentIdField = "rrrId", childIdField = "partyId",
     manyToManyClass = PartyForRrr.class, readOnly = true)
     private List<Party> rightHolderList;
-    @ChildEntity(childIdField="locId",insertBeforeParent=true)
-    private LocWithMoth loc;
-        
+    @ChildEntity(childIdField = "locId", insertBeforeParent = true)
+    private LocWithMoth loc;   
+    @Column(name = "restriction_reasoncode")
+    private String restrictionReasonCode;
+    @Column(name = "restriction_officecode")
+    private String restictionOfficeCode;
     // Other fields
     private Boolean locked = null;
 
@@ -120,6 +123,22 @@ public class Rrr extends AbstractVersionedEntity {
         super();
     }
 
+    public String getRestictionOfficeCode() {
+        return restictionOfficeCode;
+    }
+
+    public void setRestictionOfficeCode(String restictionOfficeCode) {
+        this.restictionOfficeCode = restictionOfficeCode;
+    }
+
+    public String getRestrictionReasonCode() {
+        return restrictionReasonCode;
+    }
+
+    public void setRestrictionReasonCode(String restrictionReasonCode) {
+        this.restrictionReasonCode = restrictionReasonCode;
+    }
+    
     private String generateRrrNumber() {
         String result = "";
         SystemEJBLocal systemEJB = RepositoryUtility.tryGetEJB(SystemEJBLocal.class);
