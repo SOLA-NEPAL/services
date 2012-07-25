@@ -50,6 +50,9 @@ public class RrrStatusChanger extends AbstractStatusChangerEntity {
     @AccessFunctions(onSelect="(SELECT office_code FROM administrative.ba_unit b WHERE b.id = ba_unit_id)")
     private String officeCode;
     
+    @Column(name="is_terminating")
+    private boolean terminating;
+    
     public RrrStatusChanger() {
         super();
     }
@@ -68,5 +71,13 @@ public class RrrStatusChanger extends AbstractStatusChangerEntity {
 
     public void setOfficeCode(String officeCode) {
         this.officeCode = officeCode;
+    }
+
+    public boolean isTerminating() {
+        return terminating;
+    }
+
+    public void setTerminating(boolean terminating) {
+        this.terminating = terminating;
     }
 }

@@ -63,7 +63,7 @@ public class Rrr extends AbstractVersionedEntity {
             + "#{" + QUERY_PARAMETER_TRANSACTIONID + "}";
     public static final String QUERY_WHERE_BY_LOCID = "loc_id = "
             + "#{" + RrrLoc.PARAM_LOC_ID + "} and (status_code = '" + StatusConstants.PENDING 
-            + "' or status_code = '" + StatusConstants.CURRENT + "') and is_terminating = 'f'";
+            + "' or status_code = '" + StatusConstants.CURRENT + "')";
     public static final String ORDER_BY_BAUNIT_ID = "ba_unit_id";
     
     @Id
@@ -97,6 +97,8 @@ public class Rrr extends AbstractVersionedEntity {
     private String locId;
     @Column(name="office_code", updatable=false)
     private String officeCode;
+    @Column(name="is_terminating")
+    private boolean terminating;
     
     // Child entity fields
     @ChildEntity(insertBeforeParent = false, parentIdField = "rrrId")
@@ -304,6 +306,22 @@ public class Rrr extends AbstractVersionedEntity {
 
     public void setOfficeCode(String officeCode) {
         this.officeCode = officeCode;
+    }
+
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
+
+    public boolean isTerminating() {
+        return terminating;
+    }
+
+    public void setTerminating(boolean terminating) {
+        this.terminating = terminating;
     }
 
     @Override

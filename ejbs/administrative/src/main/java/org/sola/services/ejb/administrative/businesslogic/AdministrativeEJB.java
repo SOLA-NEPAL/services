@@ -177,10 +177,15 @@ public class AdministrativeEJB extends AbstractEJB
 
             validationResult.addAll(this.validateRrr(rrr, languageCode));
             if (systemEJB.validationSucceeded(validationResult) && !validateOnly) {
-                rrr.setStatusCode(approvedStatus);
+                if(rrr.isTerminating()){
+                    rrr.setStatusCode(StatusConstants.HISTORIC);
+                } else {
+                    rrr.setStatusCode(approvedStatus);
+                }
                 getRepository().saveEntity(rrr);
             }
         }
+        
         if (!validateOnly) {
             params = new HashMap<String, Object>();
             params.put(CommonSqlProvider.PARAM_WHERE_PART, BaUnitNotation.QUERY_WHERE_BYTRANSACTIONID);
@@ -464,7 +469,7 @@ public class AdministrativeEJB extends AbstractEJB
         List<Rrr> newRrrs = new ArrayList<Rrr>();
 
         for (Rrr rrr : rrrs) {
-            if (rrr.getStatusCode().equals(StatusConstants.PENDING)) {
+            if (rrr.getStatusCode().equals(StatusConstants.PENDING) && !rrr.isTerminating()) {
                 if (compareRrrAndLoc(rrr, pendingRrrLoc) == false) {
                     // Update rrr if it is different from pending 
                     createUpdateRrrByRrrLoc(rrr, pendingRrrLoc);
