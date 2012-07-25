@@ -47,11 +47,11 @@ import org.sola.services.ejb.source.repository.entities.SourceType;
 @Local
 public interface SourceEJBLocal extends AbstractSolaTransactionEJBLocal {
 
-    public Source saveSource(Source source);
+    Source saveSource(Source source);
 
-    public Source getSourceById(String id);
+    Source getSourceById(String id);
 
-    public List<Source> getAllsources();
+    List<Source> getAllsources();
 
     List<Source> getSources(List<String> sourceIds);
 

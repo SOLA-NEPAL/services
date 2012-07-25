@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlType;
  * @author soladev
  */
 @XmlType(namespace=ServiceConstants.BASE_TO_NAMESPACE)
-public enum EntityAction { DELETE, DISASSOCIATE, INSERT, UPDATE, READ_ONLY}
+public enum EntityAction { DELETE, DISASSOCIATE, INSERT, UPDATE}
 //READ_ONLY--> attribute added by Kabindra
     
 

@@ -39,7 +39,7 @@ import java.util.List;
 import javax.transaction.Status;
 import javax.transaction.UserTransaction;
 import org.junit.After;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -79,6 +79,18 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         logout();
     }
 
+    /** Test getting RrrLoc */
+    @Ignore
+    @Test
+    public void testGetLocs() throws Exception{
+        System.out.println("====> Getting Locs by ID");
+        AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
+        List<RrrLoc> rrrLocs = instance.getRrrLocsById("a7fdc18d-b76a-43aa-9878-2e115bb52b86");
+        assertNotNull("No RrrLocs found", rrrLocs);
+        assertTrue("RrrLoc list is empty", rrrLocs.size()>0);
+        System.out.println("====> Found " + rrrLocs.size() + " RRRLocs.");
+    }
+    
     /**
      * Test of createBaUnit method, of class AdministrativeEJB.
      */
@@ -111,7 +123,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             baUnit.setRrrList(rrrs);
 
             baUnit.setCadastreObject(this.getCadastreObject("part1", "part1"));
-            BaUnit result = instance.createBaUnit(null, baUnit);
+            BaUnit result = instance.saveBaUnit(null, baUnit);
             assertNotNull(result);
             System.out.println("Creation of baunit succeeded.");
             baUnitId = result.getId();
