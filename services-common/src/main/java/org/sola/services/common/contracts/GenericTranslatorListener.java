@@ -87,6 +87,7 @@ public class GenericTranslatorListener implements DozerEventListener {
         if (event.getDestinationObject() instanceof AbstractReadOnlyEntity) {
             // Parent object is an Entity, check the child fields and fire the setter if appropriate.  
             AbstractReadOnlyEntity parent = (AbstractReadOnlyEntity) event.getDestinationObject();
+
             ChildEntityInfo childInfo = parent.getChildEntityInfo(
                     event.getFieldMap().getDestFieldName());
             if (childInfo != null) {

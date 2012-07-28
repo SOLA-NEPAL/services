@@ -177,7 +177,7 @@ public class AdministrativeEJB extends AbstractEJB
 
             validationResult.addAll(this.validateRrr(rrr, languageCode));
             if (systemEJB.validationSucceeded(validationResult) && !validateOnly) {
-                if(rrr.isTerminating()){
+                if (rrr.isTerminating()) {
                     rrr.setStatusCode(StatusConstants.HISTORIC);
                 } else {
                     rrr.setStatusCode(approvedStatus);
@@ -185,7 +185,7 @@ public class AdministrativeEJB extends AbstractEJB
                 getRepository().saveEntity(rrr);
             }
         }
-        
+
         if (!validateOnly) {
             params = new HashMap<String, Object>();
             params.put(CommonSqlProvider.PARAM_WHERE_PART, BaUnitNotation.QUERY_WHERE_BYTRANSACTIONID);
@@ -403,21 +403,27 @@ public class AdministrativeEJB extends AbstractEJB
         }
 
         BaUnit newBaUnit = getBaUnitById(getRepository().saveEntity(baUnit).getId());
-        synchronizeBaUnits(newBaUnit);
-        return newBaUnit;
+        if (synchronizeBaUnits(newBaUnit)) {
+            // Retrieve new version of BaUnitBean
+            return getBaUnitById(newBaUnit.getId());
+        } else {
+            return newBaUnit;
+        }
     }
 
     /**
      * Propagates ownership values of the given BaUnit over other BaUnit,
      * belonging to the same LOC.
      */
-    private void synchronizeBaUnits(BaUnit baUnit) {
+    private boolean synchronizeBaUnits(BaUnit baUnit) {
 
         Rrr tmpRrr = null;
+        boolean hasChanges = false;
 
         // Search for pending RRR
         for (Rrr rrr : baUnit.getRrrList()) {
-            if (rrr.getStatusCode().equals(StatusConstants.PENDING) && rrr.getLocId() != null) {
+            if (rrr.getStatusCode().equals(StatusConstants.PENDING) 
+                    && !rrr.isTerminating() && rrr.getLocId() != null) {
                 tmpRrr = rrr;
                 break;
             }
@@ -434,7 +440,7 @@ public class AdministrativeEJB extends AbstractEJB
         }
 
         if (tmpRrr == null) {
-            return;
+            return false;
         }
 
         RrrLoc pendingRrrLoc = null;
@@ -448,6 +454,9 @@ public class AdministrativeEJB extends AbstractEJB
             pendingRrrLoc.setSourceList(tmpRrr.getSourceList());
             pendingRrrLoc.setStatusCode(tmpRrr.getStatusCode());
             pendingRrrLoc.setTypeCode(tmpRrr.getTypeCode());
+            if (tmpRrr.getNotation() != null) {
+                pendingRrrLoc.setNotationText(tmpRrr.getNotation().getNotationText());
+            }
         } else {
             // Pick up pending from the common LOC
             List<RrrLoc> rrrLocs = getRrrLocsById(tmpRrr.getLocId());
@@ -461,7 +470,7 @@ public class AdministrativeEJB extends AbstractEJB
 
         // If no pending RRR on the provided BaUnit and no pending on the common LOC, than exit.
         if (pendingRrrLoc == null) {
-            return;
+            return false;
         }
 
         // Get RRRs by LOC for synchronizing
@@ -471,10 +480,33 @@ public class AdministrativeEJB extends AbstractEJB
         for (Rrr rrr : rrrs) {
             if (rrr.getStatusCode().equals(StatusConstants.PENDING) && !rrr.isTerminating()) {
                 if (compareRrrAndLoc(rrr, pendingRrrLoc) == false) {
+                    // Check transaction id to be the same as current
+                    if (!rrr.getTransactionId().equals(LocalInfo.getTransactionId())) {
+                        throw new SOLAException(ServiceMessage.EJB_ADMINISTRATIVE_RRR_MODIFIED_BY_ANOTHER_SERVICE);
+                    }
                     // Update rrr if it is different from pending 
                     createUpdateRrrByRrrLoc(rrr, pendingRrrLoc);
+                    hasChanges = true;
                 }
+                // Remove pending if it is equal to current 
+                //(skip current RRR, to avoid disaapearing on the client form)
+                //if (!rrr.getBaUnitId().equals(baUnit.getId())) {
+                // Look for the current record
+                for (Rrr rrr2 : rrrs) {
+                    if (rrr2.getNr() != null && rrr.getNr() != null && !rrr2.getId().equals(rrr.getId())
+                            && rrr2.getNr().equals(rrr.getNr())
+                            && rrr2.getStatusCode().equals(StatusConstants.CURRENT)) {
+                        // Check if current and pending are equal, remove pending
+                        if (compareRrrs(rrr, rrr2)) {
+                            rrr.setEntityAction(EntityAction.DELETE);
+                            hasChanges = true;
+                        }
+                        break;
+                    }
+                }
+                //}
             }
+
             if (rrr.getStatusCode().equals(StatusConstants.CURRENT)) {
 
                 // Check if there is corresponding pending
@@ -495,6 +527,7 @@ public class AdministrativeEJB extends AbstractEJB
                     newRrr.setOfficeCode(rrr.getOfficeCode());
                     newRrr.setNr(rrr.getNr());
                     newRrrs.add(newRrr);
+                    hasChanges = true;
                 }
             }
 
@@ -502,9 +535,12 @@ public class AdministrativeEJB extends AbstractEJB
 
         rrrs.addAll(newRrrs);
 
-        for (Rrr rrr : rrrs) {
-            getRepository().saveEntity(rrr);
+        if (hasChanges) {
+            for (Rrr rrr : rrrs) {
+                getRepository().saveEntity(rrr);
+            }
         }
+        return hasChanges;
     }
 
     private Rrr createUpdateRrrByRrrLoc(Rrr rrr, RrrLoc rrrLoc) {
@@ -514,12 +550,94 @@ public class AdministrativeEJB extends AbstractEJB
 
         if (rrr == null) {
             rrr = new Rrr();
+            rrr.setLocId(rrrLoc.getLocId());
         }
 
-        rrr.setLocId(rrrLoc.getLocId());
+        if (rrr.getNotation() == null) {
+            rrr.setNotation(new BaUnitNotation());
+        }
+
+        rrr.getNotation().setNotationText(rrrLoc.getNotationText());
         rrr.setRegistrationDate(rrrLoc.getRegistrationDate());
-        rrr.setRightHolderList(rrrLoc.getRightHolderList());
-        rrr.setSourceList(rrrLoc.getSourceList());
+
+        // Update rightholders
+        if (rrrLoc.getRightHolderList() == null) {
+            if (rrr.getRightHolderList() != null) {
+                for (Party party : rrr.getRightHolderList()) {
+                    party.setEntityAction(EntityAction.DISASSOCIATE);
+                }
+            }
+        } else {
+            if (rrr.getRightHolderList() == null) {
+                rrr.setRightHolderList(new ArrayList<Party>());
+            }
+            // Remove if not in rrrLoc list
+            for (Party party : rrr.getRightHolderList()) {
+                boolean found = false;
+                for (Party party2 : rrrLoc.getRightHolderList()) {
+                    if (party.getId().equals(party2.getId())) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    party.setEntityAction(EntityAction.DISASSOCIATE);
+                }
+            }
+            // Add new parties on rrr from rrrLoc
+            for (Party party : rrrLoc.getRightHolderList()) {
+                boolean found = false;
+                for (Party party2 : rrr.getRightHolderList()) {
+                    if (party.getId().equals(party2.getId())) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    rrr.getRightHolderList().add(party);
+                }
+            }
+        }
+
+        // Update sources
+        if (rrrLoc.getSourceList() == null) {
+            if (rrr.getSourceList() != null) {
+                for (Source source : rrr.getSourceList()) {
+                    source.setEntityAction(EntityAction.DISASSOCIATE);
+                }
+            }
+        } else {
+            if (rrr.getSourceList() == null) {
+                rrr.setSourceList(new ArrayList<Source>());
+            }
+            // Remove if not in rrrLoc list
+            for (Source source : rrr.getSourceList()) {
+                boolean found = false;
+                for (Source source2 : rrrLoc.getSourceList()) {
+                    if (source.getId().equals(source2.getId())) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    source.setEntityAction(EntityAction.DISASSOCIATE);
+                }
+            }
+            // Add new source on rrr from rrrLoc
+            for (Source source : rrrLoc.getSourceList()) {
+                boolean found = false;
+                for (Source source2 : rrr.getSourceList()) {
+                    if (source.getId().equals(source2.getId())) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    rrr.getSourceList().add(source);
+                }
+            }
+        }
+
         rrr.setStatusCode(rrrLoc.getStatusCode());
         rrr.setTypeCode(rrrLoc.getTypeCode());
         return rrr;
@@ -532,27 +650,63 @@ public class AdministrativeEJB extends AbstractEJB
         if (rrr == null || rrrLoc == null) {
             return false;
         }
-        if (!DateUtility.areEqual(rrr.getRegistrationDate(), rrrLoc.getRegistrationDate())) {
+        Rrr rrr2 = new Rrr();
+        rrr2.setRegistrationDate(rrrLoc.getRegistrationDate());
+        rrr2.setTypeCode(rrrLoc.getTypeCode());
+        if (rrrLoc.getNotationText() != null) {
+            BaUnitNotation notation = new BaUnitNotation();
+            notation.setNotationText(rrrLoc.getNotationText());
+            rrr2.setNotation(notation);
+        }
+        rrr2.setRightHolderList(rrrLoc.getRightHolderList());
+        rrr2.setSourceList(rrrLoc.getSourceList());
+        return compareRrrs(rrr, rrr2);
+    }
+
+    /**
+     * Returns true if RRR and RrrLoc are equal.
+     */
+    private boolean compareRrrs(Rrr rrr, Rrr rrr2) {
+        if (rrr == null || rrr2 == null) {
+            return false;
+        }
+        if (!DateUtility.areEqual(rrr.getRegistrationDate(), rrr2.getRegistrationDate())) {
             return false;
         }
 
-        if (!rrrLoc.getTypeCode().equals(rrr.getStatusCode())) {
+        if (!rrr2.getTypeCode().equals(rrr.getTypeCode())) {
+            return false;
+        }
+
+        // Check notation
+        if ((rrr.getNotation() == null || rrr.getNotation().getNotationText().isEmpty())
+                && rrr2.getNotation() != null && !rrr2.getNotation().getNotationText().isEmpty()) {
+            return false;
+        }
+
+        if ((rrr2.getNotation() == null || rrr2.getNotation().getNotationText().isEmpty())
+                && rrr.getNotation() != null && !rrr.getNotation().getNotationText().isEmpty()) {
+            return false;
+        }
+
+        if (rrr.getNotation() != null && rrr2.getNotation() != null
+                && !rrr.getNotation().getNotationText().equals(rrr2.getNotation().getNotationText())) {
             return false;
         }
 
         // Check rightholders
-        if ((rrr.getRightHolderList() == null && rrrLoc.getRightHolderList() != null)
-                || (rrr.getRightHolderList() != null && rrrLoc.getRightHolderList() == null)) {
+        if ((rrr.getRightHolderList() == null && rrr2.getRightHolderList() != null)
+                || (rrr.getRightHolderList() != null && rrr2.getRightHolderList() == null)) {
             return false;
         }
-        if (rrr.getRightHolderList() != null && rrrLoc.getRightHolderList() != null) {
-            if (rrr.getRightHolderList().size() != rrrLoc.getRightHolderList().size()) {
+        if (rrr.getRightHolderList() != null && rrr2.getRightHolderList() != null) {
+            if (rrr.getRightHolderList().size() != rrr2.getRightHolderList().size()) {
                 return false;
             }
 
             for (Party rrrParty : rrr.getRightHolderList()) {
                 boolean partyFound = false;
-                for (Party rrrLocParty : rrrLoc.getRightHolderList()) {
+                for (Party rrrLocParty : rrr2.getRightHolderList()) {
                     if (rrrParty.getId().equals(rrrLocParty.getId())) {
                         partyFound = true;
                         break;
@@ -565,18 +719,18 @@ public class AdministrativeEJB extends AbstractEJB
         }
 
         // Check sources
-        if ((rrr.getSourceList() == null && rrrLoc.getSourceList() != null)
-                || (rrr.getSourceList() != null && rrrLoc.getSourceList() == null)) {
+        if ((rrr.getSourceList() == null && rrr2.getSourceList() != null)
+                || (rrr.getSourceList() != null && rrr2.getSourceList() == null)) {
             return false;
         }
-        if (rrr.getSourceList() != null && rrrLoc.getSourceList() != null) {
-            if (rrr.getSourceList().size() != rrrLoc.getSourceList().size()) {
+        if (rrr.getSourceList() != null && rrr2.getSourceList() != null) {
+            if (rrr.getSourceList().size() != rrr2.getSourceList().size()) {
                 return false;
             }
 
             for (Source rrrSource : rrr.getSourceList()) {
                 boolean sourceFound = false;
-                for (Source rrrLocSource : rrrLoc.getSourceList()) {
+                for (Source rrrLocSource : rrr2.getSourceList()) {
                     if (rrrSource.getId().equals(rrrLocSource.getId())) {
                         sourceFound = true;
                         break;
