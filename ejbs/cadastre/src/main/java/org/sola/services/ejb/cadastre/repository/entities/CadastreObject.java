@@ -57,6 +57,9 @@ public class CadastreObject extends AbstractVersionedEntity {
     public static final String QUERY_WHERE_SEARCHBYPARTS = "status_code= 'current' and "
             + "compare_strings(#{search_string}, name_firstpart || ' ' || name_lastpart) "
             + "AND " + QUERY_WHERE_BY_OFFICE;
+    public static final String QUERY_WHERE_SEARCHBY_EXACT_PARTS = "status_code= 'current' and "
+            + "name_firstpart=#{firstpart} and name_lastpart=#{lastpart}"
+            + " and " + QUERY_WHERE_BY_OFFICE;
     public static final String QUERY_WHERE_SEARCHBYPARTS_PENDING = "status_code= 'pending' and "
             + "compare_strings(#{search_string}, name_firstpart || ' ' || name_lastpart) "
             + "AND " + QUERY_WHERE_BY_OFFICE;
@@ -100,6 +103,8 @@ public class CadastreObject extends AbstractVersionedEntity {
     //***********************************************************************************************************
     //</editor-fold>   
     //full query by Kabindra
+    private static final String QUERY_WHERE_BY_OFFICE1 = "(p.office_code=#{"
+            + AbstractReadOnlyEntity.PARAM_OFFICE_CODE + "} OR office_code IS NULL)";
     public static final String GET_BY_ADMIN_BOUNDARY_SELECT_PART =
             "p.id, p.type_code, p.map_sheet_id, p.approval_datetime, p.historic_datetime,"
             + "p.source_reference, p.name_firstpart, p.name_lastpart, p.status_code, p.transaction_id,"
@@ -115,7 +120,19 @@ public class CadastreObject extends AbstractVersionedEntity {
             + " a.vdc_code=#{" + VDC_PARAM
             + "} and a.ward_no=#{" + WARD_NO_PARAM
             + "} and p.parcel_no=#{" + PARCEL_NO_PARAM + "} "
-            + "AND " + QUERY_WHERE_BY_OFFICE;
+            + "and " + QUERY_WHERE_BY_OFFICE1;  
+    //list ward numbers.
+    public static final String GET_BY_WARD_IN_VDC =
+            " select distinct a.ward_no " 
+            + " from cadastre.cadastre_object as p,"
+            + "cadastre.spatial_unit_address as pa,"
+            + "address.address as a" 
+            + " where p.id=pa.spatial_unit_id and "
+            + " pa.address_id=a.id and "
+            + " a.vdc_code=#{" + VDC_PARAM + "} "
+            + "and " + QUERY_WHERE_BY_OFFICE1;  
+    
+    
     @Id
     @Column(name = "id")
     private String id;
