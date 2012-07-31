@@ -29,6 +29,7 @@
  */
 package org.sola.services.ejb.cadastre.businesslogic;
 
+import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Local;
 import org.sola.services.common.ejbs.AbstractEJBLocal;
@@ -114,5 +115,19 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
     List<ParcelType> getParcelTypeList(String languageCode);
     
     List<CadastreObject> getCadastreObjectListMem(List<String> mapSheetCode);
+    
+    List<ConstructionObject> loadConstructionObjectList(String mapSheetCode); 
+            
+    List<ConstructionObject> getConstructionObjectListMem(List<String> mapSheetCode);
+    
+    List<CadastreObject> getCadastreObjectByExactParts(String firstpart, String lastpart);
+    
+    List<HashMap> getWardList(String vdccode);
+    
+    List<MapSheet> loadWardMapSheet(int mapSheetType,String vdccode,String wardno);
+    
+    List<MapSheet> loadVDCMapSheet(int mapSheetType,String vdccode);
     //</editor-fold>
+    
+    List<MapSheet> getMapSheetListByOffice(String lang);
 }

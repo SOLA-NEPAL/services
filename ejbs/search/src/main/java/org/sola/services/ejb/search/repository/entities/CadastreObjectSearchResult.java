@@ -114,6 +114,16 @@ public class CadastreObjectSearchResult extends AbstractReadOnlyEntity {
     private byte[] theGeom;
     @Column(name = "office_code", updatable = false)
     private String officeCode;
+//    @ChildEntity(childIdField = "mapSheetCode",readOnly=true)
+//    private MapSheet mapSheet;
+//
+//    public MapSheet getMapSheet() {
+//        return mapSheet;
+//    }
+//
+//    public void setMapSheet(MapSheet mapSheet) {
+//        this.mapSheet = mapSheet;
+//    }
 
     public String getId() {
         return id;
