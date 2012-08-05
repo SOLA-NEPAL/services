@@ -69,7 +69,7 @@ public class Rrr extends AbstractVersionedEntity {
             + "#{" + QUERY_PARAMETER_TRANSACTIONID + "}";
     public static final String QUERY_WHERE_BY_LOCID = "loc_id = "
             + "#{" + RrrLoc.PARAM_LOC_ID + "} and (status_code = '" + StatusConstants.PENDING
-            + "' or status_code = '" + StatusConstants.CURRENT + "') and is_terminating = 'f'";
+            + "' or status_code = '" + StatusConstants.CURRENT + "')";
     public static final String ORDER_BY_BAUNIT_ID = "ba_unit_id";
     @Id
     @Column(name = "id")
@@ -102,6 +102,8 @@ public class Rrr extends AbstractVersionedEntity {
     private String locId;
     @Column(name = "office_code", updatable = false)
     private String officeCode;
+    @Column(name = "is_terminating")
+    private boolean terminating;
     // Child entity fields
     @ChildEntity(insertBeforeParent = false, parentIdField = "rrrId")
     private BaUnitNotation notation;
@@ -129,38 +131,6 @@ public class Rrr extends AbstractVersionedEntity {
 
     public Rrr() {
         super();
-    }
-
-    public String getOwnershipTypeCode() {
-        return ownershipTypeCode;
-    }
-
-    public void setOwnershipTypeCode(String ownershipTypeCode) {
-        this.ownershipTypeCode = ownershipTypeCode;
-    }
-
-    public String getShareTypeCode() {
-        return shareTypeCode;
-    }
-
-    public void setShareTypeCode(String shareTypeCode) {
-        this.shareTypeCode = shareTypeCode;
-    }
-
-    public String getRestictionOfficeCode() {
-        return restictionOfficeCode;
-    }
-
-    public void setRestictionOfficeCode(String restictionOfficeCode) {
-        this.restictionOfficeCode = restictionOfficeCode;
-    }
-
-    public String getRestrictionReasonCode() {
-        return restrictionReasonCode;
-    }
-
-    public void setRestrictionReasonCode(String restrictionReasonCode) {
-        this.restrictionReasonCode = restrictionReasonCode;
     }
 
     private String generateRrrNumber() {
@@ -349,6 +319,50 @@ public class Rrr extends AbstractVersionedEntity {
         this.officeCode = officeCode;
     }
 
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
+
+    public boolean isTerminating() {
+        return terminating;
+    }
+
+    public void setTerminating(boolean terminating) {
+        this.terminating = terminating;
+    }
+
+    public String getRestictionOfficeCode() {
+        return restictionOfficeCode;
+    }
+
+    public void setRestictionOfficeCode(String restictionOfficeCode) {
+        this.restictionOfficeCode = restictionOfficeCode;
+    }
+
+    public String getRestrictionReasonCode() {
+        return restrictionReasonCode;
+    }
+
+    public String getOwnershipTypeCode() {
+        return ownershipTypeCode;
+    }
+
+    public void setOwnershipTypeCode(String ownershipTypeCode) {
+        this.ownershipTypeCode = ownershipTypeCode;
+    }
+
+    public String getShareTypeCode() {
+        return shareTypeCode;
+    }
+
+    public void setShareTypeCode(String shareTypeCode) {
+        this.shareTypeCode = shareTypeCode;
+    }
+
     @Override
     public void preSave() {
         if (this.isNew()) {
@@ -356,7 +370,7 @@ public class Rrr extends AbstractVersionedEntity {
         }
 
         if (isNew() && getNr() == null) {
-            // Assign a generated number to the Rrr if it is not currently set. 
+            // Assign a generated number to the Rrr if it is not currently set.
             setNr(generateRrrNumber());
         }
         super.preSave();

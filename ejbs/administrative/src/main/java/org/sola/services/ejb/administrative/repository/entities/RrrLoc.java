@@ -16,8 +16,8 @@ public class RrrLoc extends AbstractReadOnlyEntity {
             + PARAM_LOC_ID +"}, #{"+ PARAM_STATUS +"})";
     public static final String SELECT_GET_PARTY_IDS = "select id from administrative.get_loc_party_ids(#{"
             + PARAM_LOC_ID +"}, #{"+ PARAM_STATUS +"})";
-    public static final String SELECT_RRR_LOCS = "select loc_id, type_code, registration_date, status_code " 
-            + "from administrative.get_loc_rrrs(#{"
+    public static final String SELECT_RRR_LOCS = "select loc_id, type_code, registration_date, status_code, " 
+            + "administrative.get_rrrloc_notation(loc_id, status_code) as notation_text from administrative.get_loc_rrrs(#{"
             + PARAM_LOC_ID +"}, #{"+ PARAM_OFFICE_CODE +"})";
     
     @Id
@@ -27,8 +27,11 @@ public class RrrLoc extends AbstractReadOnlyEntity {
     private String typeCode;
     @Column(name = "registration_date")
     private Date registrationDate;
+    @Column(name = "notation_text")
+    private String notationText;
     @Column(name = "status_code")
     private String statusCode;
+    
     
     private List<Source> sourceList;
     private List<Party> rightHolderList;
@@ -67,6 +70,14 @@ public class RrrLoc extends AbstractReadOnlyEntity {
 
     public void setTypeCode(String typeCode) {
         this.typeCode = typeCode;
+    }
+
+    public String getNotationText() {
+        return notationText;
+    }
+
+    public void setNotationText(String notationText) {
+        this.notationText = notationText;
     }
 
     public List<Party> getRightHolderList() {

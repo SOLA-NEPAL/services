@@ -63,10 +63,8 @@ public class CadastreObjectSearchResult extends AbstractReadOnlyEntity {
             + "' > ' || co.name_firstpart || '/ ' || co.name_lastpart as label, "
             + "st_asewkb(geom_polygon) as the_geom, co.office_code";
 
-    public static final String QUERY_FROM_SEARCHBY_BAUNIT = "cadastre.cadastre_object  co "
-            + " inner join administrative.ba_unit_contains_spatial_unit bas "
-            + " on co.id = bas.spatial_unit_id "
-            + " inner join administrative.ba_unit on ba_unit.id = bas.ba_unit_id";
+    public static final String QUERY_FROM_SEARCHBY_BAUNIT = "cadastre.cadastre_object co "
+            + "inner join administrative.ba_unit on co.id = ba_unit.cadastre_object_id";
 
     public static final String QUERY_WHERE_SEARCHBY_BAUNIT = 
             "(co.status_code= 'current' or ba_unit.status_code= 'current')"
@@ -79,10 +77,8 @@ public class CadastreObjectSearchResult extends AbstractReadOnlyEntity {
             + "st_asewkb(co.geom_polygon) as the_geom, co.office_code";
     
     public static final String QUERY_FROM_SEARCHBY_OWNER_OF_BAUNIT = "cadastre.cadastre_object co "
-            + "inner join administrative.ba_unit_contains_spatial_unit bas "
-            + "on co.id = bas.spatial_unit_id"
-            + " inner join administrative.ba_unit "
-            + "on bas.ba_unit_id= ba_unit.id "
+            + "inner join administrative.ba_unit "
+            + "on co.id = ba.cadastre_object_id "
             + "inner join administrative.rrr "
             + "on (ba_unit.id = rrr.ba_unit_id and rrr.status_code = 'current' "
             + "and rrr.type_code = 'ownership') "
@@ -95,14 +91,17 @@ public class CadastreObjectSearchResult extends AbstractReadOnlyEntity {
             + "coalesce(party.name, '') || ' ' || coalesce(party.last_name, '')) "
             + "AND " + QUERY_WHERE_BY_OFFICE2;
     
+    /** 
+     * Ideally status should be current, that means splitted parcels should be approved first.
+     * In this case, add into query the following statement - AND status_code = 'current'.
+    */ 
+    
     public static final String QUERY_WHERE_GET_NEW_PARCELS = "transaction_id IN "
-            + "(SELECT cot.transaction_id "
-            + "FROM (administrative.ba_unit_contains_spatial_unit ba_su "
-            + "INNER JOIN cadastre.cadastre_object co ON ba_su.spatial_unit_id = co.id) "
-            + "INNER JOIN cadastre.cadastre_object_target cot ON co.id = cot.cadastre_object_id "
-            + "WHERE ba_su.ba_unit_id = #{search_string}) "
-            + "AND (SELECT COUNT(1) FROM administrative.ba_unit_contains_spatial_unit WHERE spatial_unit_id = cadastre_object.id) = 0 "
-            + "AND status_code = 'current' AND " + QUERY_WHERE_BY_OFFICE;
+            + "(SELECT cot.transaction_id FROM administrative.ba_unit ba "
+            + "INNER JOIN cadastre.cadastre_object_target cot ON ba.cadastre_object_id = cot.cadastre_object_id "
+            + "WHERE ba.id = #{search_string}) "
+            + "AND (SELECT COUNT(1) FROM administrative.ba_unit WHERE cadastre_object_id = cadastre_object.id) = 0 "
+            + "AND " + QUERY_WHERE_BY_OFFICE;
     
     @Column(name = "id")
     private String id;
@@ -114,6 +113,16 @@ public class CadastreObjectSearchResult extends AbstractReadOnlyEntity {
     private byte[] theGeom;
     @Column(name = "office_code", updatable = false)
     private String officeCode;
+//    @ChildEntity(childIdField = "mapSheetCode",readOnly=true)
+//    private MapSheet mapSheet;
+//
+//    public MapSheet getMapSheet() {
+//        return mapSheet;
+//    }
+//
+//    public void setMapSheet(MapSheet mapSheet) {
+//        this.mapSheet = mapSheet;
+//    }
 
     public String getId() {
         return id;

@@ -73,7 +73,7 @@ public class BaUnit extends AbstractVersionedEntity {
             "name_firstpart = #{" + QUERY_PARAMETER_FIRSTPART + "} AND "
             + "name_lastpart = #{" + QUERY_PARAMETER_LASTPART + "}";
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable=false)
     private String id;
     @Column(name = "type_code")
     private String typeCode;
