@@ -36,6 +36,10 @@ public class Loc extends AbstractVersionedEntity {
     @Column(name = "office_code")
     private String officeCode;
 
+    public Loc() {
+        super();
+    }
+
     public String getOfficeCode() {
         return officeCode;
     }

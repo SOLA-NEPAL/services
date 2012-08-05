@@ -84,7 +84,14 @@ public interface SystemEJBLocal extends AbstractEJBLocal {
     List<RestrictionReason> getRestrictionReasons(String languageCode);
 
     List<RestrictionReleaseReason> getRestrictionReleaseReasons(String languageCode);
-    
+
     List<RestrictionOffice> getRestrictionOffices(String languageCode);
-    
+
+    //<editor-fold defaultstate="collapsed" desc="Kumar">
+    List<OwnershipType> getOwnerShipTypes(String languageCode);
+
+    List<ShareType> getShareTypes(String languageCode);
+
+    List<TenantType> getTenantTypes(String languageCode);
+    //</editor-fold>
 }
