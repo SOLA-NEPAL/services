@@ -93,5 +93,13 @@ public interface SystemEJBLocal extends AbstractEJBLocal {
     List<ShareType> getShareTypes(String languageCode);
 
     List<TenantType> getTenantTypes(String languageCode);
-    //</editor-fold>
+
+    List<ParcelType> getParcelTypes(String languageCode);
+
+    List<LandClass> getLandClasses(String languageCode);
+
+    List<LandUse> getLandUses(String languageCode);
+
+    List<GuthiName> getGuthiNames(String languageCode);
+//</editor-fold>
 }

@@ -293,5 +293,25 @@ public class SystemEJB extends AbstractEJB implements SystemEJBLocal {
     public List<TenantType> getTenantTypes(String languageCode) {
         return getRepository().getCodeList(TenantType.class, languageCode);
     }
+
+    @Override
+    public List<ParcelType> getParcelTypes(String languageCode) {
+        return getRepository().getCodeList(ParcelType.class, languageCode);
+    }
+
+    @Override
+    public List<LandClass> getLandClasses(String languageCode) {
+        return getRepository().getCodeList(LandClass.class, languageCode);
+    }
+
+    @Override
+    public List<LandUse> getLandUses(String languageCode) {
+        return getRepository().getCodeList(LandUse.class, languageCode);
+    }
+
+    @Override
+    public List<GuthiName> getGuthiNames(String languageCode) {
+        return getRepository().getCodeList(GuthiName.class, languageCode);
+    }
     //</editor-fold>
 }

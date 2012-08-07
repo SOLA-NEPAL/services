@@ -10,15 +10,15 @@ import org.sola.services.common.repository.entities.AbstractCodeEntity;
 
 /**
  *
- * @author Dinesh
+ * @author ShresthaKabin
  */
-@Table(name = "restriction_office", schema = "system")
+@Table(name = "parcel_type", schema = "system")
 @DefaultSorter(sortString = "display_value")
-public class RestrictionOffice extends AbstractCodeEntity {
+public class ParcelType extends AbstractCodeEntity {
 
     public static final String CANCEL = "cancel";
 
-    public RestrictionOffice() {
+    public ParcelType() {
         super();
     }
 }

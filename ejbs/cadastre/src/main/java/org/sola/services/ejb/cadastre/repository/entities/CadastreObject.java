@@ -96,9 +96,9 @@ public class CadastreObject extends AbstractVersionedEntity {
     public static final String GET_BY_VDC_AND_WARD_NO = "vdc=#{" + VDC_PARAM + "} and wardno=#{" + WARD_NO_PARAM + "} "
             + "AND " + QUERY_WHERE_BY_OFFICE;
     public static final String PARCEL_NO_PARAM = "parcelno";
-    public static final String GET_BY_VDC_AND_WARD_NO_PARCEL_NO = "vdc=#{" + VDC_PARAM + "} and wardno=#{" + WARD_NO_PARAM + "} and parcel_no=#{" 
+    public static final String GET_BY_VDC_AND_WARD_NO_PARCEL_NO = "vdc=#{" + VDC_PARAM + "} and wardno=#{" + WARD_NO_PARAM + "} and parcel_no=#{"
             + PARCEL_NO_PARAM + "} AND " + QUERY_WHERE_BY_OFFICE;
-    public static final String GET_BY_MAPSHEET_AND_PARCELNO = "map_sheet_id=#{" + MAP_SHEET_CODE_PARAM 
+    public static final String GET_BY_MAPSHEET_AND_PARCELNO = "map_sheet_id=#{" + MAP_SHEET_CODE_PARAM
             + "} and parcel_no=#{" + PARCEL_NO_PARAM + "} AND " + QUERY_WHERE_BY_OFFICE;
     //***********************************************************************************************************
     //</editor-fold>   
@@ -108,7 +108,7 @@ public class CadastreObject extends AbstractVersionedEntity {
     public static final String GET_BY_ADMIN_BOUNDARY_SELECT_PART =
             "p.id, p.type_code, p.map_sheet_id, p.approval_datetime, p.historic_datetime,"
             + "p.source_reference, p.name_firstpart, p.name_lastpart, p.status_code, p.transaction_id,"
-            + "st_asewkb(p.geom_polygon) as geom_polygon, p.parcel_no, p.parcel_note, p.parcel_type,"
+            + "st_asewkb(p.geom_polygon) as geom_polygon, p.parcel_no, p.parcel_note, p.parcel_typecode,p.land_usecode,p.land_classcode,p.guthi_namecode"
             + "p.rowversion, p.change_user, p.rowidentifier, p.office_code";
     public static final String GET_BY_ADMIN_BOUNDARY_FROM_PART =
             "cadastre.cadastre_object as p,"
@@ -120,19 +120,17 @@ public class CadastreObject extends AbstractVersionedEntity {
             + " a.vdc_code=#{" + VDC_PARAM
             + "} and a.ward_no=#{" + WARD_NO_PARAM
             + "} and p.parcel_no=#{" + PARCEL_NO_PARAM + "} "
-            + "and " + QUERY_WHERE_BY_OFFICE1;  
+            + "and " + QUERY_WHERE_BY_OFFICE1;
     //list ward numbers.
     public static final String GET_BY_WARD_IN_VDC =
-            " select distinct a.ward_no " 
+            " select distinct a.ward_no "
             + " from cadastre.cadastre_object as p,"
             + "cadastre.spatial_unit_address as pa,"
-            + "address.address as a" 
+            + "address.address as a"
             + " where p.id=pa.spatial_unit_id and "
             + " pa.address_id=a.id and "
             + " a.vdc_code=#{" + VDC_PARAM + "} "
-            + "and " + QUERY_WHERE_BY_OFFICE1;  
-    
-    
+            + "and " + QUERY_WHERE_BY_OFFICE1;
     @Id
     @Column(name = "id")
     private String id;
@@ -165,9 +163,15 @@ public class CadastreObject extends AbstractVersionedEntity {
     private int parcelno;
     @Column(name = "parcel_note")
     private String parcelNote;
-    @Column(name = "parcel_type")
-    private String parcelType;
-    @ChildEntity(childIdField = "mapSheetCode",readOnly=true)
+    @Column(name = "parcel_typecode")
+    private String parcelTypeCode;
+    @Column(name = "land_usecode")
+    private String landUseCode;
+    @Column(name = "land_classcode")
+    private String landClassCode;
+    @Column(name = "guthi_namecode")
+    private String guthiNameCode;
+    @ChildEntity(childIdField = "mapSheetCode", readOnly = true)
     private MapSheet mapSheet;
     @Column(name = "office_code", updatable = false)
     private String officeCode;
@@ -186,14 +190,6 @@ public class CadastreObject extends AbstractVersionedEntity {
 
     public void setParcelNote(String parcelNote) {
         this.parcelNote = parcelNote;
-    }
-
-    public String getParcelType() {
-        return parcelType;
-    }
-
-    public void setParcelType(String parcelType) {
-        this.parcelType = parcelType;
     }
 
     public int getParcelno() {
@@ -289,6 +285,38 @@ public class CadastreObject extends AbstractVersionedEntity {
         this.typeCode = typeCode;
     }
 
+    public String getGuthiNameCode() {
+        return guthiNameCode;
+    }
+
+    public void setGuthiNameCode(String guthiNameCode) {
+        this.guthiNameCode = guthiNameCode;
+    }
+
+    public String getLandClassCode() {
+        return landClassCode;
+    }
+
+    public void setLandClassCode(String landClassCode) {
+        this.landClassCode = landClassCode;
+    }
+
+    public String getLandUseCode() {
+        return landUseCode;
+    }
+
+    public void setLandUseCode(String landUseCode) {
+        this.landUseCode = landUseCode;
+    }
+
+    public String getParcelTypeCode() {
+        return parcelTypeCode;
+    }
+
+    public void setParcelTypeCode(String parcelTypeCode) {
+        this.parcelTypeCode = parcelTypeCode;
+    }
+
     public List<SpatialValueArea> getSpatialValueAreaList() {
         // Loaded eagerly by the CommonRepository
         return spatialValueAreaList;
@@ -316,7 +344,7 @@ public class CadastreObject extends AbstractVersionedEntity {
     public void setOfficeCode(String officeCode) {
         this.officeCode = officeCode;
     }
-    
+
     @Override
     public void preSave() {
         if (this.isNew() && this.getTransactionId() == null) {

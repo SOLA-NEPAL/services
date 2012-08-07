@@ -54,7 +54,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
 
     @EJB
     AdminEJBLocal adminEJB;
-    
+
     @Override
     public List<CadastreObjectType> getCadastreObjectTypes(String languageCode) {
         return getRepository().getCodeList(CadastreObjectType.class, languageCode);
@@ -80,7 +80,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         return getRepository().getEntityList(CadastreObject.class,
                 CadastreObject.QUERY_WHERE_SEARCHBYPARTS, params);
     }
-    
+
     @Override
     public List<CadastreObject> getPendingParcelByParts(String searchString) {
         Integer numberOfMaxRecordsReturned = 10;
@@ -105,7 +105,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
 
     @Override
     public CadastreObject saveCadastreObject(CadastreObject cadastreObject) {
-        if(cadastreObject.isNew()){
+        if (cadastreObject.isNew()) {
             cadastreObject.setOfficeCode(adminEJB.getCurrentOfficeCode());
         } else {
             adminEJB.checkOfficeCode(cadastreObject.getOfficeCode());
@@ -292,40 +292,29 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         return getRepository().getEntityList(
                 CadastreObject.class, CadastreObject.QUERY_WHERE_SEARCHBY_BYTE_INTERSECTION, params);
     }
-    
-    @Override
-    public List<ParcelType> getParcelTypeList(){
-        return getRepository().getEntityList(ParcelType.class);
-    }
-    
-     @Override
-    public List<ParcelType> getParcelTypeList(String languageCode){
-        //return getRepository().getEntityList(ParcelType.class);
-        return getRepository().getCodeList(ParcelType.class, languageCode);
-    }
-     
+
     @Override
     public List<CadastreObject> getCadastreObjectListMem(List<String> mapSheetCode) {
-        List<CadastreObject> CadObjs=new ArrayList<CadastreObject>();
-        for (int i=0;i<mapSheetCode.size();i++){
-            List<CadastreObject> tmpCadObjs= this.loadCadastreObjectList(mapSheetCode.get(i));
+        List<CadastreObject> CadObjs = new ArrayList<CadastreObject>();
+        for (int i = 0; i < mapSheetCode.size(); i++) {
+            List<CadastreObject> tmpCadObjs = this.loadCadastreObjectList(mapSheetCode.get(i));
             CadObjs.addAll(tmpCadObjs);
         }
-        
+
         return CadObjs;
     }
-    
+
     @Override
     public List<ConstructionObject> getConstructionObjectListMem(List<String> mapSheetCode) {
-        List<ConstructionObject> CadObjs=new ArrayList<ConstructionObject>();
-        for (int i=0;i<mapSheetCode.size();i++){
-            List<ConstructionObject> tmpCadObjs= this.loadConstructionObjectList(mapSheetCode.get(i));
+        List<ConstructionObject> CadObjs = new ArrayList<ConstructionObject>();
+        for (int i = 0; i < mapSheetCode.size(); i++) {
+            List<ConstructionObject> tmpCadObjs = this.loadConstructionObjectList(mapSheetCode.get(i));
             CadObjs.addAll(tmpCadObjs);
         }
-        
+
         return CadObjs;
     }
-    
+
     @Override
     public List<ConstructionObject> loadConstructionObjectList(String mapSheetCode) {
         Map params = new HashMap<String, Object>();
@@ -336,19 +325,19 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         params.put(CadastreObject.MAP_SHEET_CODE_PARAM, mapSheetCode);
         return getRepository().getEntityList(ConstructionObject.class, params);
     }
-    
+
     @Override
-    public List<CadastreObject> getCadastreObjectByExactParts(String firstpart, String lastpart){
+    public List<CadastreObject> getCadastreObjectByExactParts(String firstpart, String lastpart) {
         //Integer numberOfMaxRecordsReturned = 10;
         HashMap params = new HashMap();
         params.put("firstpart", firstpart);
-        params.put("lastpart",lastpart);
+        params.put("lastpart", lastpart);
         //params.put(CommonSqlProvider.PARAM_LIMIT_PART, numberOfMaxRecordsReturned);
         params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntityList(CadastreObject.class,
                 CadastreObject.QUERY_WHERE_SEARCHBY_EXACT_PARTS, params);
     }
-    
+
     @Override
     public List<HashMap> getWardList(String vdccode) {
         Map params = new HashMap<String, Object>();
@@ -359,10 +348,10 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     }
 
     @Override
-    public List<MapSheet> loadWardMapSheet(int mapSheetType,String vdccode, String wardno) {
+    public List<MapSheet> loadWardMapSheet(int mapSheetType, String vdccode, String wardno) {
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_SELECT_PART, MapSheet.GET_BY_WARD_SELECT_PART);
-        params.put(CommonSqlProvider.PARAM_FROM_PART,MapSheet.GET_BY_WARD_FROM_PART);
+        params.put(CommonSqlProvider.PARAM_FROM_PART, MapSheet.GET_BY_WARD_FROM_PART);
         params.put(CommonSqlProvider.PARAM_WHERE_PART, MapSheet.GET_BY_WARD_WHERE_PART);
         params.put(MapSheet.VDC_PARAM, vdccode);
         params.put(MapSheet.WARD_NO_PARAM, wardno);
@@ -371,10 +360,10 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     }
 
     @Override
-    public List<MapSheet> loadVDCMapSheet(int mapSheetType,String vdccode) {
+    public List<MapSheet> loadVDCMapSheet(int mapSheetType, String vdccode) {
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_SELECT_PART, MapSheet.GET_BY_WARD_SELECT_PART);
-        params.put(CommonSqlProvider.PARAM_FROM_PART,MapSheet.GET_BY_WARD_FROM_PART);
+        params.put(CommonSqlProvider.PARAM_FROM_PART, MapSheet.GET_BY_WARD_FROM_PART);
         params.put(CommonSqlProvider.PARAM_WHERE_PART, MapSheet.GET_BY_VDC_WHERE_PART);
         params.put(MapSheet.VDC_PARAM, vdccode);
         params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
@@ -432,7 +421,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     public CadastreObject getCadastreObject(String vdcCode, String wardNo, int parcelNo) {
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_SELECT_PART, CadastreObject.GET_BY_ADMIN_BOUNDARY_SELECT_PART);
-        params.put(CommonSqlProvider.PARAM_FROM_PART,CadastreObject.GET_BY_ADMIN_BOUNDARY_FROM_PART);
+        params.put(CommonSqlProvider.PARAM_FROM_PART, CadastreObject.GET_BY_ADMIN_BOUNDARY_FROM_PART);
         params.put(CommonSqlProvider.PARAM_WHERE_PART, CadastreObject.GET_BY_ADMIN_BOUNDARY_WHERE_PART);
         params.put(CadastreObject.VDC_PARAM, vdcCode);
         params.put(CadastreObject.PARCEL_NO_PARAM, parcelNo);
@@ -461,7 +450,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         params.put(MapSheet.PARAM_OFFICE_CODE, officeCode);
         return getRepository().getEntityList(MapSheet.class, params);
     }
-    
+
     @Override
     public List<MapSheet> getMapSheetListByOffice(String lang) {
         HashMap params = new HashMap<String, Object>();
@@ -469,5 +458,13 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
         params.put(MapSheet.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntityList(MapSheet.class, params);
+    }
+
+    @Override
+    public SpatialUnitAddress getSpatialUnitAddress(String spatialUnitId) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, SpatialUnitAddress.GET_BY_SPATIAL_UNIT_ID);
+        params.put(SpatialUnitAddress.SPATIAL_UNIT_ID_PARAM, spatialUnitId);
+        return getRepository().getEntity(SpatialUnitAddress.class, params);
     }
 }
