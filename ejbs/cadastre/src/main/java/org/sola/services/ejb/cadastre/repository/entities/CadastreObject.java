@@ -108,7 +108,7 @@ public class CadastreObject extends AbstractVersionedEntity {
     public static final String GET_BY_ADMIN_BOUNDARY_SELECT_PART =
             "p.id, p.type_code, p.map_sheet_id, p.approval_datetime, p.historic_datetime,"
             + "p.source_reference, p.name_firstpart, p.name_lastpart, p.status_code, p.transaction_id,"
-            + "st_asewkb(p.geom_polygon) as geom_polygon, p.parcel_no, p.parcel_note, p.parcel_typecode,p.land_usecode,p.land_classcode,p.guthi_namecode"
+            + "st_asewkb(p.geom_polygon) as geom_polygon, p.parcel_no, p.parcel_note, p.parcel_typecode, p.land_usecode, p.land_classcode, p.guthi_namecode,"
             + "p.rowversion, p.change_user, p.rowidentifier, p.office_code";
     public static final String GET_BY_ADMIN_BOUNDARY_FROM_PART =
             "cadastre.cadastre_object as p,"
