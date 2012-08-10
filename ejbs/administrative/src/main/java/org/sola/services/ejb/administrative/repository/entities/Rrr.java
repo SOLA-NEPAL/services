@@ -118,13 +118,13 @@ public class Rrr extends AbstractVersionedEntity {
     private List<Party> rightHolderList;
     @ChildEntity(childIdField = "locId", insertBeforeParent = true)
     private LocWithMoth loc;
-    @Column(name = "restriction_reasoncode")
+    @Column(name = "restriction_reason_code")
     private String restrictionReasonCode;
-    @Column(name = "restriction_officecode")
+    @Column(name = "restriction_office_code")
     private String restictionOfficeCode;
-    @Column(name = "ownership_typecode")
-    private String ownershipTypeCode;
-    @Column(name = "share_typecode")
+    @Column(name = "owner_type_code")
+    private String ownerTypeCode;
+    @Column(name = "share_type_code")
     private String shareTypeCode;
     // Other fields
     private Boolean locked = null;
@@ -347,12 +347,12 @@ public class Rrr extends AbstractVersionedEntity {
         return restrictionReasonCode;
     }
 
-    public String getOwnershipTypeCode() {
-        return ownershipTypeCode;
+    public String getOwnerTypeCode() {
+        return ownerTypeCode;
     }
 
-    public void setOwnershipTypeCode(String ownershipTypeCode) {
-        this.ownershipTypeCode = ownershipTypeCode;
+    public void setOwnerTypeCode(String ownerTypeCode) {
+        this.ownerTypeCode = ownerTypeCode;
     }
 
     public String getShareTypeCode() {

@@ -67,8 +67,6 @@ public interface AdministrativeEJBLocal extends AbstractSolaTransactionEJBLocal 
 
     List<RrrLoc> getRrrLocsById(String locId);
     
-    //<editor-fold defaultstate="collapsed" desc="By Kumar">
-    //***********************************************************************************************************
     Moth saveMoth(Moth moth);
 
     Moth getMoth(String id);
@@ -89,6 +87,15 @@ public interface AdministrativeEJBLocal extends AbstractSolaTransactionEJBLocal 
     
     List<Loc> getLocList(String mothId);   
     
+    List<RestrictionReason> getRestrictionReasons(String languageCode);
+
+    List<RestrictionReleaseReason> getRestrictionReleaseReasons(String languageCode);
+
+    List<RestrictionOffice> getRestrictionOffices(String languageCode);
+    
+    List<OwnerType> getOwnerTypes(String languageCode);
+
+    List<ShareType> getShareTypes(String languageCode);
+
+    List<TenantType> getTenantTypes(String languageCode);
 }
-//***********************************************************************************************************
-//</editor-fold>

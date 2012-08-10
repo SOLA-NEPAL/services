@@ -259,42 +259,6 @@ public class SystemEJB extends AbstractEJB implements SystemEJBLocal {
     }
 
     @Override
-    public List<RestrictionType> getRestrictionTypes(String languageCode) {
-        return getRepository().getCodeList(RestrictionType.class, languageCode);
-    }
-
-    @Override
-    public List<RestrictionReason> getRestrictionReasons(String languageCode) {
-        return getRepository().getCodeList(RestrictionReason.class, languageCode);
-    }
-
-    @Override
-    public List<RestrictionReleaseReason> getRestrictionReleaseReasons(String languageCode) {
-        return getRepository().getCodeList(RestrictionReleaseReason.class, languageCode);
-    }
-
-    @Override
-    public List<RestrictionOffice> getRestrictionOffices(String languageCode) {
-        return getRepository().getCodeList(RestrictionOffice.class, languageCode);
-    }
-
-    //<editor-fold defaultstate="collapsed" desc="Kumar">
-    @Override
-    public List<OwnershipType> getOwnerShipTypes(String languageCode) {
-        return getRepository().getCodeList(OwnershipType.class, languageCode);
-    }
-
-    @Override
-    public List<ShareType> getShareTypes(String languageCode) {
-        return getRepository().getCodeList(ShareType.class, languageCode);
-    }
-
-    @Override
-    public List<TenantType> getTenantTypes(String languageCode) {
-        return getRepository().getCodeList(TenantType.class, languageCode);
-    }
-
-    @Override
     public List<ParcelType> getParcelTypes(String languageCode) {
         return getRepository().getCodeList(ParcelType.class, languageCode);
     }
@@ -308,10 +272,4 @@ public class SystemEJB extends AbstractEJB implements SystemEJBLocal {
     public List<LandUse> getLandUses(String languageCode) {
         return getRepository().getCodeList(LandUse.class, languageCode);
     }
-
-    @Override
-    public List<GuthiName> getGuthiNames(String languageCode) {
-        return getRepository().getCodeList(GuthiName.class, languageCode);
-    }
-    //</editor-fold>
 }

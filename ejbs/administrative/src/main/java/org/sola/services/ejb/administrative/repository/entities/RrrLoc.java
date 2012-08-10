@@ -16,7 +16,7 @@ public class RrrLoc extends AbstractReadOnlyEntity {
             + PARAM_LOC_ID +"}, #{"+ PARAM_STATUS +"})";
     public static final String SELECT_GET_PARTY_IDS = "select id from administrative.get_loc_party_ids(#{"
             + PARAM_LOC_ID +"}, #{"+ PARAM_STATUS +"})";
-    public static final String SELECT_RRR_LOCS = "select loc_id, type_code, registration_date, status_code, " 
+    public static final String SELECT_RRR_LOCS = "select loc_id, type_code, owner_type_code, share_type_code, registration_date, status_code, " 
             + "administrative.get_rrrloc_notation(loc_id, status_code) as notation_text from administrative.get_loc_rrrs(#{"
             + PARAM_LOC_ID +"}, #{"+ PARAM_OFFICE_CODE +"})";
     
@@ -25,6 +25,10 @@ public class RrrLoc extends AbstractReadOnlyEntity {
     private String locId;
     @Column(name = "type_code")
     private String typeCode;
+    @Column(name = "owner_type_code")
+    private String ownerTypeCode;
+    @Column(name = "share_type_code")
+    private String shareTypeCode;
     @Column(name = "registration_date")
     private Date registrationDate;
     @Column(name = "notation_text")
@@ -70,6 +74,22 @@ public class RrrLoc extends AbstractReadOnlyEntity {
 
     public void setTypeCode(String typeCode) {
         this.typeCode = typeCode;
+    }
+
+    public String getOwnerTypeCode() {
+        return ownerTypeCode;
+    }
+
+    public void setOwnerTypeCode(String ownerTypeCode) {
+        this.ownerTypeCode = ownerTypeCode;
+    }
+
+    public String getShareTypeCode() {
+        return shareTypeCode;
+    }
+
+    public void setShareTypeCode(String shareTypeCode) {
+        this.shareTypeCode = shareTypeCode;
     }
 
     public String getNotationText() {

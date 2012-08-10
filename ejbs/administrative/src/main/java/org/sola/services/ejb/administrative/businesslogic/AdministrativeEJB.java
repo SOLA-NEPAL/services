@@ -454,6 +454,9 @@ public class AdministrativeEJB extends AbstractEJB
             pendingRrrLoc.setSourceList(tmpRrr.getSourceList());
             pendingRrrLoc.setStatusCode(tmpRrr.getStatusCode());
             pendingRrrLoc.setTypeCode(tmpRrr.getTypeCode());
+            pendingRrrLoc.setOwnerTypeCode(tmpRrr.getOwnerTypeCode());
+            pendingRrrLoc.setShareTypeCode(tmpRrr.getShareTypeCode());
+            
             if (tmpRrr.getNotation() != null) {
                 pendingRrrLoc.setNotationText(tmpRrr.getNotation().getNotationText());
             }
@@ -640,6 +643,8 @@ public class AdministrativeEJB extends AbstractEJB
 
         rrr.setStatusCode(rrrLoc.getStatusCode());
         rrr.setTypeCode(rrrLoc.getTypeCode());
+        rrr.setOwnerTypeCode(rrrLoc.getOwnerTypeCode());
+        rrr.setShareTypeCode(rrrLoc.getShareTypeCode());
         return rrr;
     }
 
@@ -653,6 +658,8 @@ public class AdministrativeEJB extends AbstractEJB
         Rrr rrr2 = new Rrr();
         rrr2.setRegistrationDate(rrrLoc.getRegistrationDate());
         rrr2.setTypeCode(rrrLoc.getTypeCode());
+        rrr2.setOwnerTypeCode(rrrLoc.getOwnerTypeCode());
+        rrr2.setShareTypeCode(rrrLoc.getShareTypeCode());
         if (rrrLoc.getNotationText() != null) {
             BaUnitNotation notation = new BaUnitNotation();
             notation.setNotationText(rrrLoc.getNotationText());
@@ -675,6 +682,28 @@ public class AdministrativeEJB extends AbstractEJB
         }
 
         if (!rrr2.getTypeCode().equals(rrr.getTypeCode())) {
+            return false;
+        }
+        
+        // Check owner type
+        if ((rrr2.getOwnerTypeCode()!=null && rrr.getOwnerTypeCode() == null) || 
+                (rrr2.getOwnerTypeCode()==null && rrr.getOwnerTypeCode() != null)) {
+            return false;
+        }
+        
+        if (rrr2.getOwnerTypeCode()!=null && rrr.getOwnerTypeCode() != null && 
+                !rrr2.getOwnerTypeCode().equals(rrr.getOwnerTypeCode())) {
+            return false;
+        }
+        
+        // Check share type
+        if ((rrr2.getShareTypeCode()!=null && rrr.getShareTypeCode() == null) || 
+                (rrr2.getShareTypeCode()==null && rrr.getShareTypeCode() != null)) {
+            return false;
+        }
+        
+        if (rrr2.getShareTypeCode()!=null && rrr.getShareTypeCode() != null && 
+                !rrr2.getShareTypeCode().equals(rrr.getShareTypeCode())) {
             return false;
         }
 
@@ -850,5 +879,35 @@ public class AdministrativeEJB extends AbstractEJB
             }
         }
         return rrrLocs;
+    }
+
+    @Override
+    public List<RestrictionReason> getRestrictionReasons(String languageCode) {
+        return getRepository().getCodeList(RestrictionReason.class, languageCode);
+    }
+
+    @Override
+    public List<RestrictionReleaseReason> getRestrictionReleaseReasons(String languageCode) {
+        return getRepository().getCodeList(RestrictionReleaseReason.class, languageCode);
+    }
+
+    @Override
+    public List<RestrictionOffice> getRestrictionOffices(String languageCode) {
+        return getRepository().getCodeList(RestrictionOffice.class, languageCode);
+    }
+
+    @Override
+    public List<OwnerType> getOwnerTypes(String languageCode) {
+        return getRepository().getCodeList(OwnerType.class, languageCode);
+    }
+
+    @Override
+    public List<ShareType> getShareTypes(String languageCode) {
+        return getRepository().getCodeList(ShareType.class, languageCode);
+    }
+
+    @Override
+    public List<TenantType> getTenantTypes(String languageCode) {
+        return getRepository().getCodeList(TenantType.class, languageCode);
     }
 }

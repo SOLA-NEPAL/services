@@ -79,27 +79,12 @@ public interface SystemEJBLocal extends AbstractEJBLocal {
 
     boolean validationSucceeded(List<ValidationResult> validationResultList);
 
-    List<RestrictionType> getRestrictionTypes(String languageCode);
-
-    List<RestrictionReason> getRestrictionReasons(String languageCode);
-
-    List<RestrictionReleaseReason> getRestrictionReleaseReasons(String languageCode);
-
-    List<RestrictionOffice> getRestrictionOffices(String languageCode);
-
     //<editor-fold defaultstate="collapsed" desc="Kumar">
-    List<OwnershipType> getOwnerShipTypes(String languageCode);
-
-    List<ShareType> getShareTypes(String languageCode);
-
-    List<TenantType> getTenantTypes(String languageCode);
-
+    
     List<ParcelType> getParcelTypes(String languageCode);
 
     List<LandClass> getLandClasses(String languageCode);
 
     List<LandUse> getLandUses(String languageCode);
-
-    List<GuthiName> getGuthiNames(String languageCode);
 //</editor-fold>
 }
