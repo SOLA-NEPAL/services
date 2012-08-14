@@ -439,6 +439,21 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntity(CadastreObject.class, params);
     }
+
+    @Override
+    public List<ParcelType> getParcelTypes(String languageCode) {
+        return getRepository().getCodeList(ParcelType.class, languageCode);
+    }
+
+    @Override
+    public List<LandClass> getLandClasses(String languageCode) {
+        return getRepository().getCodeList(LandClass.class, languageCode);
+    }
+
+    @Override
+    public List<LandUse> getLandUses(String languageCode) {
+        return getRepository().getCodeList(LandUse.class, languageCode);
+    }
     //*****************************************************************************************************************************
     //</editor-fold>
 
@@ -458,13 +473,5 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
         params.put(MapSheet.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntityList(MapSheet.class, params);
-    }
-
-    @Override
-    public SpatialUnitAddress getSpatialUnitAddress(String spatialUnitId) {
-        Map params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_WHERE_PART, SpatialUnitAddress.GET_BY_SPATIAL_UNIT_ID);
-        params.put(SpatialUnitAddress.SPATIAL_UNIT_ID_PARAM, spatialUnitId);
-        return getRepository().getEntity(SpatialUnitAddress.class, params);
     }
 }

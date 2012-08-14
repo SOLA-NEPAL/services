@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.sola.services.ejb.system.repository.entities;
+package org.sola.services.ejb.cadastre.repository.entities;
 
 import javax.persistence.Table;
 import org.sola.services.common.repository.DefaultSorter;

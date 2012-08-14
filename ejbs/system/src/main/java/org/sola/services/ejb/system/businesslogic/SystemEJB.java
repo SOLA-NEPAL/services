@@ -257,19 +257,4 @@ public class SystemEJB extends AbstractEJB implements SystemEJBLocal {
         }
         return true;
     }
-
-    @Override
-    public List<ParcelType> getParcelTypes(String languageCode) {
-        return getRepository().getCodeList(ParcelType.class, languageCode);
-    }
-
-    @Override
-    public List<LandClass> getLandClasses(String languageCode) {
-        return getRepository().getCodeList(LandClass.class, languageCode);
-    }
-
-    @Override
-    public List<LandUse> getLandUses(String languageCode) {
-        return getRepository().getCodeList(LandUse.class, languageCode);
-    }
 }

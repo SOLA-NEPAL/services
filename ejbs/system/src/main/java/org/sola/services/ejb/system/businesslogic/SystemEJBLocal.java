@@ -40,7 +40,9 @@ import javax.ejb.Local;
 import org.sola.services.common.br.ValidationResult;
 import org.sola.services.common.ejbs.AbstractEJBLocal;
 import org.sola.services.ejb.system.br.Result;
-import org.sola.services.ejb.system.repository.entities.*;
+import org.sola.services.ejb.system.repository.entities.Br;
+import org.sola.services.ejb.system.repository.entities.BrReport;
+import org.sola.services.ejb.system.repository.entities.BrValidation;
 
 /**
  *
@@ -78,13 +80,4 @@ public interface SystemEJBLocal extends AbstractEJBLocal {
             HashMap<String, Serializable> parameters);
 
     boolean validationSucceeded(List<ValidationResult> validationResultList);
-
-    //<editor-fold defaultstate="collapsed" desc="Kumar">
-    
-    List<ParcelType> getParcelTypes(String languageCode);
-
-    List<LandClass> getLandClasses(String languageCode);
-
-    List<LandUse> getLandUses(String languageCode);
-//</editor-fold>
 }
