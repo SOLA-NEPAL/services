@@ -33,7 +33,6 @@ import java.util.List;
 import javax.ejb.Local;
 import org.sola.services.common.ejbs.AbstractSolaTransactionEJBLocal;
 import org.sola.services.ejb.administrative.repository.entities.*;
-import org.sola.services.ejb.source.repository.entities.Source;
 
 /**
  * Provides local interface for administrative ejbs.

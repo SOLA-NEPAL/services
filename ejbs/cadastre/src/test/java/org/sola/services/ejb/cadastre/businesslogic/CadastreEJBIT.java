@@ -139,8 +139,11 @@ public class CadastreEJBIT extends AbstractEJBTest {
             CadastreEJBLocal instance = (CadastreEJBLocal) getEJBInstance(CadastreEJB.class.getSimpleName());
             CadastreObject cobj = new CadastreObject();
             cobj.setTransactionId("cadastre-transaction");
-            cobj.setMapSheetCode("87f66dde-7fc6-4ba5-aadd-252344ae0418");
-            cobj.setParcelno(1500);
+            cobj.setMapSheetCode("0");
+            cobj.setParcelno(12012);
+            cobj.setParcelTypeCode("0");
+            //Address add=new Address();
+            cobj.setAddressId("e176651e-8bb3-4f77-8218-1d6b20cbe942");
             //cobj.setParcelType(0);
             instance.saveCadastreObject(cobj);
             tx.commit();
@@ -195,7 +198,7 @@ public class CadastreEJBIT extends AbstractEJBTest {
         }
 
     }
-    
+
     @Test
     @Ignore
     public void testGetParcel() throws Exception {
@@ -205,6 +208,7 @@ public class CadastreEJBIT extends AbstractEJBTest {
             tx.begin();
             CadastreEJBLocal instance = (CadastreEJBLocal) getEJBInstance(CadastreEJB.class.getSimpleName());
             CadastreObject Parcel = instance.getCadastreObject("27009", "5", 5);
+            //CadastreObject Parcel = instance.getCadastreObject("41");
 
             tx.commit();
         } catch (Exception e) {
@@ -212,7 +216,7 @@ public class CadastreEJBIT extends AbstractEJBTest {
             fail(e.getMessage());
         }
 
-    }   
+    }
     //***********************************************************************************************************
     //</editor-fold>
 
