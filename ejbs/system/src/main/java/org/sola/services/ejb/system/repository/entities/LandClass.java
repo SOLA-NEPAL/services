@@ -12,7 +12,7 @@ import org.sola.services.common.repository.entities.AbstractCodeEntity;
  *
  * @author KumarKhadka
  */
-@Table(name = "land_class", schema = "system")
+@Table(name = "land_class", schema = "cadastre")
 @DefaultSorter(sortString = "display_value")
 public class LandClass extends AbstractCodeEntity {
 

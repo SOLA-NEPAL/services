@@ -12,13 +12,13 @@ import org.sola.services.common.repository.entities.AbstractCodeEntity;
  *
  * @author KumarKhadka
  */
-@Table(name = "ownership_type", schema = "system")
+@Table(name = "owner_type", schema = "administrative")
 @DefaultSorter(sortString = "display_value")
-public class OwnershipType extends AbstractCodeEntity {
+public class OwnerType extends AbstractCodeEntity {
 
     public static final String CANCEL = "cancel";
 
-    public OwnershipType() {
+    public OwnerType() {
         super();
     }
 }

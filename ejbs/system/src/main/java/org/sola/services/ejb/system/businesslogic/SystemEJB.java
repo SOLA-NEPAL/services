@@ -280,8 +280,8 @@ public class SystemEJB extends AbstractEJB implements SystemEJBLocal {
 
     //<editor-fold defaultstate="collapsed" desc="Kumar">
     @Override
-    public List<OwnershipType> getOwnerShipTypes(String languageCode) {
-        return getRepository().getCodeList(OwnershipType.class, languageCode);
+    public List<OwnerType> getOwnerShipTypes(String languageCode) {
+        return getRepository().getCodeList(OwnerType.class, languageCode);
     }
 
     @Override

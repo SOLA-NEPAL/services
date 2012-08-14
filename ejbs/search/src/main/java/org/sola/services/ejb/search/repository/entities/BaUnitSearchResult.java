@@ -65,6 +65,9 @@ public class BaUnitSearchResult extends AbstractReadOnlyEntity {
     private String rightholders;
     @Column(name="office_code", updatable=false)
     private String officeCode;
+    private String mothNumber;
+    private String locId;
+    private String pageNumber;
 
     public BaUnitSearchResult() {
         super();

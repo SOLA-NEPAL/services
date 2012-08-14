@@ -39,6 +39,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 import org.sola.services.common.EntityAction;
 import org.sola.services.ejb.address.repository.entities.Address;
 import org.sola.services.common.test.AbstractEJBTest;
@@ -66,6 +67,7 @@ public class AddressEJBIT extends AbstractEJBTest {
     /**
      * Performs CRUD tests for the Address EJB
      */
+    @Ignore
     @Test
     public void testSaveAddress() throws Exception {
 
@@ -137,6 +139,7 @@ public class AddressEJBIT extends AbstractEJBTest {
     }
 
     @Test
+    @Ignore
     public void testGetAddresses() throws Exception {
 
         System.out.println("testGetAddress");
@@ -147,6 +150,7 @@ public class AddressEJBIT extends AbstractEJBTest {
         UserTransaction tx = getUserTransaction();
         try {
             tx.begin();
+            Address add=instance.getAddress("27-9-5");
             List<Address> result = instance.getAddresses(Arrays.asList("8000", "8001", "8002"));
             assertNotNull(result);
             System.out.println("Num Addresses=" + result.size());

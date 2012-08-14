@@ -12,7 +12,7 @@ import org.sola.services.common.repository.entities.AbstractCodeEntity;
  *
  * @author Dinesh
  */
-@Table(name = "restriction_office", schema = "system")
+@Table(name = "restriction_office", schema = "administrative")
 @DefaultSorter(sortString = "display_value")
 public class RestrictionOffice extends AbstractCodeEntity {
 

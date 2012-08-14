@@ -68,6 +68,7 @@ public class SearchEJBIT extends AbstractEJBTest {
     }
 
     /** Test searching active users */
+    @Ignore
     @Test
     public void testBaUnitSearch() throws Exception {
         if (skipIntegrationTest()) {
@@ -91,6 +92,7 @@ public class SearchEJBIT extends AbstractEJBTest {
     }
     
     /** Test searching active users */
+    @Ignore
     @Test
     public void testBrSearch() throws Exception {
         if (skipIntegrationTest()) {
@@ -114,6 +116,7 @@ public class SearchEJBIT extends AbstractEJBTest {
     }
     
     /** Test advanced searching of users */
+    @Ignore
     @Test
     public void testAdavncedUserSearch() throws Exception {
         if (skipIntegrationTest()) {
@@ -139,6 +142,7 @@ public class SearchEJBIT extends AbstractEJBTest {
     }
     
     /** Test source search. */
+    @Ignore
     @Test
     public void testSourceSearch() throws Exception {
         if (skipIntegrationTest()) {
@@ -175,7 +179,7 @@ public class SearchEJBIT extends AbstractEJBTest {
     /**
      * Test party search
      */
-    //@Ignore
+    @Ignore
     @Test
     public void testPartySearch() throws Exception {
         if (skipIntegrationTest()) {
@@ -196,6 +200,7 @@ public class SearchEJBIT extends AbstractEJBTest {
     /**
      * Test of GetPropertyVerifier method of class SearchEJB.
      */
+   // @Ignore
     @Test
     public void testGetPropertyVerifier() throws Exception {
         if (skipIntegrationTest()) {
@@ -203,8 +208,8 @@ public class SearchEJBIT extends AbstractEJBTest {
         }
         System.out.println("getPropertyVerifier-With parameters");
         SearchEJBLocal instance = (SearchEJBLocal) getEJBInstance(SearchEJB.class.getSimpleName());
-        String firstPart = "602";
-        String lastPart = "6629";
+        String firstPart = "27-9-5";
+        String lastPart = "5";
         PropertyVerifier result = instance.getPropertyVerifier("", firstPart, lastPart);
         if (result != null) {
             System.out.println("ba unit found: " + result.toString());
@@ -217,6 +222,7 @@ public class SearchEJBIT extends AbstractEJBTest {
      * Test of GetPropertyVerifier method of class SearchEJB.
      */
     @Test
+    @Ignore
     public void testGetPropertyVerifierNullParameters() throws Exception {
         if (skipIntegrationTest()) {
             return;
@@ -237,6 +243,7 @@ public class SearchEJBIT extends AbstractEJBTest {
      * Test of GetPropertyVerifier method of class SearchEJB.
      */
     @Test
+    @Ignore
     public void testGetSpatialTest() throws Exception {
         if (skipIntegrationTest()) {
             return;
@@ -264,6 +271,7 @@ public class SearchEJBIT extends AbstractEJBTest {
      * Test of getSpatialResult method of class SearchEJB.
      */
     @Test
+    @Ignore
     public void testGetSpatialResult() throws Exception {
         if (skipIntegrationTest()) {
             return;
@@ -304,6 +312,7 @@ public class SearchEJBIT extends AbstractEJBTest {
      * Test of getSpatialResult method of class SearchEJB.
      */
     @Test
+    @Ignore
     public void testConfigMapLayer() throws Exception {
         if (skipIntegrationTest()) {
             return;
@@ -325,6 +334,7 @@ public class SearchEJBIT extends AbstractEJBTest {
      * Test of getSettings method of class SearchEJB.
      */
     @Test
+    @Ignore
     public void testGetSettings() throws Exception {
         if (skipIntegrationTest()) {
             return;
@@ -346,6 +356,7 @@ public class SearchEJBIT extends AbstractEJBTest {
      * Test of getting result from a dynamic query.
      */
     @Test
+    @Ignore
     public void testGetResultForInformationTool() throws Exception {
         if (skipIntegrationTest()) {
             return;

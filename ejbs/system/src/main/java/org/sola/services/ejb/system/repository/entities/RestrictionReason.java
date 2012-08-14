@@ -16,7 +16,7 @@ import org.sola.services.common.repository.entities.AbstractCodeEntity;
 /**
  * Entity representing the system.restriction_reason code table
  */
-@Table(name = "restriction_reason", schema = "system")
+@Table(name = "restriction_reason", schema = "administrative")
 @DefaultSorter(sortString="display_value")
 public class RestrictionReason extends AbstractCodeEntity {
 
