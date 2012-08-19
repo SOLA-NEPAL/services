@@ -200,7 +200,7 @@ public class SearchEJBIT extends AbstractEJBTest {
     /**
      * Test of GetPropertyVerifier method of class SearchEJB.
      */
-   // @Ignore
+    @Ignore
     @Test
     public void testGetPropertyVerifier() throws Exception {
         if (skipIntegrationTest()) {

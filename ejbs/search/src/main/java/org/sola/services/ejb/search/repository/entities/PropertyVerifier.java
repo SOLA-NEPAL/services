@@ -46,8 +46,10 @@ public class PropertyVerifier extends AbstractReadOnlyEntity {
     public static final String QUERY_PARAM_FIRST_PART = "firstPart";
     public static final String QUERY_PARAM_LAST_PART = "lastPart";
     public static final String QUERY_PARAM_APPLICATION_NUMBER = "applicationNumber";
-    public static final String QUERY_VERIFY_SQL =           
+    public static final String QUERY_VERIFY_SQL =
             "SELECT id,"
+            + "(select count(*)>0 from cadastre.cadastre_object co "
+            + " where co.id = ba.cadastre_object_id and not co.geom_polygon is null) as has_location,"
             + "(select coalesce(string_agg(nr, ','), '') from application.application a "
             + " inner join application.application_property ap on a.id = ap.application_id "
             + " where a.status_code = 'lodged' and a.nr!=#{" + QUERY_PARAM_APPLICATION_NUMBER + "}"
@@ -56,17 +58,6 @@ public class PropertyVerifier extends AbstractReadOnlyEntity {
             + " FROM administrative.ba_unit ba where "
             + " ba.name_firstpart = #{" + QUERY_PARAM_FIRST_PART + "} "
             + " AND ba.name_lastpart = #{" + QUERY_PARAM_LAST_PART + "}";
-//            "SELECT id,  "
-//            + "(select count(*)>0 from administrative.ba_unit_contains_spatial_unit bcs "
-//            + " where ba.id = bcs.ba_unit_id ) as has_location,"
-//            + "(select coalesce(string_agg(nr, ','), '') from application.application a "
-//            + " inner join application.application_property ap on a.id = ap.application_id "
-//            + " where a.status_code = 'lodged' and a.nr!=#{" + QUERY_PARAM_APPLICATION_NUMBER + "}"
-//            + " and ap.name_firstpart= ba.name_firstpart and ap.name_lastpart= ba.name_lastpart) "
-//            + " as applications_where_found "
-//            + " FROM administrative.ba_unit ba where "
-//            + " ba.name_firstpart = #{" + QUERY_PARAM_FIRST_PART + "} "
-//            + " AND ba.name_lastpart = #{" + QUERY_PARAM_LAST_PART + "}";
     @Id
     @Column
     private String id;
