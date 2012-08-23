@@ -66,6 +66,8 @@ import org.sola.services.ejb.search.repository.entities.UserSearchParams;
 import org.sola.services.ejb.search.repository.entities.UserSearchResult;
 import org.sola.services.ejb.search.repository.entities.DynamicQuery;
 import org.sola.services.ejb.search.repository.entities.DynamicQueryField;
+import org.sola.services.ejb.search.repository.entities.ParcelSearchParams;
+import org.sola.services.ejb.search.repository.entities.ParcelSearchResult;
 import org.sola.services.ejb.search.spatial.QueryForNavigation;
 import org.sola.services.ejb.search.spatial.QueryForSelect;
 import org.sola.services.ejb.search.spatial.ResultForNavigationInfo;
@@ -75,7 +77,7 @@ import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
 @Stateless
 @EJB(name = "java:global/SOLA/SearchEJBLocal", beanInterface = SearchEJBLocal.class)
 public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
-
+    
     @EJB
     AdminEJBLocal adminEJB;
     
@@ -112,10 +114,10 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         params.put(CommonSqlProvider.PARAM_QUERY, query.getSql());
         return getRepository().getEntityList(entityClass, params);
     }
-
+    
     @Override
     public GenericResult getGenericResultList(String queryName, Map params) {
-
+        
         GenericResult result = new GenericResult();
         DynamicQuery query = getDynamicQuery(queryName, params);
         if (query.getFieldList() == null || query.getFieldList().isEmpty()) {
@@ -126,7 +128,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
 
         // Create the generic result from the query result. 
         if (queryResult != null && !queryResult.isEmpty()) {
-
+            
             String[] fieldNames = null;
             List<String> queryFields = new ArrayList<String>();
             List<String> displayNames = new ArrayList<String>();
@@ -159,7 +161,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
 //            }
             fieldNames = queryFields.toArray(new String[0]);
             result.setFieldNames(displayNames.toArray(new String[0]));
-
+            
             for (HashMap map : queryResult) {
                 Object[] values = new Object[fieldNames.length];
                 for (int i = 0; i < fieldNames.length; i++) {
@@ -170,10 +172,10 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         }
         return result;
     }
-
+    
     @Override
     public PropertyVerifier getPropertyVerifier(String applicationNumber, String firstPart, String lastPart) {
-        if(applicationNumber==null){
+        if (applicationNumber == null) {
             applicationNumber = "";
         }
         Map params = new HashMap<String, Object>();
@@ -183,7 +185,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         params.put(PropertyVerifier.QUERY_PARAM_LAST_PART, lastPart);
         return getRepository().getEntity(PropertyVerifier.class, params);
     }
-
+    
     @Override
     @RolesAllowed(RolesConstants.APPLICATION_VIEW_APPS)
     public List<ApplicationSearchResult> searchApplications(ApplicationSearchParams params) {
@@ -191,7 +193,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
 
         Map queryParams = new HashMap<String, Object>();
         queryParams.put(CommonSqlProvider.PARAM_FROM_PART, ApplicationSearchResult.QUERY_FROM);
-
+        
         queryParams.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, params.getLocale());
         queryParams.put(ApplicationSearchResult.QUERY_PARAM_CONTACT_NAME,
                 params.getContactPerson() == null ? "%" : params.getContactPerson().trim() + "%");
@@ -203,21 +205,21 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
                 params.getFromDate() == null ? new GregorianCalendar(1, 1, 1).getTime() : params.getFromDate());
         queryParams.put(ApplicationSearchResult.QUERY_PARAM_TO_LODGE_DATE,
                 params.getToDate() == null ? new GregorianCalendar(2500, 1, 1).getTime() : params.getToDate());
-        queryParams.put(ApplicationSearchResult.QUERY_PARAM_OFFICE_CODE, 
-                adminEJB.getCurrentOfficeCode()==null ? "" : adminEJB.getCurrentOfficeCode());
+        queryParams.put(ApplicationSearchResult.QUERY_PARAM_OFFICE_CODE,
+                adminEJB.getCurrentOfficeCode() == null ? "" : adminEJB.getCurrentOfficeCode());
         
         queryParams.put(CommonSqlProvider.PARAM_WHERE_PART, ApplicationSearchResult.QUERY_WHERE_SEARCH_APPLICATIONS);
         queryParams.put(CommonSqlProvider.PARAM_ORDER_BY_PART, ApplicationSearchResult.QUERY_ORDER_BY);
         queryParams.put(CommonSqlProvider.PARAM_LIMIT_PART, "100");
-
+        
         return getRepository().getEntityList(ApplicationSearchResult.class, queryParams);
     }
-
+    
     @Override
     @RolesAllowed(RolesConstants.SOURCE_SEARCH)
     public List<SourceSearchResult> searchSources(SourceSearchParams searchParams) {
         Map params = new HashMap<String, Object>();
-
+        
         params.put(SourceSearchResult.QUERY_PARAM_FROM_RECORDATION_DATE,
                 searchParams.getFromRecordationDate() == null
                 ? new GregorianCalendar(1, 1, 1).getTime()
@@ -242,34 +244,34 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
                 searchParams.getLaNumber() == null ? "" : searchParams.getLaNumber());
         params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE,
                 searchParams.getLocale() == null ? "en" : searchParams.getLocale());
-
+        
         params.put(CommonSqlProvider.PARAM_QUERY, SourceSearchResult.SEARCH_QUERY);
         return getRepository().getEntityList(SourceSearchResult.class, params);
     }
-
+    
     @Override
     @RolesAllowed(RolesConstants.ADMIN_MANAGE_SECURITY)
     public List<UserSearchResult> searchUsers(UserSearchParams searchParams) {
         if (searchParams.getDepartmentCode() == null) {
             searchParams.setDepartmentCode("");
         }
-
+        
         if (searchParams.getUserName() == null) {
             searchParams.setUserName("");
         }
-
+        
         if (searchParams.getFirstName() == null) {
             searchParams.setFirstName("");
         }
-
+        
         if (searchParams.getLastName() == null) {
             searchParams.setLastName("");
         }
-
+        
         if (searchParams.getLocale() == null) {
             searchParams.setLocale("");
         }
-               
+        
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_QUERY, UserSearchResult.QUERY_ADVANCED_USER_SEARCH);
         params.put("userName", searchParams.getUserName());
@@ -279,7 +281,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         params.put(UserSearchResult.PARAM_LANG_CODE, searchParams.getLocale());
         return getRepository().getEntityList(UserSearchResult.class, params);
     }
-
+    
     @Override
     @RolesAllowed(RolesConstants.APPLICATION_VIEW_APPS)
     public List<ApplicationSearchResult> getAssignedApplications(String locale) {
@@ -289,8 +291,8 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         
         if (isInRole(RolesConstants.APPLICATION_ASSIGN_TO_ALL)) {
             params.put(CommonSqlProvider.PARAM_WHERE_PART, ApplicationSearchResult.QUERY_WHERE_GET_ASSIGNED_ALL);
-            params.put(ApplicationSearchResult.QUERY_PARAM_OFFICE_CODE, 
-                adminEJB.getCurrentOfficeCode()==null ? "" : adminEJB.getCurrentOfficeCode());
+            params.put(ApplicationSearchResult.QUERY_PARAM_OFFICE_CODE,
+                    adminEJB.getCurrentOfficeCode() == null ? "" : adminEJB.getCurrentOfficeCode());
         } else if (isInRole(RolesConstants.APPLICATION_ASSIGN_TO_DEPARTMENT)) {
             params.put(CommonSqlProvider.PARAM_WHERE_PART, ApplicationSearchResult.QUERY_WHERE_GET_ASSIGNED_DEPARTMENT);
             params.put(ApplicationSearchResult.QUERY_PARAM_USER_NAME, getUserName());
@@ -301,10 +303,10 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         
         params.put(CommonSqlProvider.PARAM_ORDER_BY_PART, ApplicationSearchResult.QUERY_ORDER_BY);
         params.put(CommonSqlProvider.PARAM_LIMIT_PART, "100");
-
+        
         return getRepository().getEntityList(ApplicationSearchResult.class, params);
     }
-
+    
     @Override
     public List<UserSearchResult> getUsersByOffice(String officeCode) {
         Map params = new HashMap<String, Object>();
@@ -312,7 +314,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         params.put(UserSearchResult.PARAM_OFFICE_CODE, officeCode);
         return getRepository().getEntityList(UserSearchResult.class, params);
     }
-
+    
     @Override
     public List<PartySearchResult> searchParties(PartySearchParams searchParams) {
         if (searchParams.getName() == null) {
@@ -324,9 +326,9 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         if (searchParams.getRoleTypeCode() == null) {
             searchParams.setRoleTypeCode("");
         }
-
+        
         searchParams.setName(searchParams.getName().trim());
-
+        
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_QUERY, PartySearchResult.SEARCH_QUERY);
         params.put("name", searchParams.getName());
@@ -334,7 +336,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         params.put("roleTypeCode", searchParams.getRoleTypeCode());
         return getRepository().getEntityList(PartySearchResult.class, params);
     }
-
+    
     @Override
     public ResultForNavigationInfo getSpatialResult(
             QueryForNavigation spatialQuery, String officeCode) {
@@ -353,7 +355,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         spatialResultInfo.setToAdd(result);
         return spatialResultInfo;
     }
-
+    
     @Override
     public List<ConfigMapLayer> getConfigMapLayerList(String languageCode) {
         Map params = new HashMap<String, Object>();
@@ -361,7 +363,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         params.put(CommonSqlProvider.PARAM_QUERY, ConfigMapLayer.QUERY_SQL);
         return getRepository().getEntityList(ConfigMapLayer.class, params);
     }
-
+    
     @Override
     public List<ResultForSelectionInfo> getSpatialResultFromSelection(
             List<QueryForSelect> queriesForSelection) {
@@ -383,12 +385,12 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         }
         return results;
     }
-
+    
     @Override
     public HashMap<String, String> getMapSettingList() {
         return this.getSettingList(Setting.QUERY_SQL_FOR_MAP_SETTINGS);
     }
-
+    
     private HashMap<String, String> getSettingList(String queryBody) {
         HashMap settingMap = new HashMap();
         Map params = new HashMap<String, Object>();
@@ -401,7 +403,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         }
         return settingMap;
     }
-
+    
     @Override
     @RolesAllowed(RolesConstants.APPLICATION_VIEW_APPS)
     public List<ApplicationLogResult> getApplicationLog(String applicationId) {
@@ -409,14 +411,14 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         params.put(CommonSqlProvider.PARAM_QUERY, SearchSqlProvider.buildApplicationLogSql());
         params.put(SearchSqlProvider.PARAM_APPLICATION_ID, applicationId);
         return getRepository().getEntityList(ApplicationLogResult.class, params);
-
+        
     }
-
+    
     @RolesAllowed(RolesConstants.ADMIN_MANAGE_BR)
     @Override
     public List<BrSearchResult> searchBr(BrSearchParams searchParams, String lang) {
         Map params = new HashMap<String, Object>();
-
+        
         if (searchParams.getDisplayName() == null) {
             searchParams.setDisplayName("");
         }
@@ -426,9 +428,9 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         if (searchParams.getTechnicalTypeCode() == null) {
             searchParams.setTechnicalTypeCode("");
         }
-
+        
         searchParams.setDisplayName(searchParams.getDisplayName().trim());
-
+        
         params.put(CommonSqlProvider.PARAM_QUERY, BrSearchResult.SELECT_QUERY);
         params.put("lang", lang);
         params.put("displayName", searchParams.getDisplayName());
@@ -436,17 +438,17 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         params.put("targetCode", searchParams.getTargetCode());
         return getRepository().getEntityList(BrSearchResult.class, params);
     }
-
+    
     @Override
     public List<DynamicQuery> getQueryListAll() {
         return this.getRepository().getEntityList(DynamicQuery.class);
     }
-
+    
     @Override
     @RolesAllowed(RolesConstants.ADMINISTRATIVE_BA_UNIT_SEARCH)
     public List<BaUnitSearchResult> searchBaUnits(BaUnitSearchParams searchParams) {
         Map params = new HashMap<String, Object>();
-
+        
         if (searchParams.getNameFirstPart() == null) {
             searchParams.setNameFirstPart("");
         }
@@ -456,7 +458,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         if (searchParams.getOwnerName() == null) {
             searchParams.setOwnerName("");
         }
-
+        
         params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY);
         params.put("ownerName", searchParams.getOwnerName());
         params.put("nameFirstPart", searchParams.getNameFirstPart());
@@ -464,7 +466,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         params.put(BaUnitSearchResult.SEARCH_PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntityList(BaUnitSearchResult.class, params);
     }
-
+    
     @Override
     public List<CadastreObjectSearchResult> searchCadastreObjects(
             String searchBy, String searchString) {
@@ -472,7 +474,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         String selectPart = null;
         String fromPart = null;
         Integer numberOfMaxRecordsReturned = 30;
-
+        
         if (searchBy.equals(CadastreObjectSearchResult.SEARCH_BY_NUMBER)) {
             wherePart = CadastreObjectSearchResult.QUERY_WHERE_SEARCHBY_NUMBER;
         } else if (searchBy.equals(CadastreObjectSearchResult.SEARCH_BY_BAUNIT)) {
@@ -507,7 +509,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         }
         return result;
     }
-
+    
     @Override
     public List<UserSearchResult> getUsersByDepartment(String departmentCode) {
         Map params = new HashMap<String, Object>();
@@ -515,7 +517,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         params.put(UserSearchResult.PARAM_DEPARTMENT_CODE, departmentCode);
         return getRepository().getEntityList(UserSearchResult.class, params);
     }
-
+    
     @Override
     @RolesAllowed({RolesConstants.ADMIN_MANAGE_SECURITY, RolesConstants.APPLICATION_ASSIGN_TO_ALL, RolesConstants.APPLICATION_ASSIGN_TO_DEPARTMENT})
     public List<UserSearchResult> getUsersWithAssignRightByDepartment(String departmentCode) {
@@ -524,7 +526,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         params.put(UserSearchResult.PARAM_DEPARTMENT_CODE, departmentCode);
         return getRepository().getEntityList(UserSearchResult.class, params);
     }
-
+    
     @Override
     @RolesAllowed({RolesConstants.ADMIN_MANAGE_SECURITY, RolesConstants.APPLICATION_ASSIGN_TO_ALL, RolesConstants.APPLICATION_ASSIGN_TO_DEPARTMENT})
     public List<UserSearchResult> getUsersWithAssignRightByOffice(String officeCode) {
@@ -532,5 +534,26 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         params.put(CommonSqlProvider.PARAM_QUERY, UserSearchResult.QUERY_USERS_WITH_ASSIGN_RIGHT_BY_OFFICE);
         params.put(UserSearchResult.PARAM_OFFICE_CODE, officeCode);
         return getRepository().getEntityList(UserSearchResult.class, params);
+    }
+    
+    @Override
+    public List<ParcelSearchResult> searchParcels(ParcelSearchParams searchParams) {
+        if (searchParams.getVdcCode() == null) {
+            searchParams.setVdcCode("");
+        }
+        if (searchParams.getWardNo() == null) {
+            searchParams.setWardNo("");
+        }
+        if (searchParams.getMapSheetCode() == null) {
+            searchParams.setMapSheetCode("");
+        }
+        
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, ParcelSearchResult.PARCEL_SEARCH_QUERY);
+        params.put(ParcelSearchResult.VDC_PARAM, searchParams.getVdcCode());
+        params.put(ParcelSearchResult.PARCEL_NO_PARAM, searchParams.getParcelNo());
+        params.put(ParcelSearchResult.WARD_NO_PARAM, searchParams.getWardNo());
+        //params.put(ParcelSearchResult.MAP_SHEET_CODE_PARAM, searchParams.getMapSheetCode());
+        return getRepository().getEntityList(ParcelSearchResult.class, params);
     }
 }

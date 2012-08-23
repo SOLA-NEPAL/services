@@ -1,28 +1,30 @@
 /**
  * ******************************************************************************************
- * Copyright (C) 2012 - Food and Agriculture Organization of the United Nations (FAO).
- * All rights reserved.
+ * Copyright (C) 2012 - Food and Agriculture Organization of the United Nations
+ * (FAO). All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- *    1. Redistributions of source code must retain the above copyright notice,this list
- *       of conditions and the following disclaimer.
- *    2. Redistributions in binary form must reproduce the above copyright notice,this list
- *       of conditions and the following disclaimer in the documentation and/or other
- *       materials provided with the distribution.
- *    3. Neither the name of FAO nor the names of its contributors may be used to endorse or
- *       promote products derived from this software without specific prior written permission.
+ * 1. Redistributions of source code must retain the above copyright notice,this
+ * list of conditions and the following disclaimer. 2. Redistributions in binary
+ * form must reproduce the above copyright notice,this list of conditions and
+ * the following disclaimer in the documentation and/or other materials provided
+ * with the distribution. 3. Neither the name of FAO nor the names of its
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
- * SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,PROCUREMENT
- * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,STRICT LIABILITY,OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT,STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * *********************************************************************************************
  */
 package org.sola.services.ejb.search.businesslogic;
@@ -48,11 +50,11 @@ import org.sola.services.ejb.search.spatial.ResultForSelectionInfo;
  * @author manoku
  */
 public class SearchEJBIT extends AbstractEJBTest {
-    
+
     private static final String LANG = "en";
     private static final String LOGIN_USER = "test";
     private static final String LOGIN_PASS = "test";
-    
+
     @Before
     public void setUp() throws Exception {
         login(LOGIN_USER, LOGIN_PASS);
@@ -62,12 +64,14 @@ public class SearchEJBIT extends AbstractEJBTest {
     public void tearDown() throws Exception {
         logout();
     }
-    
+
     public SearchEJBIT() {
         super();
     }
 
-    /** Test searching active users */
+    /**
+     * Test searching active users
+     */
     @Ignore
     @Test
     public void testBaUnitSearch() throws Exception {
@@ -90,8 +94,10 @@ public class SearchEJBIT extends AbstractEJBTest {
             fail(e.getMessage());
         }
     }
-    
-    /** Test searching active users */
+
+    /**
+     * Test searching active users
+     */
     @Ignore
     @Test
     public void testBrSearch() throws Exception {
@@ -114,8 +120,10 @@ public class SearchEJBIT extends AbstractEJBTest {
             fail(e.getMessage());
         }
     }
-    
-    /** Test advanced searching of users */
+
+    /**
+     * Test advanced searching of users
+     */
     @Ignore
     @Test
     public void testAdavncedUserSearch() throws Exception {
@@ -124,9 +132,9 @@ public class SearchEJBIT extends AbstractEJBTest {
         }
         try {
             SearchEJBLocal instance = (SearchEJBLocal) getEJBInstance(SearchEJB.class.getSimpleName());
-            UserSearchParams params =new UserSearchParams();
+            UserSearchParams params = new UserSearchParams();
             params.setUserName("test");
-            
+
             List<UserSearchResult> result = instance.searchUsers(params);
 
             assertNotNull(result);
@@ -140,8 +148,10 @@ public class SearchEJBIT extends AbstractEJBTest {
             fail(e.getMessage());
         }
     }
-    
-    /** Test source search. */
+
+    /**
+     * Test source search.
+     */
     @Ignore
     @Test
     public void testSourceSearch() throws Exception {
@@ -424,5 +434,29 @@ public class SearchEJBIT extends AbstractEJBTest {
 //        } else {
 //            System.out.println("Can't find any element.");
 //        }
+    }
+
+    /**
+     * Test parcels search
+     */
+    @Ignore
+    @Test
+    public void testParcelSearch() throws Exception {
+        if (skipIntegrationTest()) {
+            return;
+        }
+        ParcelSearchParams params = new ParcelSearchParams();
+        //params.setWardNo("5");
+        // params.setParcelNo(5);
+        params.setVdcCode("27009");
+        SearchEJBLocal instance = (SearchEJBLocal) getEJBInstance(SearchEJB.class.getSimpleName());
+        List<ParcelSearchResult> result = instance.searchParcels(params);
+        assertNotNull(result);
+
+        if (result != null && result.size() > 0) {
+            System.out.println("Found " + result.size() + " parcels");
+        } else {
+            System.out.println("Can't find any parcels");
+        }
     }
 }
