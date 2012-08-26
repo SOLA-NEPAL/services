@@ -31,11 +31,15 @@
  */
 package org.sola.services.ejb.address.businesslogic;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import org.sola.services.ejb.address.repository.entities.Address;
 import org.sola.services.common.ejbs.AbstractEJB;
+import org.sola.services.common.repository.CommonSqlProvider;
+import org.sola.services.ejb.address.repository.entities.Vdc;
 
 /**
  * 
@@ -45,6 +49,11 @@ import org.sola.services.common.ejbs.AbstractEJB;
 @EJB(name = "java:global/SOLA/AddressEJBLocal", beanInterface = AddressEJBLocal.class)
 public class AddressEJB extends AbstractEJB implements AddressEJBLocal {
 
+    @Override
+    protected void postConstruct() {
+        setEntityPackage(Address.class.getPackage().getName());
+    }
+    
     @Override
     public Address getAddress(String id) {
         return getRepository().getEntity(Address.class, id);
@@ -58,5 +67,41 @@ public class AddressEJB extends AbstractEJB implements AddressEJBLocal {
     @Override
     public List<Address> getAddresses(List<String> ids) {
         return getRepository().getEntityListByIds(Address.class, ids);
+    }
+    
+    @Override
+    public List<Vdc> getVdcs(String districtCode, String lang) {
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Vdc.WHERE_BY_DISTRICT_CODE);
+        params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
+        params.put(Vdc.PARAM_DISTRICT_CODE, districtCode);
+        return getRepository().getEntityList(Vdc.class, params);
+    }
+    
+    @Override
+    public List<Vdc> getVdcList() {
+        return getRepository().getEntityList(Vdc.class);
+    }
+
+    @Override
+    public Vdc getVdcByCode(String vdcCode) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Vdc.GET_BY_VDC_CODE);
+        params.put(Vdc.VDC_CODE_PARAM, vdcCode);
+        return getRepository().getEntity(Vdc.class, params);
+    }
+
+    @Override
+    public Vdc getVdcByName(String vdcName) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Vdc.GET_BY_VDC_NAME);
+        params.put(Vdc.VDC_NAME_PARAM, vdcName);
+        return getRepository().getEntity(Vdc.class, params);
+    }
+    
+    @Override
+
+    public Vdc saveVdc(Vdc vdc) {
+        return getRepository().saveEntity(vdc);
     }
 }

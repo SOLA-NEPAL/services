@@ -89,8 +89,6 @@ public class CadastreObject extends AbstractVersionedEntity {
             + "st_intersects(geom_polygon, setsrid(st_geomfromewkb(#{geom}" + "::geometry)" + ", #{srid})) "
             + "AND " + QUERY_WHERE_BY_OFFICE;
     //--------------------------------------------------------------------------
-    //<editor-fold defaultstate="collapsed" desc="By Kumar">
-    //***********************************************************************************************************
     public static final String MAP_SHEET_CODE_PARAM = "mapSheetCode";
     public static final String GET_CADASTRE_BY_MAPSHEET_CODE = "map_sheet_id=#{" + MAP_SHEET_CODE_PARAM + "} "
             + "AND " + QUERY_WHERE_BY_OFFICE;
@@ -103,13 +101,11 @@ public class CadastreObject extends AbstractVersionedEntity {
             + PARCEL_NO_PARAM + "} AND " + QUERY_WHERE_BY_OFFICE;
     public static final String GET_BY_MAPSHEET_AND_PARCELNO = "map_sheet_id=#{" + MAP_SHEET_CODE_PARAM
             + "} and parcel_no=#{" + PARCEL_NO_PARAM + "} AND " + QUERY_WHERE_BY_OFFICE;
-    //***********************************************************************************************************
-    //</editor-fold>   
     //full query by Kabindra
     private static final String QUERY_WHERE_BY_OFFICE1 = "(p.office_code=#{"
             + AbstractReadOnlyEntity.PARAM_OFFICE_CODE + "} OR office_code IS NULL)";
     public static final String GET_BY_ADMIN_BOUNDARY_SELECT_PART =
-            "p.id, p.type_code, p.map_sheet_id, p.approval_datetime, p.historic_datetime,"
+            "p.id, p.type_code, p.map_sheet_id, p.fy_code, p.approval_datetime, p.historic_datetime,"
             + "p.source_reference, p.name_firstpart, p.name_lastpart, p.status_code, p.transaction_id,"
             + "st_asewkb(p.geom_polygon) as geom_polygon, p.parcel_no, p.parcel_note, p.parcel_typecode, p.land_usecode, p.land_classcode,p.addressid, p.guthi_namecode,"
             + "p.rowversion, p.change_user, p.rowidentifier, p.office_code";
@@ -183,6 +179,8 @@ public class CadastreObject extends AbstractVersionedEntity {
     private MapSheet mapSheet;
     @Column(name = "office_code", updatable = false)
     private String officeCode;
+    @Column(name="fy_code", updatable=false)
+    private String fiscalYearCode;
 
     public String getMapSheetCode() {
         return mapSheetCode;
@@ -370,6 +368,14 @@ public class CadastreObject extends AbstractVersionedEntity {
 
     public void setOfficeCode(String officeCode) {
         this.officeCode = officeCode;
+    }
+
+    public String getFiscalYearCode() {
+        return fiscalYearCode;
+    }
+
+    public void setFiscalYearCode(String fiscalYearCode) {
+        this.fiscalYearCode = fiscalYearCode;
     }
 
     @Override

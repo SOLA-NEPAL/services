@@ -119,11 +119,6 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
     List<Department> getDepartments(String officeCode, String lang);
 
     /**
-     * Get list of VDCs by District code.
-     */
-    List<Vdc> getVdcs(String districtCode, String lang);
-
-    /**
      * Checks if user belongs to the given department.
      */
     boolean checkUserFromDepartment(String userId, String departmentCode);
@@ -132,10 +127,6 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
      * Checks if user belongs to the given office.
      */
     boolean checkUserFromOffice(String userId, String officeCode);
-
-    //<editor-fold defaultstate="collapsed" desc="By Dinesh">
-    Vdc saveVdc(Vdc vdc);
-    //</editor-fold>
 
     /**
      * Get list of Offices by District code.
@@ -147,8 +138,6 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
      */
     Office getCurrentOffice();
 
-    //<editor-fold defaultstate="collapsed" desc="By Kumar ">
-    //***************************************************************************************
     /**
      * List of nepali year from database with out any parameter given
      */
@@ -191,24 +180,6 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
      */
     Date getGregorianDate(String nepaliDate);
     
-    /**
-     * Returns list of vdc Names
-     */
-    List<Vdc> getVdcList();
-    
-    /**
-     * RReturns Vdc according to given code.
-     */
-    Vdc getVdcByCode(String vdcCode);
-    
-    /**
-     * Returns Vdc according to given Name.
-     */
-    Vdc getVdcByName(String vdcName);
-    //***************************************************************************************
-    //</editor-fold>
-    
-    
     String getCurrentOfficeCode();
     
     /**
@@ -228,4 +199,10 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
      * code.
      */
     boolean checkOfficeCode(String officeCode, boolean throwException);
+    
+    /** Returns current fiscal year. */
+    FiscalYear getCurrentFiscalYear();
+    
+    /** Returns current fiscal year code. */
+    String getCurrentFiscalYearCode();
 }

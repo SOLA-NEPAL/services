@@ -102,6 +102,8 @@ public class Rrr extends AbstractVersionedEntity {
     private String locId;
     @Column(name = "office_code", updatable = false)
     private String officeCode;
+    @Column(name="fy_code", updatable=false)
+    private String fiscalYearCode;
     @Column(name = "is_terminating")
     private boolean terminating;
     // Child entity fields
@@ -317,6 +319,14 @@ public class Rrr extends AbstractVersionedEntity {
 
     public void setOfficeCode(String officeCode) {
         this.officeCode = officeCode;
+    }
+
+    public String getFiscalYearCode() {
+        return fiscalYearCode;
+    }
+
+    public void setFiscalYearCode(String fiscalYearCode) {
+        this.fiscalYearCode = fiscalYearCode;
     }
 
     public Boolean getLocked() {

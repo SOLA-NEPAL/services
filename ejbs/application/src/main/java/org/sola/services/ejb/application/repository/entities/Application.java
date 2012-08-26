@@ -38,7 +38,6 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import org.sola.services.common.repository.AccessFunctions;
 import org.sola.services.common.repository.ChildEntity;
 import org.sola.services.common.repository.ChildEntityList;
 import org.sola.services.common.repository.ExternalEJB;
@@ -82,10 +81,6 @@ public class Application extends AbstractVersionedEntity {
     private String agentId;
     @Column(name = "status_code", insertable=false, updatable=false)
     private String statusCode = null;
-    @AccessFunctions(onSelect = "st_asewkb(location)",
-    onChange = "get_geometry_with_srid(#{location})")
-    @Column(name = "location")
-    private byte[] location;
     @Column(name = "services_fee")
     private BigDecimal servicesFee;
     @Column(name = "tax")
@@ -96,12 +91,16 @@ public class Application extends AbstractVersionedEntity {
     private BigDecimal totalAmountPaid;
     @Column(name = "fee_paid")
     private boolean feePaid;
-    @ExternalEJB(ejbLocalClass = PartyEJBLocal.class,
-    loadMethod = "getParty", saveMethod = "saveParty")
+    @Column(name="office_code", updatable=false)
+    private String officeCode;
+    @Column(name="fy_code", updatable=false)
+    private String fiscalYearCode;
+    
+    @ExternalEJB(ejbLocalClass = PartyEJBLocal.class, loadMethod = "getParty")
     @ChildEntity(childIdField = "contactPersonId",readOnly=true)
     private Party contactPerson;
     @ExternalEJB(ejbLocalClass = PartyEJBLocal.class, loadMethod = "getParty")
-    @ChildEntity(childIdField = "agentId")
+    @ChildEntity(childIdField = "agentId", readOnly=true)
     private Party agent;
     @ChildEntityList(parentIdField = "applicationId")
     private List<Service> serviceList;
@@ -112,8 +111,7 @@ public class Application extends AbstractVersionedEntity {
     @ChildEntityList(parentIdField = "applicationId", childIdField = "sourceId",
     manyToManyClass = ApplicationUsesSource.class)
     private List<Source> sourceList;
-    @Column(name="office_code", updatable=false)
-    private String officeCode;
+    
     
     public Application() {
         super();
@@ -202,14 +200,6 @@ public class Application extends AbstractVersionedEntity {
 
     public void setFeePaid(boolean feePaid) {
         this.feePaid = feePaid;
-    }
-
-    public byte[] getLocation() {
-        return location;
-    }
-
-    public void setLocation(byte[] location) {
-        this.location = location;
     }
 
     public Date getLodgingDatetime() {
@@ -325,6 +315,14 @@ public class Application extends AbstractVersionedEntity {
         this.officeCode = officeCode;
     }
 
+    public String getFiscalYearCode() {
+        return fiscalYearCode;
+    }
+
+    public void setFiscalYearCode(String fiscalYearCode) {
+        this.fiscalYearCode = fiscalYearCode;
+    }
+    
     @Override
     public void preSave() {
 

@@ -148,16 +148,6 @@ public class Development extends AbstractEJBTest{
         services.add(ser2);
         application.setServiceList(services);
 
-
-        System.out.println("Add location");
-        //Adding location
-        WKTReader wktReader = new WKTReader();
-        Geometry geom = wktReader.read("MULTIPOINT((2 3), (4 5))");
-        geom.setSRID(2193);
-        WKBWriter wkbWritter = new WKBWriter(2);
-        byte[] locationAsBytes = wkbWritter.write(geom);
-        application.setLocation(locationAsBytes);
-
         System.out.println("Add properties");
         //Adding properties to the application
         ApplicationProperty applicationProperty1 = new ApplicationProperty();

@@ -154,7 +154,6 @@ public class PartyEJBIT extends AbstractEJBTest {
             Address add = new Address();
             add.setDescription("Testing");
             add.setVdcCode("43055");
-            add.setDistrictCode("25");
             owner.setAddress(add);
 //            
 ////            // owner.setId("pqr11");

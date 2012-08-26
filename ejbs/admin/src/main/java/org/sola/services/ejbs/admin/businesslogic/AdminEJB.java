@@ -231,15 +231,6 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     }
 
     @Override
-    public List<Vdc> getVdcs(String districtCode, String lang) {
-        HashMap params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_WHERE_PART, Vdc.WHERE_BY_DISTRICT_CODE);
-        params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
-        params.put(Vdc.PARAM_DISTRICT_CODE, districtCode);
-        return getRepository().getEntityList(Vdc.class, params);
-    }
-
-    @Override
     public boolean checkUserFromDepartment(String userId, String departmentCode) {
         User user = getRepository().getEntity(User.class, userId);
         if (user != null) {
@@ -259,8 +250,6 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
         }
     }
 
-    //<editor-fold defaultstate="collapsed" desc="By Kumar">
-    //***************************************************************************************
     @Override
     public String getNepaliDate(Date date) {
         Map params = new HashMap<String, Object>();
@@ -332,29 +321,6 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     }
 
     @Override
-    public List<Vdc> getVdcList() {
-        return getRepository().getEntityList(Vdc.class);
-    }
-
-    @Override
-    public Vdc getVdcByCode(String vdcCode) {
-        Map params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_WHERE_PART, Vdc.GET_BY_VDC_CODE);
-        params.put(Vdc.VDC_CODE_PARAM, vdcCode);
-        return getRepository().getEntity(Vdc.class, params);
-    }
-
-    @Override
-    public Vdc getVdcByName(String vdcName) {
-        Map params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_WHERE_PART, Vdc.GET_BY_VDC_NAME);
-        params.put(Vdc.VDC_NAME_PARAM, vdcName);
-        return getRepository().getEntity(Vdc.class, params);
-    }
-    //***************************************************************************************
-    //</editor-fold>
-
-    @Override
     public Office getCurrentOffice() {
         Office currentOffice = LocalInfo.get(LocalInfo.CURRENT_OFFICE, Office.class, true);
 
@@ -385,17 +351,33 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
         return checkOfficeCode(officeCode, true);
     }
 
-
-    //<editor-fold defaultstate="collapsed" desc="By Dinesh">
     @Override
     public boolean checkOfficeCode(String officeCode, boolean throwException) {
         return checkOfficeCode(officeCode, getCurrentOfficeCode(), throwException);
     }
-    
-    @Override
 
-    public Vdc saveVdc(Vdc vdc) {
-        return getRepository().saveEntity(vdc);
+    @Override
+    public FiscalYear getCurrentFiscalYear() {
+        FiscalYear currentFiscalYear = LocalInfo.get(LocalInfo.CURRENT_FISCAL_YEAR, FiscalYear.class, true);
+
+        if (currentFiscalYear == null) {
+            Map params = new HashMap<String, Object>();
+            params.put(CommonSqlProvider.PARAM_WHERE_PART, FiscalYear.WHERE_GET_BY_CURRENT);
+            currentFiscalYear = getRepository().getEntity(FiscalYear.class, params);
+            if (currentFiscalYear != null) {
+                LocalInfo.set(LocalInfo.CURRENT_FISCAL_YEAR, currentFiscalYear, true, true);
+            }
+        }
+        return currentFiscalYear;
     }
-    //</editor-fold>
+
+    @Override
+    public String getCurrentFiscalYearCode() {
+        FiscalYear currentFiscalYear = getCurrentFiscalYear();
+        if(currentFiscalYear!=null){
+            return currentFiscalYear.getCode();
+        } else {
+            return null;
+        }
+    }
 }

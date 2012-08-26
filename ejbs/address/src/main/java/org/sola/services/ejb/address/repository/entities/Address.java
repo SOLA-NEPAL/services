@@ -49,8 +49,6 @@ public class Address extends AbstractVersionedEntity {
     //additional fields.
     @Column(name="street")
     private String street;
-    @Column(name="districtcode")
-    private String districtCode;
     @Column(name="vdc_code")
     private String vdcCode;
     @Column(name="ward_no")
@@ -80,14 +78,6 @@ public class Address extends AbstractVersionedEntity {
         this.street = street;
     }
 
-    public String getDistrictCode() {
-        return districtCode;
-    }
-
-    public void setDistrictCode(String districtCode) {
-        this.districtCode = districtCode;
-    }
-    
     public Address() {
         super();
     }

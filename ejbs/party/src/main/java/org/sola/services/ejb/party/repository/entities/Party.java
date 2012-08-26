@@ -39,10 +39,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import org.sola.services.common.repository.ChildEntity;
-import org.sola.services.common.repository.ChildEntityList;
-import org.sola.services.common.repository.DefaultSorter;
-import org.sola.services.common.repository.ExternalEJB;
+import org.sola.services.common.repository.*;
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
 import org.sola.services.digitalarchive.businesslogic.DigitalArchiveEJBLocal;
@@ -65,20 +62,24 @@ public class Party extends AbstractVersionedEntity {
     @Id
     @Column(name = "id")
     private String id;
+    @Column(name = "parent_id")
+    private String parentId;
+    @AccessFunctions(onSelect = "party.get_party_name(parent_id) as parent_name")
+    private String parentName;
+    @Column(name = "is_child")
+    private boolean child;
     @Column(name = "name")
     private String name;
     @Column(name = "last_name")
     private String lastName;
+    @Column(name="father_type_code")
+    private String fatherTypeCode;
     @Column(name = "fathers_name")
     private String fathersName;
-    @Column(name = "fathers_last_name")
-    private String fathersLastName;
     @Column(name = "alias")
     private String alias;
     @Column(name = "ext_id")
     private String extId;
-    @Column(name = "id_number")
-    private String idNumber;
     @Column(name = "email")
     private String email;
     @Column(name = "mobile")
@@ -89,35 +90,37 @@ public class Party extends AbstractVersionedEntity {
     private String fax;
     @Column(name = "address_id")
     private String addressId;
+    @ExternalEJB(ejbLocalClass = AddressEJBLocal.class, loadMethod = "getAddress", saveMethod = "saveAddress")
+    @ChildEntity(childIdField = "addressId")
+    private Address address;
     @Column(name = "id_type_code")
     private String idTypeCode;
+    @Column(name = "id_number")
+    private String idNumber;
+    @Column(name = "id_office_type_code")
+    private String idOfficeTypeCode;
+    @Column(name = "id_issue_date")
+    private Date idIssueDate;
+    @Column(name = "id_office_district_code")
+    private String idOfficeDistrictCode;
     @Column(name = "preferred_communication_code")
     private String preferredCommunicationCode;
     @Column(name = "type_code")
     private String typeCode;
     @Column(name = "gender_code")
     private String genderCode;
-    @ExternalEJB(ejbLocalClass = AddressEJBLocal.class, loadMethod = "getAddress", saveMethod = "saveAddress")
-    @ChildEntity(childIdField = "addressId")
-    private Address address;
     @ChildEntityList(parentIdField = "partyId")
     private List<PartyRole> roleList;
     @Column(name = "party.is_rightholder(id) AS is_rightholder", insertable = false, updatable = false)
     private boolean rightHolder;
-    //additional fields
+    @Column(name="grandfather_type_code")
+    private String grandfatherTypeCode;
     @Column(name = "grandfather_name")
     private String grandfatherName;
-    @Column(name = "grandfather_last_name")
-    private String grandFatherLastName;
     @Column(name = "date_of_birth")
     private Date birthDate;
     @Column(name = "remarks")
-    private String rmks;
-    @Column(name = "id_provider_office_code")
-    private String issuingOfficeCode;
-    @Column(name = "id_issue_date")
-    private Date idIssueDate;
-    //additional fields for image storage.
+    private String remarks;
     @Column(name="photo_id")
     private String photoId;
     @Column(name="left_finger_id")
@@ -237,14 +240,6 @@ public class Party extends AbstractVersionedEntity {
         this.birthDate = birthDate;
     }
 
-    public String getGrandFatherLastName() {
-        return grandFatherLastName;
-    }
-
-    public void setGrandFatherLastName(String grandFatherLastName) {
-        this.grandFatherLastName = grandFatherLastName;
-    }
-
     public String getGrandfatherName() {
         return grandfatherName;
     }
@@ -259,22 +254,6 @@ public class Party extends AbstractVersionedEntity {
 
     public void setIdIssueDate(Date idIssueDate) {
         this.idIssueDate = idIssueDate;
-    }
-
-    public String getIssuingOfficeCode() {
-        return issuingOfficeCode;
-    }
-
-    public void setIssuingOfficeCode(String issuingOfficeCode) {
-        this.issuingOfficeCode = issuingOfficeCode;
-    }
-
-    public String getRmks() {
-        return rmks;
-    }
-
-    public void setRmks(String rmks) {
-        this.rmks = rmks;
     }
 
     public Party() {
@@ -314,14 +293,6 @@ public class Party extends AbstractVersionedEntity {
         this.alias = alias;
     }
 
-    public String getFathersLastName() {
-        return fathersLastName;
-    }
-
-    public void setFathersLastName(String fathersLastName) {
-        this.fathersLastName = fathersLastName;
-    }
-
     public String getFathersName() {
         return fathersName;
     }
@@ -344,6 +315,70 @@ public class Party extends AbstractVersionedEntity {
 
     public void setIdNumber(String idNumber) {
         this.idNumber = idNumber;
+    }
+
+    public boolean isChild() {
+        return child;
+    }
+
+    public void setChild(boolean child) {
+        this.child = child;
+    }
+
+    public String getFatherTypeCode() {
+        return fatherTypeCode;
+    }
+
+    public void setFatherTypeCode(String fatherTypeCode) {
+        this.fatherTypeCode = fatherTypeCode;
+    }
+
+    public String getGrandfatherTypeCode() {
+        return grandfatherTypeCode;
+    }
+
+    public void setGrandfatherTypeCode(String grandfatherTypeCode) {
+        this.grandfatherTypeCode = grandfatherTypeCode;
+    }
+
+    public String getIdOfficeDistrictCode() {
+        return idOfficeDistrictCode;
+    }
+
+    public void setIdOfficeDistrictCode(String idOfficeDistrictCode) {
+        this.idOfficeDistrictCode = idOfficeDistrictCode;
+    }
+
+    public String getIdOfficeTypeCode() {
+        return idOfficeTypeCode;
+    }
+
+    public void setIdOfficeTypeCode(String idOfficeTypeCode) {
+        this.idOfficeTypeCode = idOfficeTypeCode;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
     public String getEmail() {

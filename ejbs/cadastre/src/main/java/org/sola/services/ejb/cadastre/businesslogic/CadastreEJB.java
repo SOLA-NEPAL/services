@@ -107,6 +107,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     public CadastreObject saveCadastreObject(CadastreObject cadastreObject) {
         if (cadastreObject.isNew()) {
             cadastreObject.setOfficeCode(adminEJB.getCurrentOfficeCode());
+            cadastreObject.setFiscalYearCode(adminEJB.getCurrentFiscalYearCode());
         } else {
             adminEJB.checkOfficeCode(cadastreObject.getOfficeCode());
         }
@@ -271,8 +272,6 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="By Kabindra"> 
-    //--------------------------------------------------------------------------
     @Override
     public List<CadastreObject> getCadastreObjectBy_Intersection(String geom, int srid) {
         HashMap params = new HashMap();
@@ -369,10 +368,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntityList(MapSheet.class, params);
     }
-    //</editor-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="By Kumar">
-    //*****************************************************************************************************************************
+    
     @Override
     public MapSheet getMapSheet(String id) {
         return getRepository().getEntity(MapSheet.class, id);
@@ -416,7 +412,6 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         return getRepository().getEntityList(MapSheet.class, params);
     }
 
-    //modified by Kabindra.
     @Override
     public CadastreObject getCadastreObject(String vdcCode, String wardNo, int parcelNo) {
         Map params = new HashMap<String, Object>();
@@ -454,8 +449,6 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     public List<LandUse> getLandUses(String languageCode) {
         return getRepository().getCodeList(LandUse.class, languageCode);
     }
-    //*****************************************************************************************************************************
-    //</editor-fold>
 
     @Override
     public List<MapSheet> getMapSheetListByOffice(String officeCode, String lang) {

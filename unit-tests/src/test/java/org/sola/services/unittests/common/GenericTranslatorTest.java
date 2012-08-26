@@ -84,7 +84,6 @@ public class GenericTranslatorTest {
         assertEquals(appTO.isFeePaid(), outApp.isFeePaid());
         assertEquals(appTO.getId(), outApp.getId());
         assertEquals(appTO.getLodgingDatetime(), outApp.getLodgingDatetime());
-        assertArrayEquals(appTO.getLocation(), outApp.getLocation());
         assertEquals(appTO.getNr(), outApp.getNr());
         assertEquals(appTO.getRowVersion(), outApp.getRowVersion());
         assertEquals(appTO.getStatusCode(), outApp.getStatusCode());
@@ -124,8 +123,8 @@ public class GenericTranslatorTest {
                 assertTrue(app.getContactPerson() == outApp.getContactPerson());
             }
             assertEquals(appTO.getContactPerson().getId(), outApp.getContactPersonId());
-            assertParty(app == null ? null : app.getContactPerson(), appTO.getContactPerson(),
-                    outApp.getContactPerson());
+//            assertParty(app == null ? null : app.getContactPerson(), appTO.getContactPerson(),
+//                    outApp.getContactPerson());
         }
 
         if (numServices > 0) {
@@ -314,7 +313,6 @@ public class GenericTranslatorTest {
         assertEquals(app.isFeePaid(), appTO.isFeePaid());
         assertEquals(app.getId(), appTO.getId());
         assertEquals(app.getLodgingDatetime(), appTO.getLodgingDatetime());
-        assertArrayEquals(app.getLocation(), appTO.getLocation());
         assertEquals(app.getNr(), appTO.getNr());
         assertEquals(app.getRowVersion(), appTO.getRowVersion());
         assertEquals(app.getStatusCode(), appTO.getStatusCode());
@@ -332,7 +330,7 @@ public class GenericTranslatorTest {
         if (hasContactPerson) {
             assertNotNull(appTO.getContactPerson());
             assertEquals(app.getContactPersonId(), appTO.getContactPerson().getId());
-            assertPartyTO(app.getContactPerson(), appTO.getContactPerson());
+            //assertPartyTO(app.getContactPerson(), appTO.getContactPerson());
         }
 
         assertServiceTOList(app.getServiceList(), appTO.getServiceList());
@@ -622,16 +620,11 @@ public class GenericTranslatorTest {
         System.out.println("ByteArrayTranslation");
         MockEntityFactory factory = new MockEntityFactory();
         Application app = factory.createApplication();
-        app.setLocation("abcd".getBytes()); 
         ApplicationTO appTO = GenericTranslator.toTO(app, ApplicationTO.class);
         assertNotNull(appTO);
-        assertEquals(app.getLocation().length, appTO.getLocation().length);
-        assertEquals("abcd", new String(appTO.getLocation()));
         assertApplicationTO(app, appTO);
         Application result = GenericTranslator.fromTO(appTO, Application.class, app);
         assertNotNull(result);
-        assertEquals("abcd", new String(result.getLocation()));
-        assertEquals(app.getLocation().length, result.getLocation().length);
         assertApplication(app, appTO, result);
     }
 }
