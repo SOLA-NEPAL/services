@@ -78,6 +78,8 @@ public class Rrr extends AbstractVersionedEntity {
     private String baUnitId;
     @Column(name = "nr")
     private String nr;
+    @Column(name = "sn")
+    private String sn;
     @Column(name = "type_code")
     private String typeCode;
     @Column(name = "status_code", insertable = false, updatable = false)
@@ -120,12 +122,24 @@ public class Rrr extends AbstractVersionedEntity {
     private LocWithMoth loc;
     @Column(name = "restriction_reason_code")
     private String restrictionReasonCode;
-    @Column(name = "restriction_office_code")
-    private String restictionOfficeCode;
+    @Column(name = "restriction_office_name")
+    private String restrictionOfficeName;
+    @Column(name = "restriction_release_office_name")
+    private String restrictionReleaseOfficeName;
+    @Column(name = "restriction_office_address")
+    private String restrictionOfficeAddress;
+    @Column(name = "restriction_release_reason_code")
+    private String restrictionReleaseReasonCode;
+    @Column(name = "tenancy_type_code")
+    private String tenancyTypeCode;
     @Column(name = "owner_type_code")
     private String ownerTypeCode;
     @Column(name = "share_type_code")
     private String shareTypeCode;
+    @Column(name = "bundle_number")
+    private String bundleNumber;
+    @Column(name = "bundle_page_no")
+    private String bundlePageNo;
     // Other fields
     private Boolean locked = null;
 
@@ -335,14 +349,6 @@ public class Rrr extends AbstractVersionedEntity {
         this.terminating = terminating;
     }
 
-    public String getRestictionOfficeCode() {
-        return restictionOfficeCode;
-    }
-
-    public void setRestictionOfficeCode(String restictionOfficeCode) {
-        this.restictionOfficeCode = restictionOfficeCode;
-    }
-
     public String getRestrictionReasonCode() {
         return restrictionReasonCode;
     }
@@ -374,5 +380,69 @@ public class Rrr extends AbstractVersionedEntity {
             setNr(generateRrrNumber());
         }
         super.preSave();
+    }
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
+    }
+
+    public String getRestrictionOfficeName() {
+        return restrictionOfficeName;
+    }
+
+    public void setRestrictionOfficeName(String restrictionOfficeName) {
+        this.restrictionOfficeName = restrictionOfficeName;
+    }
+
+    public String getRestrictionReleaseOfficeName() {
+        return restrictionReleaseOfficeName;
+    }
+
+    public void setRestrictionReleaseOfficeName(String restrictionReleaseOfficeName) {
+        this.restrictionReleaseOfficeName = restrictionReleaseOfficeName;
+    }
+
+    public String getRestrictionOfficeAddress() {
+        return restrictionOfficeAddress;
+    }
+
+    public void setRestrictionOfficeAddress(String restrictionOfficeAddress) {
+        this.restrictionOfficeAddress = restrictionOfficeAddress;
+    }
+
+    public String getRestrictionReleaseReasonCode() {
+        return restrictionReleaseReasonCode;
+    }
+
+    public void setRestrictionReleaseReasonCode(String restrictionReleaseReasonCode) {
+        this.restrictionReleaseReasonCode = restrictionReleaseReasonCode;
+    }
+
+    public String getTenancyTypeCode() {
+        return tenancyTypeCode;
+    }
+
+    public void setTenancyTypeCode(String tenancyTypeCode) {
+        this.tenancyTypeCode = tenancyTypeCode;
+    }
+
+    public String getBundleNumber() {
+        return bundleNumber;
+    }
+
+    public void setBundleNumber(String bundleNumber) {
+        this.bundleNumber = bundleNumber;
+    }
+
+    public String getBundlePageNo() {
+        return bundlePageNo;
+    }
+
+    public void setBundlePageNo(String bundlePageNo) {
+        this.bundlePageNo = bundlePageNo;
     }
 }
