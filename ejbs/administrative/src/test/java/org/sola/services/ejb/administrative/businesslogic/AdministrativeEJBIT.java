@@ -477,7 +477,6 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             moth.setMothlujNumber("MOOO2");
             moth.setVdcCode("43055");
             moth.setMothLuj("M");
-            moth.setFinancialYear("69");
 
             Loc loc = new Loc();
             loc.setMothId(moth.getId());
@@ -524,7 +523,6 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             Address add = new Address();
             add.setDescription("Testing");
             add.setVdcCode("43055");
-            add.setDistrictCode("25");
             owner.setAddress(add);
             List<Party> partyList = new ArrayList<Party>();
             partyList.add(owner);

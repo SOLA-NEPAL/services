@@ -148,6 +148,7 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
         application.setAssignedDatetime(DateUtility.now());
         application.setAssigneeId(adminEJB.getCurrentUser().getId());
         application.setOfficeCode(adminEJB.getCurrentOfficeCode());
+        application.setFiscalYearCode(adminEJB.getCurrentFiscalYearCode());
         
         if (application.getLodgingDatetime() == null) {
             application.setLodgingDatetime(DateUtility.now());
@@ -316,6 +317,7 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
         
         if(application.isNew()){
             application.setOfficeCode(adminEJB.getCurrentOfficeCode());
+            application.setFiscalYearCode(adminEJB.getCurrentFiscalYearCode());
         } else {
             adminEJB.checkOfficeCode(application.getOfficeCode());
         }

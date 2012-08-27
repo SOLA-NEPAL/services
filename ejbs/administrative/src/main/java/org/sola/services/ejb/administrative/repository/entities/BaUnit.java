@@ -114,6 +114,8 @@ public class BaUnit extends AbstractVersionedEntity {
     private String pendingActionCode;
     @Column(name = "office_code", updatable=false)
     private String officeCode;
+    @Column(name="fy_code", updatable=false)
+    private String fiscalYearCode;
     @Column
     private BigDecimal area;
     
@@ -135,6 +137,14 @@ public class BaUnit extends AbstractVersionedEntity {
 
     public void setOfficeCode(String officeCode) {
         this.officeCode = officeCode;
+    }
+
+    public String getFiscalYearCode() {
+        return fiscalYearCode;
+    }
+
+    public void setFiscalYearCode(String fiscalYearCode) {
+        this.fiscalYearCode = fiscalYearCode;
     }
 
     public CadastreObject getCadastreObject() {

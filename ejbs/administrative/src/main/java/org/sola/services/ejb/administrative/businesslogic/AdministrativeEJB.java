@@ -379,6 +379,7 @@ public class AdministrativeEJB extends AbstractEJB
             baUnit.setStatusCode(StatusConstants.PENDING);
             baUnit.setTypeCode("administrativeUnit");
             baUnit.setOfficeCode(adminEJB.getCurrentOfficeCode());
+            baUnit.setFiscalYearCode(adminEJB.getCurrentFiscalYearCode());
         } else {
             statusCode = baUnit.getOriginalValue("statusCode");
             if (statusCode != null) {
@@ -391,6 +392,7 @@ public class AdministrativeEJB extends AbstractEJB
         for (Rrr rrr : baUnit.getRrrList()) {
             if (rrr.isNew()) {
                 rrr.setOfficeCode(adminEJB.getCurrentOfficeCode());
+                rrr.setFiscalYearCode(adminEJB.getCurrentFiscalYearCode());
             } else {
                 adminEJB.checkOfficeCode(rrr.getOfficeCode());
                 statusCode = rrr.getOriginalValue("statusCode");
@@ -528,6 +530,7 @@ public class AdministrativeEJB extends AbstractEJB
                     Rrr newRrr = createUpdateRrrByRrrLoc(null, pendingRrrLoc);
                     newRrr.setBaUnitId(rrr.getBaUnitId());
                     newRrr.setOfficeCode(rrr.getOfficeCode());
+                    newRrr.setFiscalYearCode(adminEJB.getCurrentFiscalYearCode());
                     newRrr.setNr(rrr.getNr());
                     newRrrs.add(newRrr);
                     hasChanges = true;

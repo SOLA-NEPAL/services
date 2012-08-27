@@ -1,5 +1,6 @@
 package org.sola.services.ejb.administrative.repository.entities;
 
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -35,7 +36,9 @@ public class Loc extends AbstractVersionedEntity {
     private String tmpPanaNo;
     @Column(name = "office_code")
     private String officeCode;
-
+    @Column(name="creation_date", insertable=false, updatable=false)
+    private Date creationDate;
+    
     public Loc() {
         super();
     }
@@ -79,5 +82,13 @@ public class Loc extends AbstractVersionedEntity {
 
     public void setTmpPanaNo(String tmpPanaNo) {
         this.tmpPanaNo = tmpPanaNo;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 }

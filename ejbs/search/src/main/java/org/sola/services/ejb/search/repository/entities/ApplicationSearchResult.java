@@ -119,6 +119,8 @@ public class ApplicationSearchResult extends AbstractReadOnlyEntity {
     private Boolean feePaid;
     @Column(name="a.office_code")
     private String officeCode;
+    @Column(name="fy_code")
+    private String fiscalYearCode;
     @Column(name="a.rowversion")
     private int rowVersion;
     
@@ -244,6 +246,14 @@ public class ApplicationSearchResult extends AbstractReadOnlyEntity {
 
     public void setOfficeCode(String officeCode) {
         this.officeCode = officeCode;
+    }
+
+    public String getFiscalYearCode() {
+        return fiscalYearCode;
+    }
+
+    public void setFiscalYearCode(String fiscalYearCode) {
+        this.fiscalYearCode = fiscalYearCode;
     }
 
     public int getRowVersion() {

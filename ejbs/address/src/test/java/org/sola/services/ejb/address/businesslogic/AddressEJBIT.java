@@ -43,6 +43,8 @@ import org.junit.Ignore;
 import org.sola.services.common.EntityAction;
 import org.sola.services.ejb.address.repository.entities.Address;
 import org.sola.services.common.test.AbstractEJBTest;
+import org.sola.services.ejb.address.repository.entities.District;
+import org.sola.services.ejb.address.repository.entities.Vdc;
 
 /**
  *
@@ -162,6 +164,84 @@ public class AddressEJBIT extends AbstractEJBTest {
                 tx.rollback();
                 System.out.println("Failed Transction!");
             }
+        }
+    }
+    
+    @Ignore
+    @Test
+
+    public void testGetDistricts() throws Exception {
+        System.out.println(">>> Loading Districts.");
+        try {
+            AddressEJBLocal instance = (AddressEJBLocal) getEJBInstance(AddressEJB.class.getSimpleName());
+            List<District> result = instance.getCodeEntityList(District.class);
+
+            assertNotNull("Can't find any dDistrict.", result);
+            System.out.println(">>> Found " + result.size() + " districts");
+
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Ignore
+    @Test
+    public void getVdcs() throws Exception {
+        System.out.println("Getting vdcs Names");
+        UserTransaction tx = getUserTransaction();
+
+        try {
+            AddressEJBLocal instance = (AddressEJBLocal) getEJBInstance(AddressEJB.class.getSimpleName());
+            tx.begin();
+            List<Vdc> list = instance.getVdcList();
+            for (Vdc v : list) {
+                 System.out.println(">>> Found " + v.getDisplayValue());
+                System.out.println(">>> Found " + v.getCode());
+            }
+            System.out.println(">>> Found " + list);
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            fail(e.getMessage());
+        }
+    }
+
+    @Ignore
+    @Test
+    public void getVdcByName() throws Exception {
+        System.out.println("Getting vdcs codes");
+        UserTransaction tx = getUserTransaction();
+
+        try {
+             AddressEJBLocal instance = (AddressEJBLocal) getEJBInstance(AddressEJB.class.getSimpleName());
+            tx.begin();
+            Vdc vdc = instance.getVdcByName("Rupakot");
+
+            System.out.println(">>> Found " + vdc.getCode());
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            fail(e.getMessage());
+        }
+    }
+
+    @Ignore
+    @Test
+    public void getVdcByCode() throws Exception {
+        System.out.println("Getting vdcs names");
+        UserTransaction tx = getUserTransaction();
+
+        try {
+             AddressEJBLocal instance = (AddressEJBLocal) getEJBInstance(AddressEJB.class.getSimpleName());
+            tx.begin();
+            Vdc vdc = instance.getVdcByCode("1");
+
+            System.out.println(">>> Found " + vdc.getDisplayValue());
+            tx.commit();
+
+        } catch (Exception e) {
+            tx.rollback();
+            fail(e.getMessage());
         }
     }
 }

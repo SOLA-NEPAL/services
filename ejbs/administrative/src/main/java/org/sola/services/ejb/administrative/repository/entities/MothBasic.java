@@ -4,6 +4,7 @@
  */
 package org.sola.services.ejb.administrative.repository.entities;
 
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -11,7 +12,7 @@ import org.sola.services.common.repository.ChildEntity;
 import org.sola.services.common.repository.ExternalEJB;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
 import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.Vdc;
+import org.sola.services.ejb.address.repository.entities.Vdc;
 
 /**
  *
@@ -28,10 +29,10 @@ public class MothBasic extends AbstractVersionedEntity {
     private String vdcCode;
     @Column(name = "moth_luj")
     private String mothLuj;
-    @Column(name = "financial_year")
-    private String financialYear;
     @Column(name = "office_code")
     private String officeCode;
+    @Column(name="creation_date", insertable=false, updatable=false)
+    private Date creationDate;
     @ExternalEJB(ejbLocalClass = AdminEJBLocal.class, loadMethod = "getVdcByCode")
     @ChildEntity(childIdField = "vdcCode")
     private Vdc vdc;
@@ -40,12 +41,12 @@ public class MothBasic extends AbstractVersionedEntity {
         super();
     }
 
-    public void setFinancialYear(String financialYear) {
-        this.financialYear = financialYear;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
-    public String getFinancialYear() {
-        return financialYear;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public String getOfficeCode() {

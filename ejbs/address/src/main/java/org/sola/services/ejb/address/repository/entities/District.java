@@ -1,10 +1,10 @@
-package org.sola.services.ejbs.admin.businesslogic.repository.entities;
+package org.sola.services.ejb.address.repository.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
 import org.sola.services.common.repository.entities.AbstractCodeEntity;
 
-@Table(name = "district", schema = "system")
+@Table(name = "district", schema = "address")
 public class District extends AbstractCodeEntity {
 
     @Column(name = "zone_code")

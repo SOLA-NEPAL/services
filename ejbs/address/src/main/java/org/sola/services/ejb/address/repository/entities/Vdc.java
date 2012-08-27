@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.sola.services.ejbs.admin.businesslogic.repository.entities;
+package org.sola.services.ejb.address.repository.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
@@ -12,7 +12,7 @@ import org.sola.services.common.repository.entities.AbstractCodeEntity;
  *
  * @author KumarKhadka
  */
-@Table(name = "vdc", schema = "system")
+@Table(name = "vdc", schema = "address")
 public class Vdc extends AbstractCodeEntity {
     
     public static final String VDC_NAME_PARAM = "displayValue";

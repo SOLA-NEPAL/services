@@ -63,6 +63,10 @@ public class ApplicationProperty extends AbstractVersionedEntity {
     private boolean verifiedLocation;
     @Column(name = "ba_unit_id")
     private String baUnitId;
+    @Column(name="moth_no")
+    private String mothNo;
+    @Column(name="page_no")
+    private String pageNo;
 
     public ApplicationProperty() {
         super();
@@ -140,5 +144,20 @@ public class ApplicationProperty extends AbstractVersionedEntity {
     public void setVerifiedLocation(boolean verifiedLocation) {
         this.verifiedLocation = verifiedLocation;
     }
-  
+
+    public String getMothNo() {
+        return mothNo;
+    }
+
+    public void setMothNo(String mothNo) {
+        this.mothNo = mothNo;
+    }
+
+    public String getPageNo() {
+        return pageNo;
+    }
+
+    public void setPageNo(String pageNo) {
+        this.pageNo = pageNo;
+    }
 }
