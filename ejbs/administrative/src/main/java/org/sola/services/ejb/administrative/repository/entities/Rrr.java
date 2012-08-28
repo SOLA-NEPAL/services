@@ -78,6 +78,8 @@ public class Rrr extends AbstractVersionedEntity {
     private String baUnitId;
     @Column(name = "nr")
     private String nr;
+    @Column(name = "registration_number")
+    private String registrationNumber;
     @Column(name = "sn")
     private String sn;
     @Column(name = "type_code")
@@ -104,7 +106,7 @@ public class Rrr extends AbstractVersionedEntity {
     private String locId;
     @Column(name = "office_code", updatable = false)
     private String officeCode;
-    @Column(name="fy_code", updatable=false)
+    @Column(name = "fy_code", updatable = false)
     private String fiscalYearCode;
     @Column(name = "is_terminating")
     private boolean terminating;
@@ -136,12 +138,18 @@ public class Rrr extends AbstractVersionedEntity {
     private String tenancyTypeCode;
     @Column(name = "owner_type_code")
     private String ownerTypeCode;
-    @Column(name = "share_type_code")
+//    @Column(name="ownership_type_code")    
+//    private String ownerShipTypeCode;    
+    @Column(name = "share_type_code")//should remove
     private String shareTypeCode;
     @Column(name = "bundle_number")
     private String bundleNumber;
     @Column(name = "bundle_page_no")
     private String bundlePageNo;
+    @Column(name = "valuation_amount")
+    private double valuationAmount;
+    @Column(name = "tax_amount")
+    private double taxAmount;
     // Other fields
     private Boolean locked = null;
 
@@ -377,6 +385,30 @@ public class Rrr extends AbstractVersionedEntity {
 
     public void setShareTypeCode(String shareTypeCode) {
         this.shareTypeCode = shareTypeCode;
+    }
+
+    public String getRegistrationNumber() {
+        return registrationNumber;
+    }
+
+    public void setRegistrationNumber(String registrationNumber) {
+        this.registrationNumber = registrationNumber;
+    }
+
+    public double getValuationAmount() {
+        return valuationAmount;
+    }
+
+    public void setValuationAmount(double valuationAmount) {
+        this.valuationAmount = valuationAmount;
+    }
+
+    public double getTaxAmount() {
+        return taxAmount;
+    }
+
+    public void setTaxAmount(double taxAmount) {
+        this.taxAmount = taxAmount;
     }
 
     @Override
