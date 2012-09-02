@@ -84,11 +84,8 @@ public class AddressEJB extends AbstractEJB implements AddressEJBLocal {
     }
 
     @Override
-    public Vdc getVdcByCode(String vdcCode) {
-        Map params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_WHERE_PART, Vdc.GET_BY_VDC_CODE);
-        params.put(Vdc.VDC_CODE_PARAM, vdcCode);
-        return getRepository().getEntity(Vdc.class, params);
+    public Vdc getVdcByCode(String languageCode, String vdcCode) {
+        return getRepository().getCode(Vdc.class, vdcCode, languageCode);
     }
 
     @Override

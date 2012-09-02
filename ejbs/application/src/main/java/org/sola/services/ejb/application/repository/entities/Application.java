@@ -38,6 +38,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.sola.services.common.repository.AccessFunctions;
 import org.sola.services.common.repository.ChildEntity;
 import org.sola.services.common.repository.ChildEntityList;
 import org.sola.services.common.repository.ExternalEJB;
@@ -45,6 +46,8 @@ import org.sola.services.common.repository.RepositoryUtility;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
 import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
 import org.sola.services.ejb.party.repository.entities.Party;
+import org.sola.services.ejb.search.businesslogic.SearchEJBLocal;
+import org.sola.services.ejb.search.repository.entities.BaUnitSearchResult;
 import org.sola.services.ejb.source.businesslogic.SourceEJBLocal;
 import org.sola.services.ejb.source.repository.entities.Source;
 import org.sola.services.ejb.system.br.Result;
@@ -85,17 +88,25 @@ public class Application extends AbstractVersionedEntity {
     private BigDecimal servicesFee;
     @Column(name = "tax")
     private BigDecimal tax;
-    @Column(name = "total_fee")
-    private BigDecimal totalFee;
+    @Column(name = "valuation_amount")
+    private BigDecimal valuationAmount;
     @Column(name = "total_amount_paid")
     private BigDecimal totalAmountPaid;
     @Column(name = "fee_paid")
     private boolean feePaid;
+    @Column(name="receipt_number")
+    private String receiptNumber;
+    @Column(name="receipt_date")
+    private Date receiptDate;
+    @Column(name="payment_remarks")
+    private String paymentRemarks;
     @Column(name="office_code", updatable=false)
     private String officeCode;
     @Column(name="fy_code", updatable=false)
     private String fiscalYearCode;
-    
+    @Column(name="status_change_time", updatable=false, insertable=false)
+    @AccessFunctions(onSelect="application.f_get_application_status_change_date(id)")
+    private Date statusChangeDate;
     @ExternalEJB(ejbLocalClass = PartyEJBLocal.class, loadMethod = "getParty")
     @ChildEntity(childIdField = "contactPersonId",readOnly=true)
     private Party contactPerson;
@@ -104,8 +115,10 @@ public class Application extends AbstractVersionedEntity {
     private Party agent;
     @ChildEntityList(parentIdField = "applicationId")
     private List<Service> serviceList;
-    @ChildEntityList(parentIdField = "applicationId")
-    private List<ApplicationProperty> propertyList;
+    @ExternalEJB(ejbLocalClass = SearchEJBLocal.class, loadMethod = "searchBaUnitsByIds")
+    @ChildEntityList(parentIdField = "applicationId", childIdField = "baUnitId",
+    manyToManyClass = ApplicationProperty.class, readOnly=true)
+    private List<BaUnitSearchResult> propertyList;
     @ExternalEJB(ejbLocalClass = SourceEJBLocal.class,
     loadMethod = "getSources", saveMethod = "saveSource")
     @ChildEntityList(parentIdField = "applicationId", childIdField = "sourceId",
@@ -250,12 +263,44 @@ public class Application extends AbstractVersionedEntity {
         this.totalAmountPaid = totalAmountPaid;
     }
 
-    public BigDecimal getTotalFee() {
-        return totalFee;
+    public BigDecimal getValuationAmount() {
+        return valuationAmount;
     }
 
-    public void setTotalFee(BigDecimal totalFee) {
-        this.totalFee = totalFee;
+    public void setValuationAmount(BigDecimal valuationAmount) {
+        this.valuationAmount = valuationAmount;
+    }
+
+    public String getPaymentRemarks() {
+        return paymentRemarks;
+    }
+
+    public void setPaymentRemarks(String paymentRemarks) {
+        this.paymentRemarks = paymentRemarks;
+    }
+
+    public Date getReceiptDate() {
+        return receiptDate;
+    }
+
+    public void setReceiptDate(Date receiptDate) {
+        this.receiptDate = receiptDate;
+    }
+
+    public String getReceiptNumber() {
+        return receiptNumber;
+    }
+
+    public Date getStatusChangeDate() {
+        return statusChangeDate;
+    }
+
+    public void setStatusChangeDate(Date statusChangeDate) {
+        this.statusChangeDate = statusChangeDate;
+    }
+
+    public void setReceiptNumber(String receiptNumber) {
+        this.receiptNumber = receiptNumber;
     }
 
     public Party getAgent() {
@@ -280,12 +325,12 @@ public class Application extends AbstractVersionedEntity {
         }
     }
 
-    public List<ApplicationProperty> getPropertyList() {
-        propertyList = propertyList == null ? new ArrayList<ApplicationProperty>() : propertyList;
+    public List<BaUnitSearchResult> getPropertyList() {
+        propertyList = propertyList == null ? new ArrayList<BaUnitSearchResult>() : propertyList;
         return propertyList;
     }
 
-    public void setPropertyList(List<ApplicationProperty> propertyList) {
+    public void setPropertyList(List<BaUnitSearchResult> propertyList) {
         this.propertyList = propertyList;
     }
 

@@ -234,7 +234,7 @@ public class AddressEJBIT extends AbstractEJBTest {
         try {
              AddressEJBLocal instance = (AddressEJBLocal) getEJBInstance(AddressEJB.class.getSimpleName());
             tx.begin();
-            Vdc vdc = instance.getVdcByCode("1");
+            Vdc vdc = instance.getVdcByCode("", "1");
 
             System.out.println(">>> Found " + vdc.getDisplayValue());
             tx.commit();

@@ -210,48 +210,6 @@ public class SearchEJBIT extends AbstractEJBTest {
     /**
      * Test of GetPropertyVerifier method of class SearchEJB.
      */
-    @Ignore
-    @Test
-    public void testGetPropertyVerifier() throws Exception {
-        if (skipIntegrationTest()) {
-            return;
-        }
-        System.out.println("getPropertyVerifier-With parameters");
-        SearchEJBLocal instance = (SearchEJBLocal) getEJBInstance(SearchEJB.class.getSimpleName());
-        String firstPart = "27-9-5";
-        String lastPart = "5";
-        PropertyVerifier result = instance.getPropertyVerifier("", firstPart, lastPart);
-        if (result != null) {
-            System.out.println("ba unit found: " + result.toString());
-        } else {
-            System.out.println("Result: nothing returned");
-        }
-    }
-
-    /**
-     * Test of GetPropertyVerifier method of class SearchEJB.
-     */
-    @Test
-    @Ignore
-    public void testGetPropertyVerifierNullParameters() throws Exception {
-        if (skipIntegrationTest()) {
-            return;
-        }
-        System.out.println("getPropertyVerifier-With null parameters");
-        SearchEJBLocal instance = (SearchEJBLocal) getEJBInstance(SearchEJB.class.getSimpleName());
-        String firstPart = null;
-        String lastPart = "6629";
-        PropertyVerifier result = instance.getPropertyVerifier("", firstPart, lastPart);
-        if (result != null) {
-            System.out.println("ba unit found: " + result.toString());
-        } else {
-            System.out.println("Result: nothing returned");
-        }
-    }
-
-    /**
-     * Test of GetPropertyVerifier method of class SearchEJB.
-     */
     @Test
     @Ignore
     public void testGetSpatialTest() throws Exception {

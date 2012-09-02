@@ -90,7 +90,6 @@ public class GenericTranslatorTest {
         assertEquals(appTO.getServicesFee(), outApp.getServicesFee());
         assertEquals(appTO.getTax(), outApp.getTax());
         assertEquals(appTO.getTotalAmountPaid(), outApp.getTotalAmountPaid());
-        assertEquals(appTO.getTotalFee(), outApp.getTotalFee());
 
         if (app != null) {
             // assertEquals(app.getChangeAction(), outApp.getChangeAction());
@@ -319,7 +318,6 @@ public class GenericTranslatorTest {
         assertEquals(app.getServicesFee(), appTO.getServicesFee());
         assertEquals(app.getTax(), appTO.getTax());
         assertEquals(app.getTotalAmountPaid(), appTO.getTotalAmountPaid());
-        assertEquals(app.getTotalFee(), appTO.getTotalFee());
 
         if (hasAgent) {
             assertNotNull(appTO.getAgent());

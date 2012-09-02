@@ -57,6 +57,7 @@ import org.sola.services.common.test.AbstractEJBTest;
 import org.sola.services.ejb.party.businesslogic.PartyEJB;
 import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
 import org.sola.services.ejb.party.repository.entities.Party;
+import org.sola.services.ejb.search.repository.entities.BaUnitSearchResult;
 
 /**
  *
@@ -143,16 +144,13 @@ public class ApplicationEJBIT extends AbstractEJBTest {
 
 
         //Adding properties to the application
-        ApplicationProperty applicationProperty1 = new ApplicationProperty();
-        applicationProperty1.setNameFirstpart("first_part1");
-        applicationProperty1.setNameLastpart("last_part1");
-        applicationProperty1.setArea(new BigDecimal("0.23"));
-        applicationProperty1.setTotalValue(new BigDecimal("10000"));
+        BaUnitSearchResult applicationProperty1 = new BaUnitSearchResult();
+        applicationProperty1.setNameFirstPart("first_part1");
+        applicationProperty1.setNameLastPart("last_part1");
 
-        ApplicationProperty applicationProperty2 = new ApplicationProperty();
-        applicationProperty2.setNameFirstpart("first_part2");
-        applicationProperty2.setNameLastpart("last_part2");
-        applicationProperty2.setTotalValue(new BigDecimal("12300"));
+        BaUnitSearchResult applicationProperty2 = new BaUnitSearchResult();
+        applicationProperty2.setNameFirstPart("first_part2");
+        applicationProperty2.setNameLastPart("last_part2");
 
 //        application.addProperty(applicationProperty1);
 //        application.addProperty(applicationProperty2);
@@ -180,9 +178,6 @@ public class ApplicationEJBIT extends AbstractEJBTest {
             applicationId = result.getId();
             appRowVersion = result.getRowVersion();
             System.out.println("ApplicationId = " + applicationId + ", RowVersion = " + appRowVersion);
-
-            // Check the fee calculation
-            assertEquals("Fee Calculation incorrect: ", new BigDecimal("1688.82"), result.getTotalFee());
             tx.commit();
         } finally {
             if (tx.getStatus() != Status.STATUS_NO_TRANSACTION) {
@@ -411,7 +406,7 @@ public class ApplicationEJBIT extends AbstractEJBTest {
                 if (result.getPropertyList() != null) {
                     System.out.println("Number of properties=" + result.getPropertyList().size());
                     if (result.getPropertyList().size() > 0) {
-                        ApplicationProperty appProp = result.getPropertyList().get(0);
+                        BaUnitSearchResult appProp = result.getPropertyList().get(0);
                        // appProp.setChangeAction('d');
                         System.out.println("Changed change action status to delete ");
                     }

@@ -60,6 +60,7 @@ import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
 import org.sola.services.ejb.party.businesslogic.PartyEJB;
 import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
 import org.sola.services.ejb.party.repository.entities.Party;
+import org.sola.services.ejb.search.repository.entities.BaUnitSearchResult;
 import org.sola.services.ejb.source.repository.entities.Source;
 
 /**
@@ -150,15 +151,15 @@ public class Development extends AbstractEJBTest{
 
         System.out.println("Add properties");
         //Adding properties to the application
-        ApplicationProperty applicationProperty1 = new ApplicationProperty();
-        applicationProperty1.setNameFirstpart("first_part1");
-        applicationProperty1.setNameLastpart("last_part1");
+        BaUnitSearchResult applicationProperty1 = new BaUnitSearchResult();
+        applicationProperty1.setNameFirstPart("first_part1");
+        applicationProperty1.setNameLastPart("last_part1");
 
-        ApplicationProperty applicationProperty2 = new ApplicationProperty();
-        applicationProperty2.setNameFirstpart("first_part2");
-        applicationProperty2.setNameLastpart("last_part2");
+        BaUnitSearchResult applicationProperty2 = new BaUnitSearchResult();
+        applicationProperty2.setNameFirstPart("first_part2");
+        applicationProperty2.setNameLastPart("last_part2");
 
-        List<ApplicationProperty> props = new ArrayList<ApplicationProperty>();
+        List<BaUnitSearchResult> props = new ArrayList<BaUnitSearchResult>();
         props.add(applicationProperty1);
         props.add(applicationProperty2);
         application.setPropertyList(props);

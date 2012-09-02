@@ -56,7 +56,6 @@ import org.sola.services.ejb.search.repository.entities.ConfigMapLayer;
 import org.sola.services.ejb.search.repository.entities.GenericResult;
 import org.sola.services.ejb.search.repository.entities.PartySearchParams;
 import org.sola.services.ejb.search.repository.entities.PartySearchResult;
-import org.sola.services.ejb.search.repository.entities.PropertyVerifier;
 import org.sola.services.ejb.search.repository.SearchSqlProvider;
 import org.sola.services.ejb.search.repository.entities.Setting;
 import org.sola.services.ejb.search.repository.entities.SourceSearchParams;
@@ -171,19 +170,6 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
             }
         }
         return result;
-    }
-    
-    @Override
-    public PropertyVerifier getPropertyVerifier(String applicationNumber, String firstPart, String lastPart) {
-        if (applicationNumber == null) {
-            applicationNumber = "";
-        }
-        Map params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_QUERY, PropertyVerifier.QUERY_VERIFY_SQL);
-        params.put(PropertyVerifier.QUERY_PARAM_APPLICATION_NUMBER, applicationNumber);
-        params.put(PropertyVerifier.QUERY_PARAM_FIRST_PART, firstPart);
-        params.put(PropertyVerifier.QUERY_PARAM_LAST_PART, lastPart);
-        return getRepository().getEntity(PropertyVerifier.class, params);
     }
     
     @Override
@@ -555,5 +541,36 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         params.put(ParcelSearchResult.WARD_NO_PARAM, searchParams.getWardNo());
         //params.put(ParcelSearchResult.MAP_SHEET_CODE_PARAM, searchParams.getMapSheetCode());
         return getRepository().getEntityList(ParcelSearchResult.class, params);
+    }
+
+    @Override
+    public BaUnitSearchResult searchBaUnitById(String baUnitId) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_BY_ID_QUERY);
+        params.put(BaUnitSearchResult.SEARCH_PARAM_BA_UNIT_ID, baUnitId);
+        params.put(BaUnitSearchResult.SEARCH_PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntity(BaUnitSearchResult.class, params);
+    }
+
+    @Override
+    public List<BaUnitSearchResult> searchBaUnitsByIds(List<String> ids) {
+        if(ids==null || ids.size() < 1){
+            return new ArrayList<BaUnitSearchResult>();
+        }
+        
+        Map params = new HashMap<String, Object>();
+        String query = BaUnitSearchResult.SELECT_PART + "WHERE b.office_code = #{" 
+                + BaUnitSearchResult.SEARCH_PARAM_OFFICE_CODE + "} AND b.id IN (";
+        int i = 0;
+        for (String id : ids) {
+            query = query + "#{idVal" + i + "}, ";
+            params.put("idVal" + i, id);
+            i++;
+        }
+        query = query.substring(0, query.length() - 2) + ")";
+        
+        params.put(CommonSqlProvider.PARAM_QUERY, query);
+        params.put(BaUnitSearchResult.SEARCH_PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(BaUnitSearchResult.class, params);
     }
 }

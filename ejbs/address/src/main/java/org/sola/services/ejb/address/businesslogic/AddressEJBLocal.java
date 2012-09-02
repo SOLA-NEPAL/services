@@ -58,9 +58,9 @@ public interface AddressEJBLocal extends AbstractEJBLocal {
     List<Vdc> getVdcList();
 
     /**
-     * RReturns Vdc according to given code.
+     * Returns Vdc according to given code.
      */
-    Vdc getVdcByCode(String vdcCode);
+    Vdc getVdcByCode(String languageCode, String vdcCode);
 
     /**
      * Returns Vdc according to given Name.

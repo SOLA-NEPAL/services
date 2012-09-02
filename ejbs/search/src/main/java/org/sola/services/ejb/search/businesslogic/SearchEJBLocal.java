@@ -49,7 +49,6 @@ import org.sola.services.ejb.search.repository.entities.ParcelSearchParams;
 import org.sola.services.ejb.search.repository.entities.ParcelSearchResult;
 import org.sola.services.ejb.search.repository.entities.PartySearchParams;
 import org.sola.services.ejb.search.repository.entities.PartySearchResult;
-import org.sola.services.ejb.search.repository.entities.PropertyVerifier;
 import org.sola.services.ejb.search.repository.entities.SourceSearchParams;
 import org.sola.services.ejb.search.repository.entities.SourceSearchResult;
 import org.sola.services.ejb.search.repository.entities.UserSearchParams;
@@ -65,8 +64,6 @@ import org.sola.services.ejb.search.spatial.ResultForSelectionInfo;
  */
 @Local
 public interface SearchEJBLocal extends AbstractEJBLocal {
-
-    PropertyVerifier getPropertyVerifier(String applicationNumber, String firstPart, String lastPart);
 
     GenericResult getGenericResultList(String queryName, Map params);
 
@@ -102,6 +99,10 @@ public interface SearchEJBLocal extends AbstractEJBLocal {
     List<BrSearchResult> searchBr(BrSearchParams searchParams, String lang);
 
     List<BaUnitSearchResult> searchBaUnits(BaUnitSearchParams searchParams);
+    
+    BaUnitSearchResult searchBaUnitById(String baUnitId);
+    
+    List<BaUnitSearchResult> searchBaUnitsByIds(List<String> ids);
 
     List<DynamicQuery> getQueryListAll();
 

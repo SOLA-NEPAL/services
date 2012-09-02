@@ -159,28 +159,11 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
             }
         }
 
-        calculateFeesAndDates(application);
+        calculateCompletionDates(application);
         treatApplicationSources(application);
         application.getContactPerson().setTypeCode("naturalPerson");
         application = getRepository().saveEntity(application);
 
-        return application;
-    }
-
-    /**
-     * Calculates the lodgement fees as well as the expected completions dates
-     * for each service as well as the application.
-     *
-     * @param application
-     * @return
-     */
-    @Override
-    public Application calculateFeesAndDates(Application application) {
-        if (application == null) {
-            return application;
-        }
-        calculateCompletionDates(application);
-        calculateLodgementFees(application);
         return application;
     }
 
@@ -226,76 +209,6 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
     }
 
     /**
-     * Calculates the fees applicable for lodgement based on the services that
-     * have been associated with the application. Values on the application are
-     * updated directly.
-     *
-     * @param application
-     */
-    private void calculateLodgementFees(Application application) {
-
-        // Get the total area and the total value of the properties on the application
-        BigDecimal totalArea = BigDecimal.ZERO;
-        Money totalValue = new Money(BigDecimal.ZERO);
-        if (application.getPropertyList() != null) {
-            for (ApplicationProperty prop : application.getPropertyList()) {
-                if (prop.getArea() != null) {
-                    totalArea = totalArea.add(prop.getArea().abs());
-                }
-                if (prop.getTotalValue() != null) {
-                    Money propertyValue = new Money(prop.getTotalValue().abs());
-                    totalValue = totalValue.plus(propertyValue);
-                }
-            }
-        }
-
-        // Calculate the fee for each service and the total services fee for the application.
-        // Uses the money type to ensure all calculations yeild consisent results. Note that the
-        // Money type applies Bankers Rounding to all calculations. 
-
-        //Elton: Not important in this context what language the request types are asked
-        List<RequestType> requestTypes = this.getRequestTypes("en");
-        Money servicesFeeTotal = new Money(BigDecimal.ZERO);
-        if (application.getServiceList() != null) {
-            for (Service ser : application.getServiceList()) {
-                Money baseFee = new Money(BigDecimal.ZERO);
-                Money areaFee = new Money(BigDecimal.ZERO);
-                Money valueFee = new Money(BigDecimal.ZERO);
-                if (requestTypes != null) {
-                    for (RequestType type : requestTypes) {
-                        if (ser.getRequestTypeCode().equals(type.getCode())) {
-                            if (type.getBaseFee() != null) {
-                                baseFee = new Money(type.getBaseFee().abs());
-                            }
-                            if (type.getAreaBaseFee() != null) {
-                                areaFee = new Money(type.getAreaBaseFee().abs()).times(totalArea);
-                            }
-                            if (type.getValueBaseFee() != null) {
-                                valueFee = totalValue.times(type.getValueBaseFee().abs());
-                            }
-                            break;
-                        }
-                    }
-                }
-                ser.setBaseFee(baseFee.getAmount());
-                ser.setAreaFee(areaFee.getAmount());
-                ser.setValueFee(valueFee.getAmount());
-                servicesFeeTotal = servicesFeeTotal.plus(baseFee).plus(areaFee).plus(valueFee);
-            }
-        }
-
-        // Calculate the tax and the total fee for the application.
-        application.setServicesFee(servicesFeeTotal.getAmount());
-        Money taxAmount = servicesFeeTotal.times(systemEJB.getTaxRate());
-        application.setTax(taxAmount.getAmount());
-        application.setTotalFee((servicesFeeTotal.plus(taxAmount)).getAmount());
-
-        if (application.getTotalAmountPaid() == null) {
-            application.setTotalAmountPaid(BigDecimal.ZERO);
-        }
-    }
-
-    /**
      * Saves changes to the application and child objects. <p> Note that this
      * method should only be used after the application record has been created
      * in the database. Merge by itself will insert a new Application record,
@@ -333,8 +246,6 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
                 }
             }
         }
-
-        calculateLodgementFees(application);
 
         treatApplicationSources(application);
         application = getRepository().saveEntity(application);

@@ -64,8 +64,6 @@ public interface ApplicationEJBLocal extends AbstractEJBLocal {
 
     List<ApplicationLog> getUserActions(String username, Date fromTime, Date toTime);
 
-    Application calculateFeesAndDates(Application application);
-
     List<ApplicationStatusType> getApplicationStatusTypes(String languageCode);
 
     List<ApplicationActionType> getApplicationActionTypes(String languageCode);

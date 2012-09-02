@@ -45,40 +45,14 @@ import org.sola.services.common.repository.entities.AbstractVersionedEntity;
 public class ApplicationProperty extends AbstractVersionedEntity {
 
     @Id
-    @Column(name = "id")
-    private String id;
     @Column(name = "application_id")
     private String applicationId;
-    @Column(name = "name_firstpart")
-    private String nameFirstpart;
-    @Column(name = "name_lastpart")
-    private String nameLastpart;
-    @Column(name = "area")
-    private BigDecimal area;
-    @Column(name = "total_value")
-    private BigDecimal totalValue;
-    @Column(name = "verified_exists")
-    private boolean verifiedExists;
-    @Column(name = "verified_location")
-    private boolean verifiedLocation;
+    @Id
     @Column(name = "ba_unit_id")
     private String baUnitId;
-    @Column(name="moth_no")
-    private String mothNo;
-    @Column(name="page_no")
-    private String pageNo;
 
     public ApplicationProperty() {
         super();
-    }
-
-    public String getId() {
-        id = id == null ? generateId() : id;
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getApplicationId() {
@@ -89,75 +63,11 @@ public class ApplicationProperty extends AbstractVersionedEntity {
         this.applicationId = applicationId;
     }
 
-    public BigDecimal getArea() {
-        return area;
-    }
-
-    public void setArea(BigDecimal area) {
-        this.area = area;
-    }
-
     public String getBaUnitId() {
         return baUnitId;
     }
 
     public void setBaUnitId(String baUnitId) {
         this.baUnitId = baUnitId;
-    }
-
-    public String getNameFirstpart() {
-        return nameFirstpart;
-    }
-
-    public void setNameFirstpart(String nameFirstpart) {
-        this.nameFirstpart = nameFirstpart;
-    }
-
-    public String getNameLastpart() {
-        return nameLastpart;
-    }
-
-    public void setNameLastpart(String nameLastpart) {
-        this.nameLastpart = nameLastpart;
-    }
-
-    public BigDecimal getTotalValue() {
-        return totalValue;
-    }
-
-    public void setTotalValue(BigDecimal totalValue) {
-        this.totalValue = totalValue;
-    }
-
-    public boolean isVerifiedExists() {
-        return verifiedExists;
-    }
-
-    public void setVerifiedExists(boolean verifiedExists) {
-        this.verifiedExists = verifiedExists;
-    }
-
-    public boolean isVerifiedLocation() {
-        return verifiedLocation;
-    }
-
-    public void setVerifiedLocation(boolean verifiedLocation) {
-        this.verifiedLocation = verifiedLocation;
-    }
-
-    public String getMothNo() {
-        return mothNo;
-    }
-
-    public void setMothNo(String mothNo) {
-        this.mothNo = mothNo;
-    }
-
-    public String getPageNo() {
-        return pageNo;
-    }
-
-    public void setPageNo(String pageNo) {
-        this.pageNo = pageNo;
     }
 }

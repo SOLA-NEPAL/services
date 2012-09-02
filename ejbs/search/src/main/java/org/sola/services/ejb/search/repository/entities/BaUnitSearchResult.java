@@ -29,27 +29,45 @@ package org.sola.services.ejb.search.repository.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
-import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
+import org.sola.services.common.repository.entities.AbstractEntity;
 
-public class BaUnitSearchResult extends AbstractReadOnlyEntity {
+public class BaUnitSearchResult extends AbstractEntity {
 
     public static final String SEARCH_PARAM_OFFICE_CODE = "officeCode";
+    public static final String SEARCH_PARAM_BA_UNIT_ID = "baUnitId";
     
-    public static final String SEARCH_QUERY =
+    public static final String SELECT_PART = 
             "SELECT b.id, b.name, b.name_firstpart, b.name_lastpart, b.status_code, b.office_code, b.fy_code, "
             + "(SELECT string_agg(COALESCE(p.name, '') || ' ' || COALESCE(p.last_name, ''), '::::') "
             + "FROM administrative.rrr rrr INNER JOIN (administrative.party_for_rrr pr "
             + "INNER JOIN party.party p ON pr.party_id = p.id) ON rrr.id = pr.rrr_id "
-            + "WHERE rrr.status_code = 'current' AND "
-            + "(POSITION(LOWER(#{ownerName}) IN LOWER(COALESCE(p.name, ''))) > 0 OR "
-            + "POSITION(LOWER(#{ownerName}) IN LOWER(COALESCE(p.last_name, ''))) > 0) AND rrr.ba_unit_id = b.id) AS rightholders "
-            + "FROM administrative.ba_unit b "
+            + "WHERE rrr.status_code = 'current' AND rrr.ba_unit_id = b.id) AS rightholders, "
+            + "l.id as loc_id, m.id as moth_id, l.pana_no as pana_no, m.mothluj_no as moth_no, a.ward_no, "
+            + "a.vdc_code, co.parcel_no, msh.map_number, co.map_sheet_id "
+            + "FROM (administrative.ba_unit b LEFT JOIN (administrative.rrr r inner join "
+            + "(administrative.loc l INNER JOIN administrative.moth m on l.moth_id=m.id) on r.loc_id=l.id) "
+            + "ON b.id = r.ba_unit_id and r.status_code='current') LEFT JOIN "
+            + "((cadastre.cadastre_object co LEFT JOIN cadastre.map_sheet msh on co.map_sheet_id=msh.id) "
+            + "LEFT JOIN (address.address a INNER JOIN address.vdc vdc on a.vdc_code = vdc.code) "
+            + "on co.address_id = a.id) on b.cadastre_object_id = co.id ";
+    
+//    (SELECT string_agg(COALESCE(p.name, '') || ' ' || COALESCE(p.last_name, ''), '::::') "
+//            + "FROM administrative.rrr rrr INNER JOIN (administrative.party_for_rrr pr "
+//            + "INNER JOIN party.party p ON pr.party_id = p.id) ON rrr.id = pr.rrr_id "
+//            + "WHERE rrr.status_code = 'current' AND "
+//            + "(POSITION(LOWER(#{ownerName}) IN LOWER(COALESCE(p.name, ''))) > 0 OR "
+//            + "POSITION(LOWER(#{ownerName}) IN LOWER(COALESCE(p.last_name, ''))) > 0) AND rrr.ba_unit_id = b.id)"
+    
+    public static final String SEARCH_QUERY = SELECT_PART
             + "WHERE POSITION(LOWER(#{nameFirstPart}) IN LOWER(COALESCE(b.name_firstpart, ''))) > 0 "
             + "AND POSITION(LOWER(#{nameLastPart}) IN LOWER(COALESCE(b.name_lastpart, ''))) > 0 "
-            + "AND b.office_code = #{" + SEARCH_PARAM_OFFICE_CODE + "}"
+            + "AND b.office_code = #{" + SEARCH_PARAM_OFFICE_CODE + "} AND b.status_code != 'pending' "
             + "ORDER BY b.name_firstpart, b.name_lastpart "
             + "LIMIT 101";
     
+    public static final String SEARCH_BY_ID_QUERY = SELECT_PART
+            + "WHERE b.id = #{" + SEARCH_PARAM_BA_UNIT_ID + "} AND b.office_code = #{" + SEARCH_PARAM_OFFICE_CODE + "}";
+        
     @Id
     @Column
     private String id;
@@ -67,7 +85,25 @@ public class BaUnitSearchResult extends AbstractReadOnlyEntity {
     private String officeCode;
     @Column(name="fy_code")
     private String fiscalYearCode;
-
+    @Column(name = "loc_id")
+    private boolean locId;
+    @Column(name = "moth_id")
+    private boolean mothId;
+    @Column(name = "pana_no")
+    private boolean panaNo;
+    @Column(name = "moth_no")
+    private boolean mothNo;
+    @Column(name="ward_no")
+    private String wardNo;
+    @Column(name="vdc_code")
+    private String vdcCode;
+    @Column(name="parcel_no")
+    private String parcelNo;
+    @Column(name="map_number")
+    private String mapNumber;
+    @Column(name="map_sheet_id")
+    private String mapSheetId;
+    
     public BaUnitSearchResult() {
         super();
     }
@@ -134,5 +170,77 @@ public class BaUnitSearchResult extends AbstractReadOnlyEntity {
 
     public void setFiscalYearCode(String fiscalYearCode) {
         this.fiscalYearCode = fiscalYearCode;
+    }
+
+    public boolean isLocId() {
+        return locId;
+    }
+
+    public void setLocId(boolean locId) {
+        this.locId = locId;
+    }
+
+    public boolean isMothId() {
+        return mothId;
+    }
+
+    public void setMothId(boolean mothId) {
+        this.mothId = mothId;
+    }
+
+    public boolean isMothNo() {
+        return mothNo;
+    }
+
+    public void setMothNo(boolean mothNo) {
+        this.mothNo = mothNo;
+    }
+
+    public boolean isPanaNo() {
+        return panaNo;
+    }
+
+    public void setPanaNo(boolean panaNo) {
+        this.panaNo = panaNo;
+    }
+
+    public String getMapNumber() {
+        return mapNumber;
+    }
+
+    public void setMapNumber(String mapNumber) {
+        this.mapNumber = mapNumber;
+    }
+
+    public String getMapSheetId() {
+        return mapSheetId;
+    }
+
+    public void setMapSheetId(String mapSheetId) {
+        this.mapSheetId = mapSheetId;
+    }
+
+    public String getParcelNo() {
+        return parcelNo;
+    }
+
+    public void setParcelNo(String parcelNo) {
+        this.parcelNo = parcelNo;
+    }
+
+    public String getVdcCode() {
+        return vdcCode;
+    }
+
+    public void setVdcCode(String vdcCode) {
+        this.vdcCode = vdcCode;
+    }
+
+    public String getWardNo() {
+        return wardNo;
+    }
+
+    public void setWardNo(String wardNo) {
+        this.wardNo = wardNo;
     }
 }

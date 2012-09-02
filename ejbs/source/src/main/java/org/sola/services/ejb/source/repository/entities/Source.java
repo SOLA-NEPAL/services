@@ -277,7 +277,7 @@ public class Source extends AbstractVersionedEntity {
 
         if (isNew() && getLaNr() == null) {
             // Assign a generated number to the source if it is not currently set. 
-            //setLaNr(generateSourceNumber());            
+            setLaNr(generateSourceNumber());            
         }
 
         // Call super.preSave after updates to the Source are completed. 

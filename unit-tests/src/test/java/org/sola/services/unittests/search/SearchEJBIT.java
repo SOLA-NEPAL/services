@@ -32,16 +32,8 @@
 package org.sola.services.unittests.search;
 
 import org.junit.After;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
-import org.junit.Test;
-import org.sola.services.boundary.transferobjects.search.PropertyVerifierTO;
-import org.sola.services.common.contracts.GenericTranslator;
 import org.sola.services.common.test.AbstractEJBTest;
-import org.sola.services.ejb.search.businesslogic.SearchEJB;
-import org.sola.services.ejb.search.businesslogic.SearchEJBLocal;
-import org.sola.services.ejb.search.repository.entities.PropertyVerifier;
 
 /**
  *
@@ -63,39 +55,5 @@ public class SearchEJBIT extends AbstractEJBTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of getParty method, of class PartyEJB.
-     */
-    @Test
-    public void testGetVerifyProperty() throws Exception {
-
-        System.out.println("testGetVerifyProperty - Parcel Exists");
-
-        SearchEJBLocal instance = (SearchEJBLocal) getEJBInstance(SEARCH_MODULE_NAME,
-                SearchEJB.class.getSimpleName());
-        String firstPart = "17"; // Samoan data
-        String lastPart = "4841";
-        PropertyVerifier result = instance.getPropertyVerifier("", firstPart, lastPart);
-        if (result != null) {
-            System.out.println("Parcel Exists: " + result.toString());
-            assertFalse(result.isHasLocation());
-            PropertyVerifierTO to = GenericTranslator.toTO(result, PropertyVerifierTO.class);
-            assertFalse(to.isHasLocation());
-        } else {
-            System.out.println("Result: nothing returned - check Samoan data is in DB");
-        }
-
-        System.out.println("testGetVerifyProperty - Parcel Exists with Location");
-        firstPart = "335"; // Samoan data
-        lastPart = "2775";
-        result = instance.getPropertyVerifier("", firstPart, lastPart);
-        if (result != null) {
-            System.out.println("Parcel Exists with Location: " + result.toString());
-            assertTrue(result.isHasLocation());
-            PropertyVerifierTO to = GenericTranslator.toTO(result, PropertyVerifierTO.class);
-            assertTrue(to.isHasLocation());
-        } else {
-            System.out.println("Result: nothing returned - check Samoan data is in DB");
-        }
-    }
+    
 }
