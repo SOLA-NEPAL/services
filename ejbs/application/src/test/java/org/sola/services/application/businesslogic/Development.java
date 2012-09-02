@@ -274,7 +274,6 @@ public class Development extends AbstractEJBTest{
         CadastreObject co = new CadastreObject();
         co.setNameFirstpart(firstPart);
         co.setNameLastpart(lastPart + DateUtility.now());
-        co.setSourceReference("Ref1");
         co.setTypeCode("parcel");
         return co;
     }

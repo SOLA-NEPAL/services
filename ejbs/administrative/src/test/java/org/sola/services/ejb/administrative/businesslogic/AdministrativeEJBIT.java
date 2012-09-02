@@ -188,7 +188,6 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         CadastreObject co = new CadastreObject();
         co.setNameFirstpart(firstPart);
         co.setNameLastpart(DateUtility.now().toString());
-        co.setSourceReference("Ref1");
         co.setTypeCode("parcel");
         return co;
     }
