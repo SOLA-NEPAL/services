@@ -457,7 +457,7 @@ public class AdministrativeEJB extends AbstractEJB
             pendingRrrLoc.setStatusCode(tmpRrr.getStatusCode());
             pendingRrrLoc.setTypeCode(tmpRrr.getTypeCode());
             pendingRrrLoc.setOwnerTypeCode(tmpRrr.getOwnerTypeCode());
-            pendingRrrLoc.setShareTypeCode(tmpRrr.getShareTypeCode());
+            pendingRrrLoc.setShareTypeCode(tmpRrr.getOwnershipTypeCode());
             
             if (tmpRrr.getNotation() != null) {
                 pendingRrrLoc.setNotationText(tmpRrr.getNotation().getNotationText());
@@ -647,7 +647,7 @@ public class AdministrativeEJB extends AbstractEJB
         rrr.setStatusCode(rrrLoc.getStatusCode());
         rrr.setTypeCode(rrrLoc.getTypeCode());
         rrr.setOwnerTypeCode(rrrLoc.getOwnerTypeCode());
-        rrr.setShareTypeCode(rrrLoc.getShareTypeCode());
+        rrr.setOwnershipTypeCode(rrrLoc.getShareTypeCode());
         return rrr;
     }
 
@@ -662,7 +662,7 @@ public class AdministrativeEJB extends AbstractEJB
         rrr2.setRegistrationDate(rrrLoc.getRegistrationDate());
         rrr2.setTypeCode(rrrLoc.getTypeCode());
         rrr2.setOwnerTypeCode(rrrLoc.getOwnerTypeCode());
-        rrr2.setShareTypeCode(rrrLoc.getShareTypeCode());
+        rrr2.setOwnershipTypeCode(rrrLoc.getShareTypeCode());
         if (rrrLoc.getNotationText() != null) {
             BaUnitNotation notation = new BaUnitNotation();
             notation.setNotationText(rrrLoc.getNotationText());
@@ -700,13 +700,13 @@ public class AdministrativeEJB extends AbstractEJB
         }
         
         // Check share type
-        if ((rrr2.getShareTypeCode()!=null && rrr.getShareTypeCode() == null) || 
-                (rrr2.getShareTypeCode()==null && rrr.getShareTypeCode() != null)) {
+        if ((rrr2.getOwnershipTypeCode()!=null && rrr.getOwnershipTypeCode() == null) || 
+                (rrr2.getOwnershipTypeCode()==null && rrr.getOwnershipTypeCode() != null)) {
             return false;
         }
         
-        if (rrr2.getShareTypeCode()!=null && rrr.getShareTypeCode() != null && 
-                !rrr2.getShareTypeCode().equals(rrr.getShareTypeCode())) {
+        if (rrr2.getOwnershipTypeCode()!=null && rrr.getOwnershipTypeCode() != null && 
+                !rrr2.getOwnershipTypeCode().equals(rrr.getOwnershipTypeCode())) {
             return false;
         }
 
@@ -905,8 +905,8 @@ public class AdministrativeEJB extends AbstractEJB
     }
 
     @Override
-    public List<ShareType> getShareTypes(String languageCode) {
-        return getRepository().getCodeList(ShareType.class, languageCode);
+    public List<OwnershipType> getOwnershipTypes(String languageCode) {
+        return getRepository().getCodeList(OwnershipType.class, languageCode);
     }
 
     @Override

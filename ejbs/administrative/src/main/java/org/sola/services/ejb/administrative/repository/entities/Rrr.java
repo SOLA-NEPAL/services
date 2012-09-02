@@ -138,10 +138,8 @@ public class Rrr extends AbstractVersionedEntity {
     private String tenancyTypeCode;
     @Column(name = "owner_type_code")
     private String ownerTypeCode;
-//    @Column(name="ownership_type_code")    
-//    private String ownerShipTypeCode;    
-    @Column(name = "share_type_code")//should remove
-    private String shareTypeCode;
+    @Column(name = "ownership_type_code")
+    private String ownershipTypeCode;
     @Column(name = "bundle_number")
     private String bundleNumber;
     @Column(name = "bundle_page_no")
@@ -379,12 +377,12 @@ public class Rrr extends AbstractVersionedEntity {
         this.ownerTypeCode = ownerTypeCode;
     }
 
-    public String getShareTypeCode() {
-        return shareTypeCode;
+    public String getOwnershipTypeCode() {
+        return ownershipTypeCode;
     }
 
-    public void setShareTypeCode(String shareTypeCode) {
-        this.shareTypeCode = shareTypeCode;
+    public void setOwnershipTypeCode(String ownershipTypeCode) {
+        this.ownershipTypeCode = ownershipTypeCode;
     }
 
     public String getRegistrationNumber() {

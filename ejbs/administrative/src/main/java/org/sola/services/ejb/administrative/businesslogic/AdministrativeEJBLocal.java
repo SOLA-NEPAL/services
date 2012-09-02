@@ -94,7 +94,7 @@ public interface AdministrativeEJBLocal extends AbstractSolaTransactionEJBLocal 
     
     List<OwnerType> getOwnerTypes(String languageCode);
 
-    List<ShareType> getShareTypes(String languageCode);
+    List<OwnershipType> getOwnershipTypes(String languageCode);
 
     List<TenantType> getTenantTypes(String languageCode);
 }
