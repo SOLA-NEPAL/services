@@ -141,7 +141,7 @@ public class CadastreEJBIT extends AbstractEJBTest {
             cobj.setTransactionId("cadastre-transaction");
             cobj.setMapSheetCode("0");
             cobj.setParcelno(12012);
-            cobj.setParcelTypeCode("0");
+            cobj.setLandTypeCode("0");
             //Address add=new Address();
             cobj.setAddressId("e176651e-8bb3-4f77-8218-1d6b20cbe942");
             //cobj.setParcelType(0);

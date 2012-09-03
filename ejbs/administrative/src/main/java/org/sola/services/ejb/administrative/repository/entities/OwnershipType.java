@@ -8,7 +8,7 @@ import org.sola.services.common.repository.entities.AbstractCodeEntity;
  *
  * @author KumarKhadka
  */
-@Table(name = "share_type", schema = "administrative")
+@Table(name = "ownership_type", schema = "administrative")
 @DefaultSorter(sortString = "display_value")
 public class OwnershipType extends AbstractCodeEntity {
     public OwnershipType() {

@@ -145,9 +145,9 @@ public class Rrr extends AbstractVersionedEntity {
     @Column(name = "bundle_page_no")
     private String bundlePageNo;
     @Column(name = "valuation_amount")
-    private double valuationAmount;
+    private BigDecimal valuationAmount;
     @Column(name = "tax_amount")
-    private double taxAmount;
+    private BigDecimal taxAmount;
     // Other fields
     private Boolean locked = null;
 
@@ -393,19 +393,19 @@ public class Rrr extends AbstractVersionedEntity {
         this.registrationNumber = registrationNumber;
     }
 
-    public double getValuationAmount() {
+    public BigDecimal getValuationAmount() {
         return valuationAmount;
     }
 
-    public void setValuationAmount(double valuationAmount) {
+    public void setValuationAmount(BigDecimal valuationAmount) {
         this.valuationAmount = valuationAmount;
     }
 
-    public double getTaxAmount() {
+    public BigDecimal getTaxAmount() {
         return taxAmount;
     }
 
-    public void setTaxAmount(double taxAmount) {
+    public void setTaxAmount(BigDecimal taxAmount) {
         this.taxAmount = taxAmount;
     }
 
