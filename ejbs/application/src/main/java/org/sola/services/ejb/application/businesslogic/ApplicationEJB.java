@@ -107,9 +107,9 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
             for (Source source : application.getSourceList()) {
                 //Elton. New sources must be sure to have LaNr null. So it can be assigned from
                 // the system.
-                if (source.isNew()) {
-                    source.setLaNr(null);
-                }
+//                if (source.isNew()) {
+//                    source.setLaNr(null);
+//                }
             }
         }
     }
