@@ -1,28 +1,30 @@
 /**
  * ******************************************************************************************
- * Copyright (C) 2012 - Food and Agriculture Organization of the United Nations (FAO).
- * All rights reserved.
+ * Copyright (C) 2012 - Food and Agriculture Organization of the United Nations
+ * (FAO). All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- *    1. Redistributions of source code must retain the above copyright notice,this list
- *       of conditions and the following disclaimer.
- *    2. Redistributions in binary form must reproduce the above copyright notice,this list
- *       of conditions and the following disclaimer in the documentation and/or other
- *       materials provided with the distribution.
- *    3. Neither the name of FAO nor the names of its contributors may be used to endorse or
- *       promote products derived from this software without specific prior written permission.
+ * 1. Redistributions of source code must retain the above copyright notice,this
+ * list of conditions and the following disclaimer. 2. Redistributions in binary
+ * form must reproduce the above copyright notice,this list of conditions and
+ * the following disclaimer in the documentation and/or other materials provided
+ * with the distribution. 3. Neither the name of FAO nor the names of its
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
- * SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,PROCUREMENT
- * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,STRICT LIABILITY,OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT,STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * *********************************************************************************************
  */
 /*
@@ -70,11 +72,11 @@ public class Application extends AbstractVersionedEntity {
     private Date lodgingDatetime;
     @Column(name = "expected_completion_date")
     private Date expectedCompletionDate;
-    @Column(name = "assigned_datetime", insertable=true, updatable=false)
+    @Column(name = "assigned_datetime", insertable = true, updatable = false)
     private Date assignedDatetime;
-    @Column(name = "assignee_id", insertable=true, updatable=false)
+    @Column(name = "assignee_id", insertable = true, updatable = false)
     private String assigneeId;
-    @Column(name = "action_code", insertable=false, updatable=false)
+    @Column(name = "action_code", insertable = false, updatable = false)
     private String actionCode;
     @Column(name = "action_notes")
     private String actionNotes;
@@ -82,7 +84,7 @@ public class Application extends AbstractVersionedEntity {
     private String contactPersonId;
     @Column(name = "agent_id")
     private String agentId;
-    @Column(name = "status_code", insertable=false, updatable=false)
+    @Column(name = "status_code", insertable = false, updatable = false)
     private String statusCode = null;
     @Column(name = "services_fee")
     private BigDecimal servicesFee;
@@ -94,38 +96,37 @@ public class Application extends AbstractVersionedEntity {
     private BigDecimal totalAmountPaid;
     @Column(name = "fee_paid")
     private boolean feePaid;
-    @Column(name="receipt_number")
+    @Column(name = "receipt_number")
     private String receiptNumber;
-    @Column(name="receipt_date")
+    @Column(name = "receipt_date")
     private Date receiptDate;
-    @Column(name="payment_remarks")
+    @Column(name = "payment_remarks")
     private String paymentRemarks;
-    @Column(name="office_code", updatable=false)
+    @Column(name = "office_code", updatable = false)
     private String officeCode;
-    @Column(name="fy_code", updatable=false)
+    @Column(name = "fy_code", updatable = false)
     private String fiscalYearCode;
-    @Column(name="status_change_time", updatable=false, insertable=false)
-    @AccessFunctions(onSelect="application.f_get_application_status_change_date(id)")
+    @Column(name = "status_change_time", updatable = false, insertable = false)
+    @AccessFunctions(onSelect = "application.f_get_application_status_change_date(id)")
     private Date statusChangeDate;
     @ExternalEJB(ejbLocalClass = PartyEJBLocal.class, loadMethod = "getParty")
-    @ChildEntity(childIdField = "contactPersonId",readOnly=true)
+    @ChildEntity(childIdField = "contactPersonId", readOnly = true)
     private Party contactPerson;
     @ExternalEJB(ejbLocalClass = PartyEJBLocal.class, loadMethod = "getParty")
-    @ChildEntity(childIdField = "agentId", readOnly=true)
+    @ChildEntity(childIdField = "agentId", readOnly = true)
     private Party agent;
     @ChildEntityList(parentIdField = "applicationId")
     private List<Service> serviceList;
     @ExternalEJB(ejbLocalClass = SearchEJBLocal.class, loadMethod = "searchBaUnitsByIds")
     @ChildEntityList(parentIdField = "applicationId", childIdField = "baUnitId",
-    manyToManyClass = ApplicationProperty.class, readOnly=true)
+    manyToManyClass = ApplicationProperty.class, readOnly = true)
     private List<BaUnitSearchResult> propertyList;
     @ExternalEJB(ejbLocalClass = SourceEJBLocal.class,
     loadMethod = "getSources", saveMethod = "saveSource")
     @ChildEntityList(parentIdField = "applicationId", childIdField = "sourceId",
     manyToManyClass = ApplicationUsesSource.class)
     private List<Source> sourceList;
-    
-    
+
     public Application() {
         super();
     }
@@ -344,7 +345,7 @@ public class Application extends AbstractVersionedEntity {
     }
 
     public List<Source> getSourceList() {
-        sourceList = sourceList == null ? new ArrayList<Source>() : sourceList; 
+        sourceList = sourceList == null ? new ArrayList<Source>() : sourceList;
         return sourceList;
     }
 
@@ -367,7 +368,7 @@ public class Application extends AbstractVersionedEntity {
     public void setFiscalYearCode(String fiscalYearCode) {
         this.fiscalYearCode = fiscalYearCode;
     }
-    
+
     @Override
     public void preSave() {
 

@@ -107,7 +107,7 @@ public class CadastreObject extends AbstractVersionedEntity {
     public static final String GET_BY_ADMIN_BOUNDARY_SELECT_PART =
             "p.id, p.type_code, p.map_sheet_id, p.fy_code, p.approval_datetime, p.historic_datetime,"
             + "p.name_firstpart, p.name_lastpart, p.status_code, p.transaction_id,"
-            + "st_asewkb(p.geom_polygon) as geom_polygon, p.parcel_no, p.parcel_note, p.land_type_code, p.land_usecode, p.land_classcode,p.address_id, p.guthi_namecode,"
+            + "st_asewkb(p.geom_polygon) as geom_polygon, p.parcel_no, p.parcel_note, p.land_type_code, p.land_use_code, p.land_class_code,p.address_id, p.guthi_name,"
             + "p.rowversion, p.change_user, p.rowidentifier, p.office_code";
     public static final String GET_BY_ADMIN_BOUNDARY_FROM_PART =
             "cadastre.cadastre_object as p,"
@@ -160,13 +160,13 @@ public class CadastreObject extends AbstractVersionedEntity {
     private int parcelno;
     @Column(name = "parcel_note")
     private String parcelNote;
-    @Column(name = "parcel_typecode")
-    private String parcelTypeCode;
-    @Column(name = "land_usecode")
+    @Column(name = "land_type_code")
+    private String landTypeCode;
+    @Column(name = "land_use_code")
     private String landUseCode;
-    @Column(name = "land_classcode")
+    @Column(name = "land_class_code")
     private String landClassCode;
-    @Column(name = "guthi_namecode")
+    @Column(name = "guthi_name")
     private String guthiNameCode;
     @Column(name = "address_id")
     private String addressId;
@@ -324,12 +324,12 @@ public class CadastreObject extends AbstractVersionedEntity {
         this.landUseCode = landUseCode;
     }
 
-    public String getParcelTypeCode() {
-        return parcelTypeCode;
+    public String getLandTypeCode() {
+        return landTypeCode;
     }
 
-    public void setParcelTypeCode(String parcelTypeCode) {
-        this.parcelTypeCode = parcelTypeCode;
+    public void setLandTypeCode(String landTypeCode) {
+        this.landTypeCode = landTypeCode;
     }
 
     public List<SpatialValueArea> getSpatialValueAreaList() {

@@ -12,13 +12,13 @@ import org.sola.services.common.repository.entities.AbstractCodeEntity;
  *
  * @author ShresthaKabin
  */
-@Table(name = "parcel_type", schema = "cadastre")
+@Table(name = "land_type", schema = "cadastre")
 @DefaultSorter(sortString = "display_value")
-public class ParcelType extends AbstractCodeEntity {
+public class LandType extends AbstractCodeEntity {
 
     public static final String CANCEL = "cancel";
 
-    public ParcelType() {
+    public LandType() {
         super();
     }
 }
