@@ -86,7 +86,7 @@ public class CadastreEJBIT extends AbstractEJBTest {
         if (resultList.size() > 0) {
             CadastreObject co = (CadastreObject) resultList.get(0);
             id = co.getId();
-            System.out.println("Result of Areas (total):" + co.getSpatialValueAreaList().size());
+           // System.out.println("Result of Areas (total):" + co.getSpatialValueAreaList().size());
         }
 
         double x = 1778224, y = 5928786;
@@ -139,7 +139,7 @@ public class CadastreEJBIT extends AbstractEJBTest {
             CadastreEJBLocal instance = (CadastreEJBLocal) getEJBInstance(CadastreEJB.class.getSimpleName());
             CadastreObject cobj = new CadastreObject();
             cobj.setTransactionId("cadastre-transaction");
-            cobj.setMapSheetCode("0");
+            cobj.setMapSheetId("0");
             cobj.setParcelno(12012);
             cobj.setLandTypeCode("0");
             //Address add=new Address();

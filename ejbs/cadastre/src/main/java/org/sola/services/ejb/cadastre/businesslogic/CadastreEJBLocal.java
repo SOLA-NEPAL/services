@@ -97,12 +97,16 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
     CadastreObject getCadastreObject(String vdcCode, String wardNo, int parcelNo);
 
     CadastreObject getCadastreObject(String mapSheetCode, int parcelNo);
-    
+
     List<LandType> getLandTypes(String languageCode);
 
     List<LandClass> getLandClasses(String languageCode);
 
     List<LandUse> getLandUses(String languageCode);
+
+    List<AreaUnitType> getAreaUnitTypes(String languageCode);
+
+    List<BuildingUnitType> getBuildingUnitTypes(String languageCode);
 
     //*****************************************************************************************************************************
     //</editor-fold>

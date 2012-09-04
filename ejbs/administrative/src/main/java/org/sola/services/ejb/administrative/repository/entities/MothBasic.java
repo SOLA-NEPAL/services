@@ -11,8 +11,8 @@ import javax.persistence.Table;
 import org.sola.services.common.repository.ChildEntity;
 import org.sola.services.common.repository.ExternalEJB;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
-import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
 import org.sola.services.ejb.address.repository.entities.Vdc;
+import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
 
 /**
  *

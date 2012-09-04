@@ -33,15 +33,14 @@
  */
 package org.sola.services.ejb.cadastre.repository.entities;
 
+import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.sola.services.common.LocalInfo;
 import org.sola.services.common.repository.AccessFunctions;
 import org.sola.services.common.repository.ChildEntity;
-import org.sola.services.common.repository.ChildEntityList;
 import org.sola.services.common.repository.ExternalEJB;
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
@@ -111,12 +110,12 @@ public class CadastreObject extends AbstractVersionedEntity {
             + "p.rowversion, p.change_user, p.rowidentifier, p.office_code";
     public static final String GET_BY_ADMIN_BOUNDARY_FROM_PART =
             "cadastre.cadastre_object as p,"
-           + "cadastre.spatial_unit_address as pa,"
+            //+ "cadastre.spatial_unit_address as pa,"
             + "address.address as a";
     public static final String GET_BY_ADMIN_BOUNDARY_WHERE_PART =
-          " p.id=pa.spatial_unit_id and "            
-            +" pa.address_id=a.id and " 
-            +" a.vdc_code=#{" + VDC_PARAM
+            " p.id=pa.spatial_unit_id and "
+            + " pa.address_id=a.id and "
+            + " a.vdc_code=#{" + VDC_PARAM
             + "} and a.ward_no=#{" + WARD_NO_PARAM
             + "} and p.parcel_no=#{" + PARCEL_NO_PARAM + "} "
             + "and " + QUERY_WHERE_BY_OFFICE1;
@@ -124,7 +123,7 @@ public class CadastreObject extends AbstractVersionedEntity {
     public static final String GET_BY_WARD_IN_VDC =
             " select distinct a.ward_no "
             + " from cadastre.cadastre_object as p,"
-            + "cadastre.spatial_unit_address as pa,"
+            // + "cadastre.spatial_unit_address as pa,"
             + "address.address as a"
             + " where p.id=pa.spatial_unit_id and "
             + " pa.address_id=a.id and "
@@ -136,7 +135,15 @@ public class CadastreObject extends AbstractVersionedEntity {
     @Column(name = "type_code")
     private String typeCode;
     @Column(name = "map_sheet_id")
-    private String mapSheetCode;
+    private String mapSheetId;
+    @Column(name = "map_sheet_id2")
+    private String mapSheetId2;
+    @Column(name = "map_sheet_id3")
+    private String mapSheetId3;
+    @Column(name = "map_sheet_id4")
+    private String mapSheetId4;
+    @Column(name = "building_unit_type_code")
+    private String buildingUnitTypeCode;
     @Column(name = "approval_datetime")
     private Date approvalDatetime;
     @Column(name = "historic_datetime")
@@ -153,11 +160,12 @@ public class CadastreObject extends AbstractVersionedEntity {
     @AccessFunctions(onSelect = "st_asewkb(geom_polygon)",
     onChange = "get_geometry_with_srid(#{geomPolygon})")
     private byte[] geomPolygon;
-    @ChildEntityList(parentIdField = "spatialUnitId")
-    private List<SpatialValueArea> spatialValueAreaList;
-    //Additional field required for SAEx application.
     @Column(name = "parcel_no")
     private int parcelno;
+    @Column(name = "official_area")
+    private BigDecimal officialArea;
+    @Column(name = "area_unit_type_code")
+    private String areaUnitTypeCode;
     @Column(name = "parcel_note")
     private String parcelNote;
     @Column(name = "land_type_code")
@@ -167,7 +175,7 @@ public class CadastreObject extends AbstractVersionedEntity {
     @Column(name = "land_class_code")
     private String landClassCode;
     @Column(name = "guthi_name")
-    private String guthiNameCode;
+    private String guthiName;
     @Column(name = "address_id")
     private String addressId;
     @ExternalEJB(ejbLocalClass = AddressEJBLocal.class, loadMethod = "getAddress", saveMethod = "saveAddress")
@@ -177,15 +185,15 @@ public class CadastreObject extends AbstractVersionedEntity {
     private MapSheet mapSheet;
     @Column(name = "office_code", updatable = false)
     private String officeCode;
-    @Column(name="fy_code", updatable=false)
+    @Column(name = "fy_code", updatable = false)
     private String fiscalYearCode;
 
-    public String getMapSheetCode() {
-        return mapSheetCode;
+    public String getMapSheetId() {
+        return mapSheetId;
     }
 
-    public void setMapSheetCode(String mapSheetCode) {
-        this.mapSheetCode = mapSheetCode;
+    public void setMapSheetId(String mapSheetId) {
+        this.mapSheetId = mapSheetId;
     }
 
     public String getParcelNote() {
@@ -281,12 +289,12 @@ public class CadastreObject extends AbstractVersionedEntity {
         this.typeCode = typeCode;
     }
 
-    public String getGuthiNameCode() {
-        return guthiNameCode;
+    public String getGuthiName() {
+        return guthiName;
     }
 
-    public void setGuthiNameCode(String guthiNameCode) {
-        this.guthiNameCode = guthiNameCode;
+    public void setGuthiName(String guthiName) {
+        this.guthiName = guthiName;
     }
 
     public String getAddressId() {
@@ -332,15 +340,6 @@ public class CadastreObject extends AbstractVersionedEntity {
         this.landTypeCode = landTypeCode;
     }
 
-    public List<SpatialValueArea> getSpatialValueAreaList() {
-        // Loaded eagerly by the CommonRepository
-        return spatialValueAreaList;
-    }
-
-    public void setSpatialValueAreaList(List<SpatialValueArea> spatialValueAreaList) {
-        this.spatialValueAreaList = spatialValueAreaList;
-    }
-
     public MapSheet getMapSheet() {
         return mapSheet;
     }
@@ -348,7 +347,7 @@ public class CadastreObject extends AbstractVersionedEntity {
     public void setMapSheet(MapSheet mapSheet) {
         this.mapSheet = mapSheet;
         if (mapSheet != null) {
-            this.setMapSheetCode(mapSheet.getId());
+            this.setMapSheetId(mapSheet.getId());
         }
     }
 
@@ -366,6 +365,54 @@ public class CadastreObject extends AbstractVersionedEntity {
 
     public void setFiscalYearCode(String fiscalYearCode) {
         this.fiscalYearCode = fiscalYearCode;
+    }
+
+    public String getMapSheetId2() {
+        return mapSheetId2;
+    }
+
+    public void setMapSheetId2(String mapSheetId2) {
+        this.mapSheetId2 = mapSheetId2;
+    }
+
+    public String getMapSheetId3() {
+        return mapSheetId3;
+    }
+
+    public void setMapSheetId3(String mapSheetId3) {
+        this.mapSheetId3 = mapSheetId3;
+    }
+
+    public String getMapSheetId4() {
+        return mapSheetId4;
+    }
+
+    public void setMapSheetId4(String mapSheetId4) {
+        this.mapSheetId4 = mapSheetId4;
+    }
+
+    public String getBuildingUnitTypeCode() {
+        return buildingUnitTypeCode;
+    }
+
+    public void setBuildingUnitTypeCode(String buildingUnitTypeCode) {
+        this.buildingUnitTypeCode = buildingUnitTypeCode;
+    }
+
+    public BigDecimal getOfficialArea() {
+        return officialArea;
+    }
+
+    public void setOfficialArea(BigDecimal officialArea) {
+        this.officialArea = officialArea;
+    }
+
+    public String getAreaUnitTypeCode() {
+        return areaUnitTypeCode;
+    }
+
+    public void setAreaUnitTypeCode(String areaUnitTypeCode) {
+        this.areaUnitTypeCode = areaUnitTypeCode;
     }
 
     @Override

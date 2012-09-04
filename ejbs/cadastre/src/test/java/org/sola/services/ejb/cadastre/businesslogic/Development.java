@@ -74,7 +74,7 @@ public class Development extends AbstractEJBTest {
         if (resultList.size() > 0) {
             CadastreObject co = (CadastreObject) resultList.get(0);
             id = co.getId();
-            System.out.println("Result of Areas (total):" + co.getSpatialValueAreaList().size());
+          //  System.out.println("Result of Areas (total):" + co.getSpatialValueAreaList().size());
         }
 
         double x = 1778224, y = 5928786;

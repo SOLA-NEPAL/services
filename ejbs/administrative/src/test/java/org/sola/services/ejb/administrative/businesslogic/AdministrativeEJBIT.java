@@ -499,7 +499,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
 //            mapSheet.setSheetType(0);
 //            //mapSheet.setAlphaCode("1");
 //            cobj.setMapSheet(mapSheet);
-//            cobj.setMapSheetCode(mapSheet.getId());
+//            cobj.setMapSheetId(mapSheet.getId());
 
             SpatialValueArea spValA = new SpatialValueArea();
             spValA.setSpatialUnitId(moth.getId());
@@ -510,7 +510,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
 
             List<SpatialValueArea> spatialValAreaList = new ArrayList<SpatialValueArea>();
             spatialValAreaList.add(spValA);
-            cobj.setSpatialValueAreaList(spatialValAreaList);
+           // cobj.setSpatialValueAreaList(spatialValAreaList);
             List<CadastreObject> cadObjList = new ArrayList<CadastreObject>();
             cadObjList.add(cobj);
             baUnit.setCadastreObject(cobj);
