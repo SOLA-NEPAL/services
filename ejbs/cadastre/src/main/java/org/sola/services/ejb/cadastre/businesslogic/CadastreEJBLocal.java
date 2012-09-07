@@ -78,8 +78,6 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
 
     void approveCadastreRedefinition(String transactionId);
 
-    //<editor-fold defaultstate="collapsed" desc="By Kumar">
-    //*****************************************************************************************************************************
     MapSheet getMapSheet(String id);
 
     MapSheet saveMapSheet(MapSheet mapSheet);
@@ -108,10 +106,6 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
 
     List<BuildingUnitType> getBuildingUnitTypes(String languageCode);
 
-    //*****************************************************************************************************************************
-    //</editor-fold>
-    // <editor-fold defaultstate="collapsed" desc="By Kabindra">
-    //--------------------------------------------------------------------------
     List<CadastreObject> getCadastreObjectBy_Intersection(String geom, int srid);
 
     List<CadastreObject> getCadastreObjectBy_ByteIntersection(String geom, int srid);
@@ -131,7 +125,6 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
     List<MapSheet> loadWardMapSheet(int mapSheetType, String vdccode, String wardno);
 
     List<MapSheet> loadVDCMapSheet(int mapSheetType, String vdccode);
-    //</editor-fold>
 
     List<MapSheet> getMapSheetListByOffice(String lang);
 }

@@ -423,6 +423,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         params.put(CadastreObject.WARD_NO_PARAM, wardNo);
         params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntity(CadastreObject.class, params);
+
     }
 
     @Override

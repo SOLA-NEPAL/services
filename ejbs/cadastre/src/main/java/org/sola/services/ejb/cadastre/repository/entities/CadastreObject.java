@@ -113,9 +113,9 @@ public class CadastreObject extends AbstractVersionedEntity {
             //+ "cadastre.spatial_unit_address as pa,"
             + "address.address as a";
     public static final String GET_BY_ADMIN_BOUNDARY_WHERE_PART =
-            " p.id=pa.spatial_unit_id and "
-            + " pa.address_id=a.id and "
-            + " a.vdc_code=#{" + VDC_PARAM
+            // " p.id=pa.spatial_unit_id and "
+            // + " pa.address_id=a.id and "
+            " a.vdc_code=#{" + VDC_PARAM
             + "} and a.ward_no=#{" + WARD_NO_PARAM
             + "} and p.parcel_no=#{" + PARCEL_NO_PARAM + "} "
             + "and " + QUERY_WHERE_BY_OFFICE1;
@@ -125,8 +125,8 @@ public class CadastreObject extends AbstractVersionedEntity {
             + " from cadastre.cadastre_object as p,"
             // + "cadastre.spatial_unit_address as pa,"
             + "address.address as a"
-            + " where p.id=pa.spatial_unit_id and "
-            + " pa.address_id=a.id and "
+            //  + " where p.id=pa.spatial_unit_id and "
+            //  + " pa.address_id=a.id and "
             + " a.vdc_code=#{" + VDC_PARAM + "} "
             + "and " + QUERY_WHERE_BY_OFFICE1;
     @Id
