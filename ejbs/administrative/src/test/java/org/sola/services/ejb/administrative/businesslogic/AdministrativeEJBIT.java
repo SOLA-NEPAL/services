@@ -492,7 +492,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             cobj.setTypeCode("parcel");
             cobj.setStatusCode("pending");
             cobj.setTransactionId("cadastre-transaction");
-            cobj.setParcelno(1501);
+            cobj.setParcelno("1501");
             //cobj.setParcelType(0);
 //            MapSheet mapSheet = new MapSheet();
 //            mapSheet.setMapNumber("M0002");

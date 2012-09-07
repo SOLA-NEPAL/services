@@ -1,23 +1,15 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.sola.services.ejb.search.repository.entities;
 
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 
-/**
- *
- * @author Kumar
- */
-public class ParcelSearchParams extends AbstractReadOnlyEntity {
+public class CadastreObjectSearchParams extends AbstractReadOnlyEntity {
 
     private String vdcCode;
-    private int parcelNo;
+    private String parcelNo;
     private String wardNo;
     private String mapSheetCode;
-
-    public ParcelSearchParams() {
+    
+    public CadastreObjectSearchParams() {
     }
 
     public String getVdcCode() {
@@ -28,11 +20,11 @@ public class ParcelSearchParams extends AbstractReadOnlyEntity {
         this.vdcCode = vdcCode;
     }
 
-    public int getParcelNo() {
+    public String getParcelNo() {
         return parcelNo;
     }
 
-    public void setParcelNo(int parcelNo) {
+    public void setParcelNo(String parcelNo) {
         this.parcelNo = parcelNo;
     }
 

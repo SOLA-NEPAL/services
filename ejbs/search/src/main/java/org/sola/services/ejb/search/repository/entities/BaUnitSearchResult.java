@@ -37,7 +37,7 @@ public class BaUnitSearchResult extends AbstractEntity {
     public static final String SEARCH_PARAM_BA_UNIT_ID = "baUnitId";
     
     public static final String SELECT_PART = 
-            "SELECT b.id, b.name, b.name_firstpart, b.name_lastpart, b.status_code, b.office_code, b.fy_code, "
+            "SELECT DISTINCT b.id, b.name, b.name_firstpart, b.name_lastpart, b.status_code, b.office_code, b.fy_code, "
             + "(SELECT string_agg(COALESCE(p.name, '') || ' ' || COALESCE(p.last_name, ''), '::::') "
             + "FROM administrative.rrr rrr INNER JOIN (administrative.party_for_rrr pr "
             + "INNER JOIN party.party p ON pr.party_id = p.id) ON rrr.id = pr.rrr_id "

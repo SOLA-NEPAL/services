@@ -34,18 +34,15 @@ public class MapSheet extends AbstractEntity {
             "distinct m.id,m.map_number,m.sheet_type,m.office_code,m.srid ";
     public static final String GET_BY_WARD_FROM_PART =
             "cadastre.cadastre_object as p,"
-            + "cadastre.spatial_unit_address as pa,"
-            + "address.address as a,cadastre.map_sheet as m";
+            + "address.address as a, cadastre.map_sheet as m";
     public static final String GET_BY_WARD_WHERE_PART =
-            " p.id=pa.spatial_unit_id and "
-            + " pa.address_id=a.id and "
+              " p.address_id=a.id and "
             + " a.vdc_code=#{" + VDC_PARAM + "} and "
             + " a.ward_no=#{" + WARD_NO_PARAM + "} and "
             + " p.map_sheet_id=m.map_number and "
             + QUERY_WHERE_BY_OFFICE;
     public static final String GET_BY_VDC_WHERE_PART =
-            " p.id=pa.spatial_unit_id and "
-            + " pa.address_id=a.id and "
+            " p.address_id=a.id and "
             + " a.vdc_code=#{" + VDC_PARAM + "} and "
             + " p.map_sheet_id=m.map_number and "
             + QUERY_WHERE_BY_OFFICE;
@@ -61,17 +58,6 @@ public class MapSheet extends AbstractEntity {
     private String officeCode;
     @Column (name="srid")
     private int srid;
-            
-//    @Column(name = "alpha_code")
-//    private String alphaCode;
-
-//    public String getAlphaCode() {
-//        return alphaCode;
-//    }
-//
-//    public void setAlphaCode(String alpha_code) {
-//        this.alphaCode = alpha_code;
-//    }
 
     public String getId() {
         id = id == null ? id = generateId() : id;
@@ -113,5 +99,4 @@ public class MapSheet extends AbstractEntity {
     public void setSrid(int srid) {
         this.srid = srid;
     }
-    
 }

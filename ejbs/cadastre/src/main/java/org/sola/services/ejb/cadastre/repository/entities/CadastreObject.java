@@ -106,7 +106,7 @@ public class CadastreObject extends AbstractVersionedEntity {
     public static final String GET_BY_ADMIN_BOUNDARY_SELECT_PART =
             "p.id, p.type_code, p.map_sheet_id, p.fy_code, p.approval_datetime, p.historic_datetime,"
             + "p.name_firstpart, p.name_lastpart, p.status_code, p.transaction_id,"
-            + "st_asewkb(p.geom_polygon) as geom_polygon, p.parcel_no, p.parcel_note, p.land_type_code, p.land_use_code, p.land_class_code,p.address_id, p.guthi_name,"
+            + "st_asewkb(p.geom_polygon) as geom_polygon, p.parcel_no, p.parcel_note, p.land_type_code, p.land_use_code, p.land_class_code,p.address_id,"
             + "p.rowversion, p.change_user, p.rowidentifier, p.office_code";
     public static final String GET_BY_ADMIN_BOUNDARY_FROM_PART =
             "cadastre.cadastre_object as p,"
@@ -123,10 +123,8 @@ public class CadastreObject extends AbstractVersionedEntity {
     public static final String GET_BY_WARD_IN_VDC =
             " select distinct a.ward_no "
             + " from cadastre.cadastre_object as p,"
-            // + "cadastre.spatial_unit_address as pa,"
             + "address.address as a"
-            + " where p.id=pa.spatial_unit_id and "
-            + " pa.address_id=a.id and "
+            + " where p.address_id=a.id and "
             + " a.vdc_code=#{" + VDC_PARAM + "} "
             + "and " + QUERY_WHERE_BY_OFFICE1;
     @Id
@@ -148,9 +146,9 @@ public class CadastreObject extends AbstractVersionedEntity {
     private Date approvalDatetime;
     @Column(name = "historic_datetime")
     private Date historicDatetime;
-    @Column(name = "name_firstpart")
+    @Column(name = "name_firstpart", updatable = false)
     private String nameFirstpart;
-    @Column(name = "name_lastpart")
+    @Column(name = "name_lastpart", updatable = false)
     private String nameLastpart;
     @Column(name = "status_code", insertable = false, updatable = false)
     private String statusCode;
@@ -161,7 +159,7 @@ public class CadastreObject extends AbstractVersionedEntity {
     onChange = "get_geometry_with_srid(#{geomPolygon})")
     private byte[] geomPolygon;
     @Column(name = "parcel_no")
-    private int parcelno;
+    private String parcelno;
     @Column(name = "official_area")
     private BigDecimal officialArea;
     @Column(name = "area_unit_type_code")
@@ -174,15 +172,19 @@ public class CadastreObject extends AbstractVersionedEntity {
     private String landUseCode;
     @Column(name = "land_class_code")
     private String landClassCode;
-    @Column(name = "guthi_name")
-    private String guthiName;
     @Column(name = "address_id")
     private String addressId;
     @ExternalEJB(ejbLocalClass = AddressEJBLocal.class, loadMethod = "getAddress", saveMethod = "saveAddress")
     @ChildEntity(childIdField = "addressId", readOnly = true)
     private Address address;
-    @ChildEntity(childIdField = "mapSheetCode", readOnly = true)
+    @ChildEntity(childIdField = "mapSheetId", readOnly = true)
     private MapSheet mapSheet;
+    @ChildEntity(childIdField = "mapSheetId2", readOnly = true)
+    private MapSheet mapSheet2;
+    @ChildEntity(childIdField = "mapSheetId3", readOnly = true)
+    private MapSheet mapSheet3;
+    @ChildEntity(childIdField = "mapSheetId4", readOnly = true)
+    private MapSheet mapSheet4;
     @Column(name = "office_code", updatable = false)
     private String officeCode;
     @Column(name = "fy_code", updatable = false)
@@ -204,11 +206,11 @@ public class CadastreObject extends AbstractVersionedEntity {
         this.parcelNote = parcelNote;
     }
 
-    public int getParcelno() {
+    public String getParcelno() {
         return parcelno;
     }
 
-    public void setParcelno(int parcelno) {
+    public void setParcelno(String parcelno) {
         this.parcelno = parcelno;
     }
 
@@ -287,14 +289,6 @@ public class CadastreObject extends AbstractVersionedEntity {
 
     public void setTypeCode(String typeCode) {
         this.typeCode = typeCode;
-    }
-
-    public String getGuthiName() {
-        return guthiName;
-    }
-
-    public void setGuthiName(String guthiName) {
-        this.guthiName = guthiName;
     }
 
     public String getAddressId() {
@@ -391,6 +385,30 @@ public class CadastreObject extends AbstractVersionedEntity {
         this.mapSheetId4 = mapSheetId4;
     }
 
+    public MapSheet getMapSheet2() {
+        return mapSheet2;
+    }
+
+    public void setMapSheet2(MapSheet mapSheet2) {
+        this.mapSheet2 = mapSheet2;
+    }
+
+    public MapSheet getMapSheet3() {
+        return mapSheet3;
+    }
+
+    public void setMapSheet3(MapSheet mapSheet3) {
+        this.mapSheet3 = mapSheet3;
+    }
+
+    public MapSheet getMapSheet4() {
+        return mapSheet4;
+    }
+
+    public void setMapSheet4(MapSheet mapSheet4) {
+        this.mapSheet4 = mapSheet4;
+    }
+
     public String getBuildingUnitTypeCode() {
         return buildingUnitTypeCode;
     }
@@ -420,6 +438,34 @@ public class CadastreObject extends AbstractVersionedEntity {
         if (this.isNew() && this.getTransactionId() == null) {
             setTransactionId(LocalInfo.getTransactionId());
         }
+        if (isNew()) {
+            // Check first/last part names
+            String firstPart = getNameFirstpart() == null ? "" : getNameFirstpart();
+            String lastPart = getNameLastpart() == null ? "" : getNameLastpart();
+            if (!firstPart.equals(generateNameFirstPart())) {
+                setNameFirstpart(generateNameFirstPart());
+            }
+            if (!lastPart.equals(generateNameLastPart())) {
+                setNameLastpart(generateNameLastPart());
+            }
+        }
         super.preSave();
+    }
+
+    private String generateNameFirstPart() {
+        if (getAddress() == null || getAddress().getVdcCode() == null
+                || getAddress().getWardNo() == null
+                || getMapSheet().getMapNumber() == null) {
+            return null;
+        }
+        return getAddress().getVdcCode() + "-" + getAddress().getWardNo()
+                + "-" + getMapSheet().getMapNumber();
+    }
+
+    private String generateNameLastPart() {
+        if (getParcelno() == null) {
+            return null;
+        }
+        return getParcelno();
     }
 }

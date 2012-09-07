@@ -43,6 +43,7 @@ import org.sola.common.SOLAException;
 import org.sola.common.messaging.ServiceMessage;
 import org.sola.services.common.ejbs.AbstractEJB;
 import org.sola.services.common.repository.CommonSqlProvider;
+import org.sola.services.common.repository.entities.AbstractEntity;
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 import org.sola.services.ejb.search.repository.entities.ApplicationLogResult;
 import org.sola.services.ejb.search.repository.entities.ApplicationSearchParams;
@@ -65,8 +66,8 @@ import org.sola.services.ejb.search.repository.entities.UserSearchParams;
 import org.sola.services.ejb.search.repository.entities.UserSearchResult;
 import org.sola.services.ejb.search.repository.entities.DynamicQuery;
 import org.sola.services.ejb.search.repository.entities.DynamicQueryField;
-import org.sola.services.ejb.search.repository.entities.ParcelSearchParams;
-import org.sola.services.ejb.search.repository.entities.ParcelSearchResult;
+import org.sola.services.ejb.search.repository.entities.CadastreObjectSearchParams;
+import org.sola.services.ejb.search.repository.entities.CadastreObjectSearchResultExt;
 import org.sola.services.ejb.search.spatial.QueryForNavigation;
 import org.sola.services.ejb.search.spatial.QueryForSelect;
 import org.sola.services.ejb.search.spatial.ResultForNavigationInfo;
@@ -523,7 +524,10 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
     }
     
     @Override
-    public List<ParcelSearchResult> searchParcels(ParcelSearchParams searchParams) {
+    public List<CadastreObjectSearchResultExt> searchCadastreObjects(String langCode, CadastreObjectSearchParams searchParams) {
+        if (searchParams.getParcelNo() == null) {
+            searchParams.setParcelNo("");
+        }
         if (searchParams.getVdcCode() == null) {
             searchParams.setVdcCode("");
         }
@@ -535,12 +539,14 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         }
         
         Map params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_QUERY, ParcelSearchResult.PARCEL_SEARCH_QUERY);
-        params.put(ParcelSearchResult.VDC_PARAM, searchParams.getVdcCode());
-        params.put(ParcelSearchResult.PARCEL_NO_PARAM, searchParams.getParcelNo());
-        params.put(ParcelSearchResult.WARD_NO_PARAM, searchParams.getWardNo());
-        //params.put(ParcelSearchResult.MAP_SHEET_CODE_PARAM, searchParams.getMapSheetCode());
-        return getRepository().getEntityList(ParcelSearchResult.class, params);
+        params.put(CommonSqlProvider.PARAM_QUERY, CadastreObjectSearchResultExt.PARCEL_SEARCH_QUERY);
+        params.put(CadastreObjectSearchResultExt.VDC_PARAM, searchParams.getVdcCode());
+        params.put(CadastreObjectSearchResultExt.PARCEL_NO_PARAM, searchParams.getParcelNo());
+        params.put(CadastreObjectSearchResultExt.WARD_NO_PARAM, searchParams.getWardNo());
+        params.put(CadastreObjectSearchResultExt.MAP_SHEET_CODE_PARAM, searchParams.getMapSheetCode());
+        params.put(CadastreObjectSearchResultExt.LANGUAGE_CODE_PARAM, langCode);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(CadastreObjectSearchResultExt.class, params);
     }
 
     @Override

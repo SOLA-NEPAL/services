@@ -45,8 +45,8 @@ import org.sola.services.ejb.search.repository.entities.CadastreObjectSearchResu
 import org.sola.services.ejb.search.repository.entities.ConfigMapLayer;
 import org.sola.services.ejb.search.repository.entities.DynamicQuery;
 import org.sola.services.ejb.search.repository.entities.GenericResult;
-import org.sola.services.ejb.search.repository.entities.ParcelSearchParams;
-import org.sola.services.ejb.search.repository.entities.ParcelSearchResult;
+import org.sola.services.ejb.search.repository.entities.CadastreObjectSearchParams;
+import org.sola.services.ejb.search.repository.entities.CadastreObjectSearchResultExt;
 import org.sola.services.ejb.search.repository.entities.PartySearchParams;
 import org.sola.services.ejb.search.repository.entities.PartySearchResult;
 import org.sola.services.ejb.search.repository.entities.SourceSearchParams;
@@ -108,5 +108,5 @@ public interface SearchEJBLocal extends AbstractEJBLocal {
 
     List<CadastreObjectSearchResult> searchCadastreObjects(String searchBy, String searchString);
 
-    List<ParcelSearchResult> searchParcels(ParcelSearchParams searchParams);
+    List<CadastreObjectSearchResultExt> searchCadastreObjects(String langCode, CadastreObjectSearchParams searchParams);
 }
