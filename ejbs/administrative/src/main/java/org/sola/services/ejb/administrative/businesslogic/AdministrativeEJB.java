@@ -389,16 +389,18 @@ public class AdministrativeEJB extends AbstractEJB
             }
             adminEJB.checkOfficeCode(baUnit.getOfficeCode());
         }
-        for (Rrr rrr : baUnit.getRrrList()) {
-            if (rrr.isNew()) {
-                rrr.setOfficeCode(adminEJB.getCurrentOfficeCode());
-                rrr.setFiscalYearCode(adminEJB.getCurrentFiscalYearCode());
-            } else {
-                adminEJB.checkOfficeCode(rrr.getOfficeCode());
-                statusCode = rrr.getOriginalValue("statusCode");
-                if (statusCode != null) {
-                    if (!statusCode.toString().equals(StatusConstants.PENDING) && rrr.isModified()) {
-                        throw new SOLAException(ServiceMessage.EJB_ADMINISTRATIVE_BAUNIT_MODIFICATION_NOT_ALLOWED);
+        if (baUnit.getRrrList() != null) {
+            for (Rrr rrr : baUnit.getRrrList()) {
+                if (rrr.isNew()) {
+                    rrr.setOfficeCode(adminEJB.getCurrentOfficeCode());
+                    rrr.setFiscalYearCode(adminEJB.getCurrentFiscalYearCode());
+                } else {
+                    adminEJB.checkOfficeCode(rrr.getOfficeCode());
+                    statusCode = rrr.getOriginalValue("statusCode");
+                    if (statusCode != null) {
+                        if (!statusCode.toString().equals(StatusConstants.PENDING) && rrr.isModified()) {
+                            throw new SOLAException(ServiceMessage.EJB_ADMINISTRATIVE_BAUNIT_MODIFICATION_NOT_ALLOWED);
+                        }
                     }
                 }
             }
@@ -424,7 +426,7 @@ public class AdministrativeEJB extends AbstractEJB
 
         // Search for pending RRR
         for (Rrr rrr : baUnit.getRrrList()) {
-            if (rrr.getStatusCode().equals(StatusConstants.PENDING) 
+            if (rrr.getStatusCode().equals(StatusConstants.PENDING)
                     && !rrr.isTerminating() && rrr.getLocId() != null) {
                 tmpRrr = rrr;
                 break;
@@ -458,7 +460,7 @@ public class AdministrativeEJB extends AbstractEJB
             pendingRrrLoc.setTypeCode(tmpRrr.getTypeCode());
             pendingRrrLoc.setOwnerTypeCode(tmpRrr.getOwnerTypeCode());
             pendingRrrLoc.setShareTypeCode(tmpRrr.getOwnershipTypeCode());
-            
+
             if (tmpRrr.getNotation() != null) {
                 pendingRrrLoc.setNotationText(tmpRrr.getNotation().getNotationText());
             }
@@ -687,26 +689,26 @@ public class AdministrativeEJB extends AbstractEJB
         if (!rrr2.getTypeCode().equals(rrr.getTypeCode())) {
             return false;
         }
-        
+
         // Check owner type
-        if ((rrr2.getOwnerTypeCode()!=null && rrr.getOwnerTypeCode() == null) || 
-                (rrr2.getOwnerTypeCode()==null && rrr.getOwnerTypeCode() != null)) {
+        if ((rrr2.getOwnerTypeCode() != null && rrr.getOwnerTypeCode() == null)
+                || (rrr2.getOwnerTypeCode() == null && rrr.getOwnerTypeCode() != null)) {
             return false;
         }
-        
-        if (rrr2.getOwnerTypeCode()!=null && rrr.getOwnerTypeCode() != null && 
-                !rrr2.getOwnerTypeCode().equals(rrr.getOwnerTypeCode())) {
+
+        if (rrr2.getOwnerTypeCode() != null && rrr.getOwnerTypeCode() != null
+                && !rrr2.getOwnerTypeCode().equals(rrr.getOwnerTypeCode())) {
             return false;
         }
-        
+
         // Check share type
-        if ((rrr2.getOwnershipTypeCode()!=null && rrr.getOwnershipTypeCode() == null) || 
-                (rrr2.getOwnershipTypeCode()==null && rrr.getOwnershipTypeCode() != null)) {
+        if ((rrr2.getOwnershipTypeCode() != null && rrr.getOwnershipTypeCode() == null)
+                || (rrr2.getOwnershipTypeCode() == null && rrr.getOwnershipTypeCode() != null)) {
             return false;
         }
-        
-        if (rrr2.getOwnershipTypeCode()!=null && rrr.getOwnershipTypeCode() != null && 
-                !rrr2.getOwnershipTypeCode().equals(rrr.getOwnershipTypeCode())) {
+
+        if (rrr2.getOwnershipTypeCode() != null && rrr.getOwnershipTypeCode() != null
+                && !rrr2.getOwnershipTypeCode().equals(rrr.getOwnershipTypeCode())) {
             return false;
         }
 

@@ -403,12 +403,12 @@ public class SearchEJBIT extends AbstractEJBTest {
         if (skipIntegrationTest()) {
             return;
         }
-        ParcelSearchParams params = new ParcelSearchParams();
+        CadastreObjectSearchParams params = new CadastreObjectSearchParams();
         //params.setWardNo("5");
         // params.setParcelNo(5);
         params.setVdcCode("27009");
         SearchEJBLocal instance = (SearchEJBLocal) getEJBInstance(SearchEJB.class.getSimpleName());
-        List<ParcelSearchResult> result = instance.searchParcels(params);
+        List<CadastreObjectSearchResultExt> result = instance.searchCadastreObjects("en", params);
         assertNotNull(result);
 
         if (result != null && result.size() > 0) {

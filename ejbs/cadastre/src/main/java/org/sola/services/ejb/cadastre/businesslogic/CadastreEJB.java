@@ -104,6 +104,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     }
 
     @Override
+    @RolesAllowed({RolesConstants.CADASTRE_PARCEL_SAVE, RolesConstants.CADASTRE_PARCEL_DETAILS_SAVE})
     public CadastreObject saveCadastreObject(CadastreObject cadastreObject) {
         if (cadastreObject.isNew()) {
             cadastreObject.setOfficeCode(adminEJB.getCurrentOfficeCode());
@@ -375,8 +376,16 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     }
 
     @Override
-    @RolesAllowed(RolesConstants.ADMIN_MANAGE_SETTINGS)
+    @RolesAllowed({RolesConstants.ADMIN_MANAGE_SETTINGS, RolesConstants.CADASTRE_MAP_SHEET_SAVE})
     public MapSheet saveMapSheet(MapSheet mapSheet) {
+        if(mapSheet.isNew()){
+            mapSheet.setOfficeCode(adminEJB.getCurrentOfficeCode());
+        } else {
+            if(isInRole(RolesConstants.CADASTRE_PARCEL_SAVE)){
+                // check office code
+                checkOfficeCode(mapSheet.getOfficeCode(), adminEJB.getCurrentOfficeCode(), true);
+            }
+        }
         return getRepository().saveEntity(mapSheet);
     }
 
@@ -452,20 +461,10 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     }
 
     @Override
-    public List<MapSheet> getMapSheetListByOffice(String officeCode, String lang) {
+    public List<MapSheet> getMapSheetsByOffice(String officeCode) {
         HashMap params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, MapSheet.WHERE_BY_OFFICE_CODE);
-        params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
         params.put(MapSheet.PARAM_OFFICE_CODE, officeCode);
-        return getRepository().getEntityList(MapSheet.class, params);
-    }
-
-    @Override
-    public List<MapSheet> getMapSheetListByOffice(String lang) {
-        HashMap params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_WHERE_PART, MapSheet.WHERE_BY_OFFICE_CODE);
-        params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
-        params.put(MapSheet.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntityList(MapSheet.class, params);
     }
 
