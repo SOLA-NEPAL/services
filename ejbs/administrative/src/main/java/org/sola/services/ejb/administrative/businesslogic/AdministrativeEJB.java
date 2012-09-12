@@ -37,6 +37,7 @@ import javax.ejb.Stateless;
 import org.sola.common.DateUtility;
 import org.sola.common.RolesConstants;
 import org.sola.common.SOLAException;
+import org.sola.common.mapping.MappingManager;
 import org.sola.common.messaging.ServiceMessage;
 import org.sola.services.common.EntityAction;
 import org.sola.services.common.LocalInfo;
@@ -49,6 +50,7 @@ import org.sola.services.ejb.administrative.repository.entities.*;
 import org.sola.services.ejb.cadastre.businesslogic.CadastreEJBLocal;
 import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
 import org.sola.services.ejb.party.repository.entities.Party;
+import org.sola.services.ejb.search.businesslogic.SearchEJBLocal;
 import org.sola.services.ejb.source.businesslogic.SourceEJBLocal;
 import org.sola.services.ejb.source.repository.entities.Source;
 import org.sola.services.ejb.system.businesslogic.SystemEJBLocal;
@@ -79,6 +81,8 @@ public class AdministrativeEJB extends AbstractEJB
     private CadastreEJBLocal cadastreEJB;
     @EJB
     private AdminEJBLocal adminEJB;
+    @EJB
+    private SearchEJBLocal searchEJB;
 
     @Override
     protected void postConstruct() {
@@ -145,6 +149,7 @@ public class AdministrativeEJB extends AbstractEJB
     public List<ValidationResult> approveTransaction(
             String transactionId, String approvedStatus,
             boolean validateOnly, String languageCode) {
+        LocalInfo.setTransactionId(transactionId);
         List<ValidationResult> validationResult = new ArrayList<ValidationResult>();
 
         //Change the status of BA Units that are involved in a transaction directly
@@ -160,12 +165,76 @@ public class AdministrativeEJB extends AbstractEJB
 
             validationResult.addAll(this.validateBaUnit(baUnit, languageCode));
             if (systemEJB.validationSucceeded(validationResult) && !validateOnly) {
-                baUnit.setStatusCode(approvedStatus);
-                baUnit.setTransactionId(transactionId);
+                if (baUnit.getStatusCode().equals(StatusConstants.PENDING)) {
+                    baUnit.setStatusCode(StatusConstants.CURRENT);
+                }
                 getRepository().saveEntity(baUnit);
             }
         }
 
+        // Get prior properties and mark them for termination
+        if (!validateOnly) {
+            params = new HashMap<String, Object>();
+            params.put(CommonSqlProvider.PARAM_WHERE_PART, ParentBaUnitInfo.QUERY_WHERE_GET_FOR_TERMINATION);
+            params.put(ParentBaUnitInfo.PARAM_TRANSACTION_ID, transactionId);
+            List<ParentBaUnitInfo> parentBaUnits = getRepository().getEntityList(ParentBaUnitInfo.class, params);
+            if (parentBaUnits != null) {
+                for (ParentBaUnitInfo parentBaUnit : parentBaUnits) {
+                    terminateBaUnitByTransactionId(parentBaUnit.getRelatedBaUnitId(), transactionId);
+                }
+            }
+        }
+
+        // Gets BaUnits for termination and terminate underlaying RRRs
+        params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, BaUnit.QUERY_WHERE_BY_TERMINATING);
+        params.put(BaUnit.QUERY_PARAMETER_TRANSACTIONID, transactionId);
+        List<BaUnit> terminatingBaUnits = getRepository().getEntityList(BaUnit.class, params);
+
+        for (BaUnit baUnit : terminatingBaUnits) {
+            if (baUnit.getStatusCode().equals(StatusConstants.PENDING) && !validateOnly) {
+                throw new SOLAException(ServiceMessage.EJB_ADMINISTRATIVE_PENGIN_BA_UNIT_STATUS,
+                        new String[]{baUnit.getNameFirstpart() + "/" + baUnit.getNameLastpart()});
+            }
+
+            adminEJB.checkOfficeCode(baUnit.getOfficeCode());
+            BaUnitStatusChanger baUnitStatusChanger = new BaUnitStatusChanger();
+            baUnitStatusChanger.setOfficeCode(baUnit.getOfficeCode());
+            baUnitStatusChanger.setTransactionId(transactionId);
+            baUnitStatusChanger.setId(baUnit.getId());
+            baUnitStatusChanger.setRowId(baUnit.getRowId());
+            baUnitStatusChanger.setRowVersion(baUnit.getRowVersion());
+            baUnitStatusChanger.setChangeUser(baUnit.getChangeUser());
+
+            validationResult.addAll(this.validateBaUnit(baUnitStatusChanger, languageCode));
+            if (systemEJB.validationSucceeded(validationResult) && !validateOnly) {
+                for (Rrr rrr : baUnit.getRrrList()) {
+                    if (rrr.getStatusCode().equals(StatusConstants.PENDING)) {
+                        throw new SOLAException(ServiceMessage.EJB_ADMINISTRATIVE_PENGIN_RRR_EXISTS,
+                                new String[]{baUnit.getNameFirstpart() + "/" + baUnit.getNameLastpart()});
+                    }
+                    if (rrr.getStatusCode().equals(StatusConstants.CURRENT)) {
+                        // Terminate current right by creating pending with terminating flag
+                        Rrr pendingRrr = MappingManager.getMapper().map(rrr, Rrr.class);
+                        pendingRrr.setTerminating(true);
+                        pendingRrr.setId(null);
+                        pendingRrr.setTransactionId(transactionId);
+                        pendingRrr.setRowId(null);
+                        pendingRrr.setRowVersion(0);
+                        BaUnitNotation notation = new BaUnitNotation();
+                        notation.setNotationText("Property termination");
+                        pendingRrr.setNotation(notation);
+                        getRepository().saveEntity(pendingRrr);
+                    }
+                }
+                // Change BaUnit status to historic
+                baUnitStatusChanger.setStatusCode(StatusConstants.HISTORIC);
+                baUnitStatusChanger.setEntityAction(EntityAction.UPDATE);
+                getRepository().saveEntity(baUnitStatusChanger);
+            }
+        }
+
+        // Handle RRRs
         params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, Rrr.QUERY_WHERE_BYTRANSACTIONID);
         params.put(Rrr.QUERY_PARAMETER_TRANSACTIONID, transactionId);
@@ -180,7 +249,7 @@ public class AdministrativeEJB extends AbstractEJB
                 if (rrr.isTerminating()) {
                     rrr.setStatusCode(StatusConstants.HISTORIC);
                 } else {
-                    rrr.setStatusCode(approvedStatus);
+                    rrr.setStatusCode(StatusConstants.CURRENT);
                 }
                 getRepository().saveEntity(rrr);
             }
@@ -264,13 +333,18 @@ public class AdministrativeEJB extends AbstractEJB
 
         //TODO: Put BR check to have only one pending transaction for the BaUnit and BaUnit to be with "current" status.
         //TODO: Check BR for service to have cancel action and empty Rrr field.
+        terminateBaUnitByTransactionId(baUnitId, transaction.getId());
+        return getBaUnitById(baUnitId);
+    }
 
+    public void terminateBaUnitByTransactionId(String baUnitId, String transactionId) {
+        if (baUnitId == null || transactionId == null) {
+            return;
+        }
         BaUnitTarget baUnitTarget = new BaUnitTarget();
         baUnitTarget.setBaUnitId(baUnitId);
-        baUnitTarget.setTransactionId(transaction.getId());
+        baUnitTarget.setTransactionId(transactionId);
         getRepository().saveEntity(baUnitTarget);
-
-        return getBaUnitById(baUnitId);
     }
 
     @Override
@@ -380,6 +454,11 @@ public class AdministrativeEJB extends AbstractEJB
             baUnit.setTypeCode("administrativeUnit");
             baUnit.setOfficeCode(adminEJB.getCurrentOfficeCode());
             baUnit.setFiscalYearCode(adminEJB.getCurrentFiscalYearCode());
+            // Check cadastre object
+            if (baUnit.getCadastreObject() != null && !baUnit.getCadastreObject().isNew()
+                    && (baUnit.getCadastreObject().getEntityAction() == null)) {
+                baUnit.getCadastreObject().setEntityAction(EntityAction.UPDATE);
+            }
         } else {
             statusCode = baUnit.getOriginalValue("statusCode");
             if (statusCode != null) {
@@ -453,17 +532,11 @@ public class AdministrativeEJB extends AbstractEJB
             // Use pending RRR from the provided BaUnit
             pendingRrrLoc = new RrrLoc();
             pendingRrrLoc.setLocId(tmpRrr.getLocId());
-            pendingRrrLoc.setRegistrationDate(tmpRrr.getRegistrationDate());
             pendingRrrLoc.setRightHolderList(tmpRrr.getRightHolderList());
-            pendingRrrLoc.setSourceList(tmpRrr.getSourceList());
             pendingRrrLoc.setStatusCode(tmpRrr.getStatusCode());
             pendingRrrLoc.setTypeCode(tmpRrr.getTypeCode());
             pendingRrrLoc.setOwnerTypeCode(tmpRrr.getOwnerTypeCode());
-            pendingRrrLoc.setShareTypeCode(tmpRrr.getOwnershipTypeCode());
-
-            if (tmpRrr.getNotation() != null) {
-                pendingRrrLoc.setNotationText(tmpRrr.getNotation().getNotationText());
-            }
+            pendingRrrLoc.setOwnershipTypeCode(tmpRrr.getOwnershipTypeCode());
         } else {
             // Pick up pending from the common LOC
             List<RrrLoc> rrrLocs = getRrrLocsById(tmpRrr.getLocId());
@@ -534,6 +607,9 @@ public class AdministrativeEJB extends AbstractEJB
                     newRrr.setOfficeCode(rrr.getOfficeCode());
                     newRrr.setFiscalYearCode(adminEJB.getCurrentFiscalYearCode());
                     newRrr.setNr(rrr.getNr());
+                    newRrr.setNotation(rrr.getNotation());
+                    newRrr.setRegistrationDate(rrr.getRegistrationDate());
+                    newRrr.setSourceList(rrr.getSourceList());
                     newRrrs.add(newRrr);
                     hasChanges = true;
                 }
@@ -560,13 +636,6 @@ public class AdministrativeEJB extends AbstractEJB
             rrr = new Rrr();
             rrr.setLocId(rrrLoc.getLocId());
         }
-
-        if (rrr.getNotation() == null) {
-            rrr.setNotation(new BaUnitNotation());
-        }
-
-        rrr.getNotation().setNotationText(rrrLoc.getNotationText());
-        rrr.setRegistrationDate(rrrLoc.getRegistrationDate());
 
         // Update rightholders
         if (rrrLoc.getRightHolderList() == null) {
@@ -607,49 +676,10 @@ public class AdministrativeEJB extends AbstractEJB
             }
         }
 
-        // Update sources
-        if (rrrLoc.getSourceList() == null) {
-            if (rrr.getSourceList() != null) {
-                for (Source source : rrr.getSourceList()) {
-                    source.setEntityAction(EntityAction.DISASSOCIATE);
-                }
-            }
-        } else {
-            if (rrr.getSourceList() == null) {
-                rrr.setSourceList(new ArrayList<Source>());
-            }
-            // Remove if not in rrrLoc list
-            for (Source source : rrr.getSourceList()) {
-                boolean found = false;
-                for (Source source2 : rrrLoc.getSourceList()) {
-                    if (source.getId().equals(source2.getId())) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    source.setEntityAction(EntityAction.DISASSOCIATE);
-                }
-            }
-            // Add new source on rrr from rrrLoc
-            for (Source source : rrrLoc.getSourceList()) {
-                boolean found = false;
-                for (Source source2 : rrr.getSourceList()) {
-                    if (source.getId().equals(source2.getId())) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    rrr.getSourceList().add(source);
-                }
-            }
-        }
-
         rrr.setStatusCode(rrrLoc.getStatusCode());
         rrr.setTypeCode(rrrLoc.getTypeCode());
         rrr.setOwnerTypeCode(rrrLoc.getOwnerTypeCode());
-        rrr.setOwnershipTypeCode(rrrLoc.getShareTypeCode());
+        rrr.setOwnershipTypeCode(rrrLoc.getOwnershipTypeCode());
         return rrr;
     }
 
@@ -661,17 +691,10 @@ public class AdministrativeEJB extends AbstractEJB
             return false;
         }
         Rrr rrr2 = new Rrr();
-        rrr2.setRegistrationDate(rrrLoc.getRegistrationDate());
         rrr2.setTypeCode(rrrLoc.getTypeCode());
         rrr2.setOwnerTypeCode(rrrLoc.getOwnerTypeCode());
-        rrr2.setOwnershipTypeCode(rrrLoc.getShareTypeCode());
-        if (rrrLoc.getNotationText() != null) {
-            BaUnitNotation notation = new BaUnitNotation();
-            notation.setNotationText(rrrLoc.getNotationText());
-            rrr2.setNotation(notation);
-        }
+        rrr2.setOwnershipTypeCode(rrrLoc.getOwnershipTypeCode());
         rrr2.setRightHolderList(rrrLoc.getRightHolderList());
-        rrr2.setSourceList(rrrLoc.getSourceList());
         return compareRrrs(rrr, rrr2);
     }
 
@@ -680,9 +703,6 @@ public class AdministrativeEJB extends AbstractEJB
      */
     private boolean compareRrrs(Rrr rrr, Rrr rrr2) {
         if (rrr == null || rrr2 == null) {
-            return false;
-        }
-        if (!DateUtility.areEqual(rrr.getRegistrationDate(), rrr2.getRegistrationDate())) {
             return false;
         }
 
@@ -712,22 +732,6 @@ public class AdministrativeEJB extends AbstractEJB
             return false;
         }
 
-        // Check notation
-        if ((rrr.getNotation() == null || rrr.getNotation().getNotationText().isEmpty())
-                && rrr2.getNotation() != null && !rrr2.getNotation().getNotationText().isEmpty()) {
-            return false;
-        }
-
-        if ((rrr2.getNotation() == null || rrr2.getNotation().getNotationText().isEmpty())
-                && rrr.getNotation() != null && !rrr.getNotation().getNotationText().isEmpty()) {
-            return false;
-        }
-
-        if (rrr.getNotation() != null && rrr2.getNotation() != null
-                && !rrr.getNotation().getNotationText().equals(rrr2.getNotation().getNotationText())) {
-            return false;
-        }
-
         // Check rightholders
         if ((rrr.getRightHolderList() == null && rrr2.getRightHolderList() != null)
                 || (rrr.getRightHolderList() != null && rrr2.getRightHolderList() == null)) {
@@ -751,31 +755,6 @@ public class AdministrativeEJB extends AbstractEJB
                 }
             }
         }
-
-        // Check sources
-        if ((rrr.getSourceList() == null && rrr2.getSourceList() != null)
-                || (rrr.getSourceList() != null && rrr2.getSourceList() == null)) {
-            return false;
-        }
-        if (rrr.getSourceList() != null && rrr2.getSourceList() != null) {
-            if (rrr.getSourceList().size() != rrr2.getSourceList().size()) {
-                return false;
-            }
-
-            for (Source rrrSource : rrr.getSourceList()) {
-                boolean sourceFound = false;
-                for (Source rrrLocSource : rrr2.getSourceList()) {
-                    if (rrrSource.getId().equals(rrrLocSource.getId())) {
-                        sourceFound = true;
-                        break;
-                    }
-                }
-                if (!sourceFound) {
-                    return false;
-                }
-            }
-        }
-
         return true;
     }
 
@@ -824,28 +803,6 @@ public class AdministrativeEJB extends AbstractEJB
         List<Loc> loc = getRepository().getEntityList(Loc.class, params);
         return loc;
     }
-    //***********************************************************************************************************
-    //</editor-fold>    
-
-    private List<Source> getSourcesByLocAndStatus(String locId, String status) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_QUERY, RrrLoc.SELECT_GET_SOURCE_IDS);
-        params.put(RrrLoc.PARAM_LOC_ID, locId);
-        params.put(RrrLoc.PARAM_STATUS, status);
-
-        ArrayList<HashMap> rawSourceIds = getRepository().executeSql(params);
-        ArrayList<Source> sources = new ArrayList<Source>();
-
-        if (rawSourceIds != null) {
-            ArrayList<String> sourceIds = new ArrayList<String>();
-            for (HashMap hashMap : rawSourceIds) {
-                sourceIds.add(hashMap.get("id").toString());
-            }
-            sources = (ArrayList<Source>) sourceEJB.getSources(sourceIds);
-        }
-
-        return sources;
-    }
 
     private List<Party> getPartiesByLocAndStatus(String locId, String status) {
         Map<String, Object> params = new HashMap<String, Object>();
@@ -876,7 +833,6 @@ public class AdministrativeEJB extends AbstractEJB
         ArrayList<RrrLoc> rrrLocs = (ArrayList<RrrLoc>) getRepository().getEntityList(RrrLoc.class, params);
         if (rrrLocs != null) {
             for (RrrLoc rrrLoc : rrrLocs) {
-                rrrLoc.setSourceList(getSourcesByLocAndStatus(locId, rrrLoc.getStatusCode()));
                 rrrLoc.setRightHolderList(getPartiesByLocAndStatus(locId, rrrLoc.getStatusCode()));
             }
             if (rrrLocs.size() > 2) {

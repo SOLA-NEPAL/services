@@ -86,13 +86,13 @@ public class BaUnitSearchResult extends AbstractEntity {
     @Column(name="fy_code")
     private String fiscalYearCode;
     @Column(name = "loc_id")
-    private boolean locId;
+    private String locId;
     @Column(name = "moth_id")
-    private boolean mothId;
+    private String mothId;
     @Column(name = "pana_no")
-    private boolean panaNo;
+    private String panaNo;
     @Column(name = "moth_no")
-    private boolean mothNo;
+    private String mothNo;
     @Column(name="ward_no")
     private String wardNo;
     @Column(name="vdc_code")
@@ -172,37 +172,38 @@ public class BaUnitSearchResult extends AbstractEntity {
         this.fiscalYearCode = fiscalYearCode;
     }
 
-    public boolean isLocId() {
+    public String getLocId() {
         return locId;
     }
 
-    public void setLocId(boolean locId) {
+    public void setLocId(String locId) {
         this.locId = locId;
     }
 
-    public boolean isMothId() {
+    public String getMothId() {
         return mothId;
     }
 
-    public void setMothId(boolean mothId) {
+    public void setMothId(String mothId) {
         this.mothId = mothId;
     }
 
-    public boolean isMothNo() {
+    public String getMothNo() {
         return mothNo;
     }
 
-    public void setMothNo(boolean mothNo) {
+    public void setMothNo(String mothNo) {
         this.mothNo = mothNo;
     }
 
-    public boolean isPanaNo() {
+    public String getPanaNo() {
         return panaNo;
     }
 
-    public void setPanaNo(boolean panaNo) {
+    public void setPanaNo(String panaNo) {
         this.panaNo = panaNo;
     }
+
 
     public String getMapNumber() {
         return mapNumber;

@@ -58,7 +58,8 @@ public class BaUnit extends AbstractVersionedEntity {
     public static final String QUERY_PARAMETER_FIRSTPART = "firstPart";
     public static final String QUERY_PARAMETER_LASTPART = "lastPart";
     public static final String QUERY_WHERE_BYTRANSACTIONID = "transaction_id = "
-            + "#{" + QUERY_PARAMETER_TRANSACTIONID + "} or id in "
+            + "#{" + QUERY_PARAMETER_TRANSACTIONID + "}";
+    public static final String QUERY_WHERE_BY_TERMINATING = "id in "
             + "(select ba_unit_id from administrative.ba_unit_target where "
             + "transaction_id = #{" + QUERY_PARAMETER_TRANSACTIONID + "})";
     public static final String QUERY_WHERE_BY_TRANSACTION_ID_EXTENDED =
@@ -99,7 +100,7 @@ public class BaUnit extends AbstractVersionedEntity {
     @Column(name = "cadastre_object_id")
     private String cadastreObjectId;
     @ExternalEJB(ejbLocalClass = CadastreEJBLocal.class,
-    loadMethod = "getCadastreObject", saveMethod="saveCadastreObject")
+    loadMethod = "getCadastreObject", saveMethod = "saveCadastreObject")
     @ChildEntity(childIdField = "cadastreObjectId")
     private CadastreObject cadastreObject;
     private Boolean locked;
@@ -311,12 +312,16 @@ public class BaUnit extends AbstractVersionedEntity {
         }
         if (getNameFirstpart() == null || getNameFirstpart().length() < 1
                 || getNameLastpart() == null || getNameLastpart().length() < 1) {
-            String baUnitNumber = generateBaUnitNumber();
-            if (baUnitNumber != null && baUnitNumber.contains("/")) {
-                String[] numberParts = baUnitNumber.split("/");
-                setNameFirstpart(numberParts[0]);
-                setNameLastpart(numberParts[1]);
+            if (getCadastreObject() != null) {
+                setNameFirstpart(getCadastreObject().generateNameFirstPart());
+                setNameLastpart(getCadastreObject().generateNameLastPart());
             }
+//            String baUnitNumber = generateBaUnitNumber();
+//            if (baUnitNumber != null && baUnitNumber.contains("/")) {
+//                String[] numberParts = baUnitNumber.split("/");
+//                setNameFirstpart(numberParts[0]);
+//                setNameLastpart(numberParts[1]);
+//            }
         }
         super.preSave();
     }

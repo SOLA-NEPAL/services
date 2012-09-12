@@ -30,8 +30,12 @@ package org.sola.services.ejb.administrative.repository.entities;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.sola.services.common.LocalInfo;
 import org.sola.services.common.repository.ChildEntity;
+import org.sola.services.common.repository.ExternalEJB;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
+import org.sola.services.ejb.search.businesslogic.SearchEJBLocal;
+import org.sola.services.ejb.search.repository.entities.BaUnitSearchResult;
 
 @Table(schema = "administrative", name = "required_relationship_baunit")
 public class ChildBaUnitInfo extends AbstractVersionedEntity {
@@ -41,10 +45,13 @@ public class ChildBaUnitInfo extends AbstractVersionedEntity {
     @Id
     @Column(name = "to_ba_unit_id")
     private String relatedBaUnitId;
+    @Column(name="transaction_id")
+    private String transactionId;
     @Column(name = "relation_code")
     private String relationCode;
+    @ExternalEJB(ejbLocalClass = SearchEJBLocal.class, loadMethod = "searchBaUnitById")
     @ChildEntity(childIdField = "relatedBaUnitId", readOnly=true)
-    private BaUnitBasic relatedBaUnit;
+    private BaUnitSearchResult relatedBaUnit;
     
     public ChildBaUnitInfo(){
         super();
@@ -58,11 +65,11 @@ public class ChildBaUnitInfo extends AbstractVersionedEntity {
         this.baUnitId = baUnitId;
     }
 
-    public BaUnitBasic getRelatedBaUnit() {
+    public BaUnitSearchResult getRelatedBaUnit() {
         return relatedBaUnit;
     }
 
-    public void setRelatedBaUnit(BaUnitBasic relatedBaUnit) {
+    public void setRelatedBaUnit(BaUnitSearchResult relatedBaUnit) {
         this.relatedBaUnit = relatedBaUnit;
     }
 
@@ -80,5 +87,21 @@ public class ChildBaUnitInfo extends AbstractVersionedEntity {
 
     public void setRelationCode(String relationCode) {
         this.relationCode = relationCode;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+    }
+    
+    @Override
+    public void preSave() {
+        if (this.isNew()) {
+            setTransactionId(LocalInfo.getTransactionId());
+        }
+        super.preSave();
     }
 } 

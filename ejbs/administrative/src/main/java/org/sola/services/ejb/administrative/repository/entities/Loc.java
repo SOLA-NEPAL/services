@@ -34,7 +34,7 @@ public class Loc extends AbstractVersionedEntity {
     private String panaNo;
     @Column(name = "tmp_pana_no")
     private String tmpPanaNo;
-    @Column(name = "office_code")
+    @Column(name = "office_code", updatable=false)
     private String officeCode;
     @Column(name="creation_date", insertable=false, updatable=false)
     private Date creationDate;

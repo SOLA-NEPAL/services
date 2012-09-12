@@ -409,19 +409,6 @@ public class Rrr extends AbstractVersionedEntity {
         this.taxAmount = taxAmount;
     }
 
-    @Override
-    public void preSave() {
-        if (this.isNew()) {
-            setTransactionId(LocalInfo.getTransactionId());
-        }
-
-        if (isNew() && getNr() == null) {
-            // Assign a generated number to the Rrr if it is not currently set.
-            setNr(generateRrrNumber());
-        }
-        super.preSave();
-    }
-
     public String getSn() {
         return sn;
     }
@@ -484,5 +471,18 @@ public class Rrr extends AbstractVersionedEntity {
 
     public void setBundlePageNo(String bundlePageNo) {
         this.bundlePageNo = bundlePageNo;
+    }
+    
+    @Override
+    public void preSave() {
+        if (this.isNew()) {
+            setTransactionId(LocalInfo.getTransactionId());
+        }
+
+        if (isNew() && getNr() == null) {
+            // Assign a generated number to the Rrr if it is not currently set.
+            setNr(generateRrrNumber());
+        }
+        super.preSave();
     }
 }

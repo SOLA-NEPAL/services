@@ -27,14 +27,24 @@
  */
 package org.sola.services.ejb.administrative.repository.entities;
 
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.sola.services.common.LocalInfo;
 import org.sola.services.common.repository.ChildEntity;
+import org.sola.services.common.repository.ExternalEJB;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
+import org.sola.services.ejb.search.businesslogic.SearchEJBLocal;
+import org.sola.services.ejb.search.repository.entities.BaUnitSearchResult;
 
 @Table(schema = "administrative", name = "required_relationship_baunit")
 public class ParentBaUnitInfo extends AbstractVersionedEntity {
+    public static final String PARAM_TRANSACTION_ID="transactionId";
+    public static final String QUERY_WHERE_GET_FOR_TERMINATION = "transaction_id=#{" + PARAM_TRANSACTION_ID + "} "
+            + "AND from_ba_unit_id NOT IN (SELECT ba_unit_id FROM administrative.ba_unit_target "
+            + "WHERE transaction_id=#{" + PARAM_TRANSACTION_ID + "})";
+    
     @Id
     @Column(name = "to_ba_unit_id")
     private String baUnitId;
@@ -43,8 +53,11 @@ public class ParentBaUnitInfo extends AbstractVersionedEntity {
     private String relatedBaUnitId;
     @Column(name = "relation_code")
     private String relationCode;
+    @Column(name="transaction_id")
+    private String transactionId;
+    @ExternalEJB(ejbLocalClass = SearchEJBLocal.class, loadMethod = "searchBaUnitById")
     @ChildEntity(childIdField = "relatedBaUnitId", readOnly=true)
-    private BaUnitBasic relatedBaUnit;
+    private BaUnitSearchResult relatedBaUnit;
     
     public ParentBaUnitInfo(){
         super();
@@ -58,11 +71,11 @@ public class ParentBaUnitInfo extends AbstractVersionedEntity {
         this.baUnitId = baUnitId;
     }
 
-    public BaUnitBasic getRelatedBaUnit() {
+    public BaUnitSearchResult getRelatedBaUnit() {
         return relatedBaUnit;
     }
 
-    public void setRelatedBaUnit(BaUnitBasic relatedBaUnit) {
+    public void setRelatedBaUnit(BaUnitSearchResult relatedBaUnit) {
         this.relatedBaUnit = relatedBaUnit;
     }
 
@@ -80,5 +93,21 @@ public class ParentBaUnitInfo extends AbstractVersionedEntity {
 
     public void setRelationCode(String relationCode) {
         this.relationCode = relationCode;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+    }
+    
+    @Override
+    public void preSave() {
+        if (this.isNew()) {
+            setTransactionId(LocalInfo.getTransactionId());
+        }
+        super.preSave();
     }
 } 

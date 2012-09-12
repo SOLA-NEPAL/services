@@ -31,7 +31,7 @@ public class CadastreObjectSearchResultExt extends AbstractReadOnlyEntity {
             + "COALESCE(pcl.map_sheet_id2, '') = #{" + MAP_SHEET_CODE_PARAM + "} OR "
             + "COALESCE(pcl.map_sheet_id3, '') = #{" + MAP_SHEET_CODE_PARAM + "} OR "
             + "COALESCE(pcl.map_sheet_id4, '') = #{" + MAP_SHEET_CODE_PARAM + "} OR "
-            + "#{" + MAP_SHEET_CODE_PARAM + "}='') "
+            + "#{" + MAP_SHEET_CODE_PARAM + "}='') AND pcl.status_code in ('pending', 'current') "
             + "AND (COALESCE(ad.ward_no, '') = #{" + WARD_NO_PARAM + "} OR #{" + WARD_NO_PARAM + "}='') "
             + "AND (COALESCE(pcl.parcel_no, '') = #{" + PARCEL_NO_PARAM + "} OR #{" + PARCEL_NO_PARAM + "}='') "
             + "AND (COALESCE(pcl.office_code, '') = #{" + PARAM_OFFICE_CODE + "} OR #{" + PARAM_OFFICE_CODE + "}='') "

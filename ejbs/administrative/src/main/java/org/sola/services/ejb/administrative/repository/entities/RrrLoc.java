@@ -1,24 +1,19 @@
 package org.sola.services.ejb.administrative.repository.entities;
 
-import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 import org.sola.services.ejb.party.repository.entities.Party;
-import org.sola.services.ejb.source.repository.entities.Source;
 
 public class RrrLoc extends AbstractReadOnlyEntity {
 
     public static final String PARAM_LOC_ID = "locId";
     public static final String PARAM_STATUS = "status";
-    public static final String SELECT_GET_SOURCE_IDS = "select id from administrative.get_loc_source_ids(#{"
-            + PARAM_LOC_ID +"}, #{"+ PARAM_STATUS +"})";
     public static final String SELECT_GET_PARTY_IDS = "select id from administrative.get_loc_party_ids(#{"
             + PARAM_LOC_ID +"}, #{"+ PARAM_STATUS +"})";
-    public static final String SELECT_RRR_LOCS = "select loc_id, type_code, owner_type_code, share_type_code, registration_date, status_code, " 
-            + "administrative.get_rrrloc_notation(loc_id, status_code) as notation_text from administrative.get_loc_rrrs(#{"
-            + PARAM_LOC_ID +"}, #{"+ PARAM_OFFICE_CODE +"})";
+    public static final String SELECT_RRR_LOCS = "select loc_id, type_code, owner_type_code, ownership_type_code, status_code " 
+            + "from administrative.get_loc_rrrs(#{" + PARAM_LOC_ID +"}, #{"+ PARAM_OFFICE_CODE +"})";
     
     @Id
     @Column(name = "loc_id")
@@ -27,17 +22,10 @@ public class RrrLoc extends AbstractReadOnlyEntity {
     private String typeCode;
     @Column(name = "owner_type_code")
     private String ownerTypeCode;
-    @Column(name = "share_type_code")
-    private String shareTypeCode;
-    @Column(name = "registration_date")
-    private Date registrationDate;
-    @Column(name = "notation_text")
-    private String notationText;
+    @Column(name = "ownership_type_code")
+    private String ownershipTypeCode;
     @Column(name = "status_code")
     private String statusCode;
-    
-    
-    private List<Source> sourceList;
     private List<Party> rightHolderList;
 
     public RrrLoc() {
@@ -50,14 +38,6 @@ public class RrrLoc extends AbstractReadOnlyEntity {
 
     public void setLocId(String locId) {
         this.locId = locId;
-    }
-
-    public Date getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(Date registrationDate) {
-        this.registrationDate = registrationDate;
     }
 
     public String getStatusCode() {
@@ -84,20 +64,12 @@ public class RrrLoc extends AbstractReadOnlyEntity {
         this.ownerTypeCode = ownerTypeCode;
     }
 
-    public String getShareTypeCode() {
-        return shareTypeCode;
+    public String getOwnershipTypeCode() {
+        return ownershipTypeCode;
     }
 
-    public void setShareTypeCode(String shareTypeCode) {
-        this.shareTypeCode = shareTypeCode;
-    }
-
-    public String getNotationText() {
-        return notationText;
-    }
-
-    public void setNotationText(String notationText) {
-        this.notationText = notationText;
+    public void setOwnershipTypeCode(String ownershipTypeCode) {
+        this.ownershipTypeCode = ownershipTypeCode;
     }
 
     public List<Party> getRightHolderList() {
@@ -106,13 +78,5 @@ public class RrrLoc extends AbstractReadOnlyEntity {
 
     public void setRightHolderList(List<Party> rightHolderList) {
         this.rightHolderList = rightHolderList;
-    }
-
-    public List<Source> getSourceList() {
-        return sourceList;
-    }
-
-    public void setSourceList(List<Source> sourceList) {
-        this.sourceList = sourceList;
     }
 }

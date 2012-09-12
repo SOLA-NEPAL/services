@@ -4,15 +4,10 @@
  */
 package org.sola.services.ejb.administrative.repository.entities;
 
-import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import org.sola.services.common.repository.ChildEntity;
-import org.sola.services.common.repository.ExternalEJB;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
-import org.sola.services.ejb.address.repository.entities.Vdc;
-import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
 
 /**
  *
@@ -31,22 +26,29 @@ public class MothBasic extends AbstractVersionedEntity {
     private String mothLuj;
     @Column(name = "office_code")
     private String officeCode;
-    @Column(name="creation_date", insertable=false, updatable=false)
-    private Date creationDate;
-    @ExternalEJB(ejbLocalClass = AdminEJBLocal.class, loadMethod = "getVdcByCode")
-    @ChildEntity(childIdField = "vdcCode")
-    private Vdc vdc;
+    @Column(name="fy_code", updatable=false)
+    private String fiscalYearCode;
+    @Column(name="ward_no")
+    private String wardNumber;
     
     public MothBasic(){
         super();
     }
 
-    public Date getCreationDate() {
-        return creationDate;
+    public String getFiscalYearCode() {
+        return fiscalYearCode;
     }
 
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
+    public void setFiscalYearCode(String fiscalYearCode) {
+        this.fiscalYearCode = fiscalYearCode;
+    }
+
+    public String getWardNumber() {
+        return wardNumber;
+    }
+
+    public void setWardNumber(String wardNumber) {
+        this.wardNumber = wardNumber;
     }
 
     public String getOfficeCode() {
@@ -80,17 +82,6 @@ public class MothBasic extends AbstractVersionedEntity {
 
     public void setMothlujNumber(String mothlujNumber) {
         this.mothlujNumber = mothlujNumber;
-    }
-
-    public Vdc getVdc() {
-        return vdc;
-    }
-
-    public void setVdc(Vdc vdc) {
-        this.vdc = vdc;
-        if (vdc != null) {
-            this.setVdcCode(vdc.getCode());
-        }
     }
 
     public String getVdcCode() {

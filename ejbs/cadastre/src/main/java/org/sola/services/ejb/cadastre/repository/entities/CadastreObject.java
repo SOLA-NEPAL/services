@@ -175,7 +175,7 @@ public class CadastreObject extends AbstractVersionedEntity {
     @Column(name = "address_id")
     private String addressId;
     @ExternalEJB(ejbLocalClass = AddressEJBLocal.class, loadMethod = "getAddress", saveMethod = "saveAddress")
-    @ChildEntity(childIdField = "addressId", readOnly = true)
+    @ChildEntity(childIdField = "addressId")
     private Address address;
     @ChildEntity(childIdField = "mapSheetId", readOnly = true)
     private MapSheet mapSheet;
@@ -452,7 +452,7 @@ public class CadastreObject extends AbstractVersionedEntity {
         super.preSave();
     }
 
-    private String generateNameFirstPart() {
+    public String generateNameFirstPart() {
         if (getAddress() == null || getAddress().getVdcCode() == null
                 || getAddress().getWardNo() == null
                 || getMapSheet().getMapNumber() == null) {
@@ -462,7 +462,7 @@ public class CadastreObject extends AbstractVersionedEntity {
                 + "-" + getMapSheet().getMapNumber();
     }
 
-    private String generateNameLastPart() {
+    public String generateNameLastPart() {
         if (getParcelno() == null) {
             return null;
         }

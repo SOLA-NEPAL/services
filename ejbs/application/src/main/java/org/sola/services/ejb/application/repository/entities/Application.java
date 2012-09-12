@@ -119,7 +119,7 @@ public class Application extends AbstractVersionedEntity {
     private List<Service> serviceList;
     @ExternalEJB(ejbLocalClass = SearchEJBLocal.class, loadMethod = "searchBaUnitsByIds")
     @ChildEntityList(parentIdField = "applicationId", childIdField = "baUnitId",
-    manyToManyClass = ApplicationProperty.class, readOnly = true)
+    manyToManyClass = ApplicationProperty.class)
     private List<BaUnitSearchResult> propertyList;
     @ExternalEJB(ejbLocalClass = SourceEJBLocal.class,
     loadMethod = "getSources", saveMethod = "saveSource")
