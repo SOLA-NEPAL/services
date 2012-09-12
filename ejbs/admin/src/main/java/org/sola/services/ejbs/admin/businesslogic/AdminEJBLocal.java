@@ -142,19 +142,19 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
      * List of nepali year from database with out any parameter given
      */
     List<Integer> getNepaliYear();
-    
+
     /**
      * Returns List of Nepali date from database with out any parameter given
      */
     List<NepaliMonth> getNepaliMonths();
-    
+
     /**
      * Returns List of Nepali date from database
      *
      * @param year parameter to return list of month in given year
      */
     List<NepaliMonth> getNepaliMonths(int year);
-    
+
     /**
      * Returns the entity NepaliMonth
      *
@@ -162,36 +162,40 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
      * @param month nepali month
      */
     NepaliMonth getNepaliMonth(int year, int month);
-    
+
     /**
      * Returns List of Nepali date from database
      *
      * @param year parameter to return list of month in given year
      */
     NepaliMonth saveNepaliMonth(NepaliMonth nepaliMonth);
-    
+
     /**
-     * Returns Nepali date @parma date Date to convert
+     * Returns Nepali date
+     *
+     * @parma date Date to convert
      */
     String getNepaliDate(Date date);
-    
+
     /**
-     * Returns Gregorian date @parma nepaliDate Nepali date
+     * Returns Gregorian date
+     *
+     * @parma nepaliDate Nepali date
      */
     Date getGregorianDate(String nepaliDate);
-    
+
     String getCurrentOfficeCode();
-    
+
     /**
-     * Checks provided office code against the office code of the current user. 
+     * Checks provided office code against the office code of the current user.
      * By default exception will be thrown if codes are different.
      *
      * @param officeCode Provided office code to check
      */
     boolean checkOfficeCode(String officeCode);
-    
+
     /**
-     * Checks provided office code against the office code of the current user. 
+     * Checks provided office code against the office code of the current user.
      *
      * @param officeCode Provided office code to check
      * @param throwException Boolean flag indicating whether to throw an
@@ -199,10 +203,19 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
      * code.
      */
     boolean checkOfficeCode(String officeCode, boolean throwException);
-    
-    /** Returns current fiscal year. */
+
+    /**
+     * Returns current fiscal year.
+     */
     FiscalYear getCurrentFiscalYear();
-    
-    /** Returns current fiscal year code. */
+
+    /**
+     * Returns current fiscal year code.
+     */
     String getCurrentFiscalYearCode();
+
+    /**
+     * Returns list of fiscal year entity
+     */
+    List<FiscalYear> getFiscalYears(String languageCode);
 }

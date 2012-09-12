@@ -335,13 +335,13 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
         }
         return currentOffice;
     }
-    
+
     @Override
-    public String getCurrentOfficeCode(){
+    public String getCurrentOfficeCode() {
         Office office = getCurrentOffice();
-        if(office!=null){
+        if (office != null) {
             return office.getCode();
-        }else{
+        } else {
             return null;
         }
     }
@@ -374,10 +374,15 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     @Override
     public String getCurrentFiscalYearCode() {
         FiscalYear currentFiscalYear = getCurrentFiscalYear();
-        if(currentFiscalYear!=null){
+        if (currentFiscalYear != null) {
             return currentFiscalYear.getCode();
         } else {
             return null;
         }
+    }
+
+    @Override
+    public List<FiscalYear> getFiscalYears(String languageCode) {
+        return getRepository().getCodeList(FiscalYear.class, languageCode);
     }
 }

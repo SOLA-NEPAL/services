@@ -378,11 +378,10 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     @Override
     @RolesAllowed({RolesConstants.ADMIN_MANAGE_SETTINGS, RolesConstants.CADASTRE_MAP_SHEET_SAVE})
     public MapSheet saveMapSheet(MapSheet mapSheet) {
-        if(mapSheet.isNew()){
+        if (mapSheet.isNew()) {
             mapSheet.setOfficeCode(adminEJB.getCurrentOfficeCode());
         } else {
-            if(isInRole(RolesConstants.CADASTRE_PARCEL_SAVE)){
-                // check office code
+            if (isInRole(RolesConstants.CADASTRE_PARCEL_SAVE)) {
                 checkOfficeCode(mapSheet.getOfficeCode(), adminEJB.getCurrentOfficeCode(), true);
             }
         }
@@ -432,6 +431,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         params.put(CadastreObject.WARD_NO_PARAM, wardNo);
         params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntity(CadastreObject.class, params);
+
     }
 
     @Override
