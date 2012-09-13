@@ -29,12 +29,7 @@
  */
 package org.sola.services.ejb.search.businesslogic;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -45,33 +40,14 @@ import org.sola.services.common.ejbs.AbstractEJB;
 import org.sola.services.common.repository.CommonSqlProvider;
 import org.sola.services.common.repository.entities.AbstractEntity;
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
-import org.sola.services.ejb.search.repository.entities.ApplicationLogResult;
-import org.sola.services.ejb.search.repository.entities.ApplicationSearchParams;
-import org.sola.services.ejb.search.repository.entities.ApplicationSearchResult;
-import org.sola.services.ejb.search.repository.entities.BaUnitSearchParams;
-import org.sola.services.ejb.search.repository.entities.BaUnitSearchResult;
-import org.sola.services.ejb.search.repository.entities.BrSearchParams;
-import org.sola.services.ejb.search.repository.entities.BrSearchResult;
-import org.sola.services.ejb.search.repository.entities.CadastreObjectSearchResult;
-import org.sola.services.ejb.search.repository.entities.ConfigMapLayer;
-import org.sola.services.ejb.search.repository.entities.GenericResult;
-import org.sola.services.ejb.search.repository.entities.PartySearchParams;
-import org.sola.services.ejb.search.repository.entities.PartySearchResult;
 import org.sola.services.ejb.search.repository.SearchSqlProvider;
-import org.sola.services.ejb.search.repository.entities.Setting;
-import org.sola.services.ejb.search.repository.entities.SourceSearchParams;
-import org.sola.services.ejb.search.repository.entities.SourceSearchResult;
-import org.sola.services.ejb.search.repository.entities.SpatialResult;
-import org.sola.services.ejb.search.repository.entities.UserSearchParams;
-import org.sola.services.ejb.search.repository.entities.UserSearchResult;
-import org.sola.services.ejb.search.repository.entities.DynamicQuery;
-import org.sola.services.ejb.search.repository.entities.DynamicQueryField;
-import org.sola.services.ejb.search.repository.entities.CadastreObjectSearchParams;
-import org.sola.services.ejb.search.repository.entities.CadastreObjectSearchResultExt;
+import org.sola.services.ejb.search.repository.entities.*;
 import org.sola.services.ejb.search.spatial.QueryForNavigation;
 import org.sola.services.ejb.search.spatial.QueryForSelect;
 import org.sola.services.ejb.search.spatial.ResultForNavigationInfo;
 import org.sola.services.ejb.search.spatial.ResultForSelectionInfo;
+import org.sola.services.ejb.transaction.businesslogic.TransactionEJBLocal;
+import org.sola.services.ejb.transaction.repository.entities.TransactionBasic;
 import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
 
 @Stateless
@@ -80,6 +56,8 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
     
     @EJB
     AdminEJBLocal adminEJB;
+    @EJB
+    TransactionEJBLocal transactionEJB;
     
     private DynamicQuery getDynamicQuery(String queryName, Map params) {
         DynamicQuery query = null;
@@ -576,6 +554,20 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         query = query.substring(0, query.length() - 2) + ")";
         
         params.put(CommonSqlProvider.PARAM_QUERY, query);
+        params.put(BaUnitSearchResult.SEARCH_PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(BaUnitSearchResult.class, params);
+    }
+
+    @Override
+    public List<BaUnitSearchResult> getAllBaUnitsByService(String serviceId) {
+        TransactionBasic transaction = transactionEJB.getTransactionByServiceId(serviceId, false, TransactionBasic.class);
+        if(transaction == null){
+            return null;
+        }
+        
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.QUERY_WITH_ACTION);
+        params.put(BaUnitSearchResult.PARAM_TRANSACTION_ID, transaction.getId());
         params.put(BaUnitSearchResult.SEARCH_PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntityList(BaUnitSearchResult.class, params);
     }

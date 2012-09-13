@@ -109,4 +109,6 @@ public interface SearchEJBLocal extends AbstractEJBLocal {
     List<CadastreObjectSearchResult> searchCadastreObjects(String searchBy, String searchString);
 
     List<CadastreObjectSearchResultExt> searchCadastreObjects(String langCode, CadastreObjectSearchParams searchParams);
+    
+    List<BaUnitSearchResult> getAllBaUnitsByService(String serviceId);
 }

@@ -66,8 +66,7 @@ import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
  */
 @Stateless
 @EJB(name = "java:global/SOLA/AdministrativeEJBLocal", beanInterface = AdministrativeEJBLocal.class)
-public class AdministrativeEJB extends AbstractEJB
-        implements AdministrativeEJBLocal {
+public class AdministrativeEJB extends AbstractEJB implements AdministrativeEJBLocal {
 
     @EJB
     private PartyEJBLocal partyEJB;
@@ -572,18 +571,18 @@ public class AdministrativeEJB extends AbstractEJB
                 //(skip current RRR, to avoid disaapearing on the client form)
                 //if (!rrr.getBaUnitId().equals(baUnit.getId())) {
                 // Look for the current record
-                for (Rrr rrr2 : rrrs) {
-                    if (rrr2.getNr() != null && rrr.getNr() != null && !rrr2.getId().equals(rrr.getId())
-                            && rrr2.getNr().equals(rrr.getNr())
-                            && rrr2.getStatusCode().equals(StatusConstants.CURRENT)) {
-                        // Check if current and pending are equal, remove pending
-                        if (compareRrrs(rrr, rrr2)) {
-                            rrr.setEntityAction(EntityAction.DELETE);
-                            hasChanges = true;
-                        }
-                        break;
-                    }
-                }
+//                for (Rrr rrr2 : rrrs) {
+//                    if (rrr2.getNr() != null && rrr.getNr() != null && !rrr2.getId().equals(rrr.getId())
+//                            && rrr2.getNr().equals(rrr.getNr())
+//                            && rrr2.getStatusCode().equals(StatusConstants.CURRENT)) {
+//                        // Check if current and pending are equal, remove pending
+//                        if (compareRrrs(rrr, rrr2)) {
+//                            rrr.setEntityAction(EntityAction.DELETE);
+//                            hasChanges = true;
+//                        }
+//                        break;
+//                    }
+//                }
                 //}
             }
 
@@ -602,14 +601,13 @@ public class AdministrativeEJB extends AbstractEJB
 
                 if (!isPending && compareRrrAndLoc(rrr, pendingRrrLoc) == false) {
                     // Create pending
-                    Rrr newRrr = createUpdateRrrByRrrLoc(null, pendingRrrLoc);
-                    newRrr.setBaUnitId(rrr.getBaUnitId());
-                    newRrr.setOfficeCode(rrr.getOfficeCode());
+                    Rrr newRrr = MappingManager.getMapper().map(rrr, Rrr.class);
+                    newRrr.setId(null);
+                    newRrr.setRowId(null);
+                    newRrr.setRowVersion(0);
                     newRrr.setFiscalYearCode(adminEJB.getCurrentFiscalYearCode());
-                    newRrr.setNr(rrr.getNr());
-                    newRrr.setNotation(rrr.getNotation());
-                    newRrr.setRegistrationDate(rrr.getRegistrationDate());
-                    newRrr.setSourceList(rrr.getSourceList());
+
+                    createUpdateRrrByRrrLoc(newRrr, pendingRrrLoc);
                     newRrrs.add(newRrr);
                     hasChanges = true;
                 }
@@ -870,5 +868,23 @@ public class AdministrativeEJB extends AbstractEJB
     @Override
     public List<TenantType> getTenantTypes(String languageCode) {
         return getRepository().getCodeList(TenantType.class, languageCode);
+    }
+
+    @Override
+    @RolesAllowed(RolesConstants.ADMINISTRATIVE_BA_UNIT_SAVE)
+    public void deletePendingBaUnit(String baUnitId) {
+        if (baUnitId == null) {
+            return;
+        }
+        BaUnitStatusChanger baUnitStatusChanger = getRepository().getEntity(BaUnitStatusChanger.class, baUnitId);
+
+        if (baUnitStatusChanger != null) {
+            if (baUnitStatusChanger.getStatusCode().equals(StatusConstants.PENDING)) {
+                baUnitStatusChanger.setEntityAction(EntityAction.DELETE);
+                getRepository().saveEntity(baUnitStatusChanger);
+            } else {
+                throw new SOLAException(ServiceMessage.EJB_ADMINISTRATIVE_BAUNIT_MODIFICATION_NOT_ALLOWED);
+            }
+        }
     }
 }

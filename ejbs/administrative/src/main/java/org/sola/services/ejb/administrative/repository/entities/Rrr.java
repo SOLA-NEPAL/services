@@ -122,7 +122,7 @@ public class Rrr extends AbstractVersionedEntity {
     @ChildEntityList(parentIdField = "rrrId", childIdField = "partyId",
     manyToManyClass = PartyForRrr.class, readOnly = true)
     private List<Party> rightHolderList;
-    @ChildEntity(childIdField = "locId", insertBeforeParent = true)
+    @ChildEntity(childIdField = "locId", readOnly=true)
     private LocWithMoth loc;
     @Column(name = "restriction_reason_code")
     private String restrictionReasonCode;
