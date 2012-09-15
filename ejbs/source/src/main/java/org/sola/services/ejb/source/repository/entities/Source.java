@@ -96,7 +96,20 @@ public class Source extends AbstractVersionedEntity {
     private Boolean locked = null;
     @Column(name = "office_code", updatable = false)
     private String officeCode;
-
+    
+    @Column(name="owner")
+    private String owner;
+    @Column(name="description")
+    private String description;
+    @Column(name="packet_no")
+    private String packetNumber;
+    @Column(name="tameli_no")
+    private String tameliNumber;
+    @Column(name="likhat_reg_no")
+    private String likhatRegistrationNumber;
+    @Column(name="page_no")
+    private String pageNumber;
+    
     public Source() {
         super();
     }
@@ -270,6 +283,54 @@ public class Source extends AbstractVersionedEntity {
 
     public void setOfficeCode(String officeCode) {
         this.officeCode = officeCode;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getLikhatRegistrationNumber() {
+        return likhatRegistrationNumber;
+    }
+
+    public void setLikhatRegistrationNumber(String likhatRegistrationNumber) {
+        this.likhatRegistrationNumber = likhatRegistrationNumber;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public String getPacketNumber() {
+        return packetNumber;
+    }
+
+    public void setPacketNumber(String packetNumber) {
+        this.packetNumber = packetNumber;
+    }
+
+    public String getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(String pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    public String getTameliNumber() {
+        return tameliNumber;
+    }
+
+    public void setTameliNumber(String tameliNumber) {
+        this.tameliNumber = tameliNumber;
     }
 
     @Override
