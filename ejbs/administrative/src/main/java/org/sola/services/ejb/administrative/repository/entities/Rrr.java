@@ -122,7 +122,7 @@ public class Rrr extends AbstractVersionedEntity {
     @ChildEntityList(parentIdField = "rrrId", childIdField = "partyId",
     manyToManyClass = PartyForRrr.class, readOnly = true)
     private List<Party> rightHolderList;
-    @ChildEntity(childIdField = "locId", readOnly=true)
+    @ChildEntity(childIdField = "locId", readOnly = true)
     private LocWithMoth loc;
     @Column(name = "restriction_reason_code")
     private String restrictionReasonCode;
@@ -369,6 +369,10 @@ public class Rrr extends AbstractVersionedEntity {
         return restrictionReasonCode;
     }
 
+    public void setRestrictionReasonCode(String restrictionReasonCode) {
+        this.restrictionReasonCode = restrictionReasonCode;
+    }
+
     public String getOwnerTypeCode() {
         return ownerTypeCode;
     }
@@ -472,7 +476,7 @@ public class Rrr extends AbstractVersionedEntity {
     public void setBundlePageNo(String bundlePageNo) {
         this.bundlePageNo = bundlePageNo;
     }
-    
+
     @Override
     public void preSave() {
         if (this.isNew()) {
