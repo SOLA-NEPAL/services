@@ -62,24 +62,44 @@ public class Party extends AbstractVersionedEntity {
     @Id
     @Column(name = "id")
     private String id;
-    @Column(name = "parent_id")
-    private String parentId;
-    @AccessFunctions(onSelect = "party.get_party_name(parent_id) as parent_name")
-    private String parentName;
     @Column(name = "is_child")
     private boolean child;
+    @Column(name = "parent_id")
+    private String parentId;
+    @Column(name = "ext_id")
+    private String extId;
+    @Column(name = "type_code")
+    private String typeCode;
+    //@AccessFunctions(onSelect = "party.get_party_name(parent_id) as parent_name")
+    // private String parentName;    
     @Column(name = "name")
     private String name;
     @Column(name = "last_name")
     private String lastName;
-    @Column(name="father_type_code")
+    @Column(name = "father_type_code")
     private String fatherTypeCode;
     @Column(name = "fathers_name")
-    private String fathersName;
+    private String fatherName;
+    @Column(name = "grandfather_type_code")
+    private String grandfatherTypeCode;
+    @Column(name = "grandfather_name")
+    private String grandfatherName;
     @Column(name = "alias")
     private String alias;
-    @Column(name = "ext_id")
-    private String extId;
+    @Column(name = "gender_code")
+    private String genderCode;
+    @Column(name = "address_id")
+    private String addressId;
+    @Column(name = "id_type_code")
+    private String idTypeCode;
+    @Column(name = "id_number")
+    private String idNumber;
+    @Column(name = "id_issue_date")
+    private Date idIssueDate;
+    @Column(name = "id_office_type_code")
+    private String idOfficeTypeCode;
+    @Column(name = "id_office_district_code")
+    private String idOfficeDistrictCode;
     @Column(name = "email")
     private String email;
     @Column(name = "mobile")
@@ -88,81 +108,61 @@ public class Party extends AbstractVersionedEntity {
     private String phone;
     @Column(name = "fax")
     private String fax;
-    @Column(name = "address_id")
-    private String addressId;
-    @ExternalEJB(ejbLocalClass = AddressEJBLocal.class, loadMethod = "getAddress", saveMethod = "saveAddress")
-    @ChildEntity(childIdField = "addressId")
-    private Address address;
-    @Column(name = "id_type_code")
-    private String idTypeCode;
-    @Column(name = "id_number")
-    private String idNumber;
-    @Column(name = "id_office_type_code")
-    private String idOfficeTypeCode;
-    @Column(name = "id_issue_date")
-    private Date idIssueDate;
-    @Column(name = "id_office_district_code")
-    private String idOfficeDistrictCode;
     @Column(name = "preferred_communication_code")
     private String preferredCommunicationCode;
-    @Column(name = "type_code")
-    private String typeCode;
-    @Column(name = "gender_code")
-    private String genderCode;
-    @ChildEntityList(parentIdField = "partyId")
-    private List<PartyRole> roleList;
-    @Column(name = "party.is_rightholder(id) AS is_rightholder", insertable = false, updatable = false)
-    private boolean rightHolder;
-    @Column(name="grandfather_type_code")
-    private String grandfatherTypeCode;
-    @Column(name = "grandfather_name")
-    private String grandfatherName;
     @Column(name = "date_of_birth")
     private Date birthDate;
     @Column(name = "remarks")
     private String remarks;
-    @Column(name="photo_id")
+    @Column(name = "office_code")
+    private String officeCode;
+    @Column(name = "photo_id")
     private String photoId;
-    @Column(name="left_finger_id")
+    @Column(name = "left_finger_id")
     private String leftFingerId;
-    @Column(name="right_finger_id")
+    @Column(name = "right_finger_id")
     private String rightFingerId;
-    @Column(name="signature_id")
+    @Column(name = "signature_id")
     private String signatureId;
-    
-    @ExternalEJB(ejbLocalClass=DigitalArchiveEJBLocal.class,
-            loadMethod = "getDocument",
-            saveMethod= "saveDocument")
-    @ChildEntity(childIdField="photoId")
+    @ExternalEJB(ejbLocalClass = AddressEJBLocal.class, loadMethod = "getAddress", saveMethod = "saveAddress")
+    @ChildEntity(childIdField = "addressId")
+    private Address address;
+    @ChildEntityList(parentIdField = "partyId")
+    private List<PartyRole> roleList;
+    @Column(name = "party.is_rightholder(id) AS is_rightholder", insertable = false, updatable = false)
+    private boolean rightHolder;
+    @ExternalEJB(ejbLocalClass = DigitalArchiveEJBLocal.class,
+    loadMethod = "getDocument",
+    saveMethod = "saveDocument")
+    @ChildEntity(childIdField = "photoId")
     private Document photoDoc;
-    
-    @ExternalEJB(ejbLocalClass=DigitalArchiveEJBLocal.class,
-            loadMethod = "getDocument",
-            saveMethod= "saveDocument")
-    @ChildEntity(childIdField="leftFingerId")
+    @ExternalEJB(ejbLocalClass = DigitalArchiveEJBLocal.class,
+    loadMethod = "getDocument",
+    saveMethod = "saveDocument")
+    @ChildEntity(childIdField = "leftFingerId")
     private Document leftFingerDoc;
-    
-    @ExternalEJB(ejbLocalClass=DigitalArchiveEJBLocal.class,
-            loadMethod = "getDocument",
-            saveMethod= "saveDocument")
-    @ChildEntity(childIdField="rightFingerId")
+    @ExternalEJB(ejbLocalClass = DigitalArchiveEJBLocal.class,
+    loadMethod = "getDocument",
+    saveMethod = "saveDocument")
+    @ChildEntity(childIdField = "rightFingerId")
     private Document rightFingerDoc;
-    
-    @ExternalEJB(ejbLocalClass=DigitalArchiveEJBLocal.class,
-            loadMethod = "getDocument",
-            saveMethod= "saveDocument")
-    @ChildEntity(childIdField="signatureId")
+    @ExternalEJB(ejbLocalClass = DigitalArchiveEJBLocal.class,
+    loadMethod = "getDocument",
+    saveMethod = "saveDocument")
+    @ChildEntity(childIdField = "signatureId")
     private Document signatureDoc;
 
-    private String officeCode;
-    
+    public Party() {
+        super();
+    }
+
     public Document getLeftFingerDoc() {
         return leftFingerDoc;
     }
 
     public void setLeftFingerDoc(Document leftFingerDoc) {
         this.leftFingerDoc = leftFingerDoc;
-        if (this.leftFingerDoc!=null){
+        if (this.leftFingerDoc != null) {
             this.setLeftFingerId(leftFingerDoc.getId());
         }
     }
@@ -181,7 +181,7 @@ public class Party extends AbstractVersionedEntity {
 
     public void setPhotoDoc(Document photoDoc) {
         this.photoDoc = photoDoc;
-        if (this.photoDoc!=null){
+        if (this.photoDoc != null) {
             this.setPhotoId(photoDoc.getId());
         }
     }
@@ -200,7 +200,7 @@ public class Party extends AbstractVersionedEntity {
 
     public void setRightFingerDoc(Document rightFingerDoc) {
         this.rightFingerDoc = rightFingerDoc;
-        if (this.rightFingerDoc!=null){
+        if (this.rightFingerDoc != null) {
             this.setRightFingerId(rightFingerDoc.getId());
         }
     }
@@ -219,7 +219,7 @@ public class Party extends AbstractVersionedEntity {
 
     public void setSignatureDoc(Document signatureDoc) {
         this.signatureDoc = signatureDoc;
-        if (this.signatureDoc!=null){
+        if (this.signatureDoc != null) {
             this.setSignatureId(signatureDoc.getId());
         }
     }
@@ -231,8 +231,8 @@ public class Party extends AbstractVersionedEntity {
     public void setSignatureId(String signatureId) {
         this.signatureId = signatureId;
     }
-    
-    public Date getBirthDate(){
+
+    public Date getBirthDate() {
         return birthDate;
     }
 
@@ -254,10 +254,6 @@ public class Party extends AbstractVersionedEntity {
 
     public void setIdIssueDate(Date idIssueDate) {
         this.idIssueDate = idIssueDate;
-    }
-
-    public Party() {
-        super();
     }
 
     public String getId() {
@@ -293,12 +289,12 @@ public class Party extends AbstractVersionedEntity {
         this.alias = alias;
     }
 
-    public String getFathersName() {
-        return fathersName;
+    public String getFatherName() {
+        return fatherName;
     }
 
-    public void setFathersName(String fathersName) {
-        this.fathersName = fathersName;
+    public void setFatherName(String fatherName) {
+        this.fatherName = fatherName;
     }
 
     public String getExtId() {
@@ -365,14 +361,13 @@ public class Party extends AbstractVersionedEntity {
         this.parentId = parentId;
     }
 
-    public String getParentName() {
-        return parentName;
-    }
-
-    public void setParentName(String parentName) {
-        this.parentName = parentName;
-    }
-
+//    public String getParentName() {
+//        return parentName;
+//    }
+//
+//    public void setParentName(String parentName) {
+//        this.parentName = parentName;
+//    }
     public String getRemarks() {
         return remarks;
     }
@@ -436,7 +431,7 @@ public class Party extends AbstractVersionedEntity {
     public void setAddressId(String addressId) {
         this.addressId = addressId;
     }
-    
+
     public Address getAddress() {
         return address;
     }

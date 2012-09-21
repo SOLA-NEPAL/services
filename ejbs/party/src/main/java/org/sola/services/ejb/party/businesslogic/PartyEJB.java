@@ -57,10 +57,9 @@ public class PartyEJB extends AbstractEJB implements PartyEJBLocal {
 
     @EJB
     private AdminEJBLocal adminEJB;
-    
     @EJB
     private AddressEJBLocal addressEJB;
-    
+
     @Override
     protected void postConstruct() {
         setEntityPackage(Party.class.getPackage().getName());
@@ -82,13 +81,13 @@ public class PartyEJB extends AbstractEJB implements PartyEJBLocal {
         if (party.isRightHolder() && !isInRole(RolesConstants.PARTY_RIGHTHOLDERS_SAVE)) {
             throw new SOLAAccessException();
         }
-        
-        if(party.isNew()){
+
+        if (party.isNew()) {
             party.setOfficeCode(adminEJB.getCurrentOfficeCode());
         } else {
             adminEJB.checkOfficeCode(party.getOfficeCode());
         }
-        
+
         return getRepository().saveEntity(party);
     }
 
@@ -127,5 +126,15 @@ public class PartyEJB extends AbstractEJB implements PartyEJBLocal {
     @Override
     public List<PartyRoleType> getPartyRoles(String languageCode) {
         return getRepository().getCodeList(PartyRoleType.class, languageCode);
+    }
+
+    @Override
+    public List<IdOfficeType> getIdOfficeTypes(String languageCode) {
+        return getRepository().getCodeList(IdOfficeType.class, languageCode);
+    }
+
+    @Override
+    public List<GrandFatherType> getGrandFatherTypes(String languageCode) {
+        return getRepository().getCodeList(GrandFatherType.class, languageCode);
     }
 }
