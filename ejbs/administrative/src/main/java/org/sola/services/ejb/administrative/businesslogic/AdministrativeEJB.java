@@ -866,8 +866,8 @@ public class AdministrativeEJB extends AbstractEJB implements AdministrativeEJBL
     }
 
     @Override
-    public List<TenantType> getTenantTypes(String languageCode) {
-        return getRepository().getCodeList(TenantType.class, languageCode);
+    public List<TenancyType> getTenancyTypes(String languageCode) {
+        return getRepository().getCodeList(TenancyType.class, languageCode);
     }
 
     @Override

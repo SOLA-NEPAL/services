@@ -8,10 +8,10 @@ import org.sola.services.common.repository.entities.AbstractCodeEntity;
  *
  * @author KumarKhadka
  */
-@Table(name = "tenant_type", schema = "administrative")
+@Table(name = "tenancy_type", schema = "administrative")
 @DefaultSorter(sortString = "display_value")
-public class TenantType extends AbstractCodeEntity {
-    public TenantType() {
+public class TenancyType extends AbstractCodeEntity {
+    public TenancyType() {
         super();
     }
 }

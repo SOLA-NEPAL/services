@@ -96,7 +96,7 @@ public interface AdministrativeEJBLocal extends AbstractSolaTransactionEJBLocal 
 
     List<OwnershipType> getOwnershipTypes(String languageCode);
 
-    List<TenantType> getTenantTypes(String languageCode);
+    List<TenancyType> getTenancyTypes(String languageCode);
     
     void deletePendingBaUnit(String baUnitId);
 }
