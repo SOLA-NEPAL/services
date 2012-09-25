@@ -196,6 +196,7 @@ public class SearchEJBIT extends AbstractEJBTest {
             return;
         }
         PartySearchParams params = new PartySearchParams();
+        //params.setChild(false);
         SearchEJBLocal instance = (SearchEJBLocal) getEJBInstance(SearchEJB.class.getSimpleName());
         List<PartySearchResult> result = instance.searchParties(params);
         assertNotNull(result);
