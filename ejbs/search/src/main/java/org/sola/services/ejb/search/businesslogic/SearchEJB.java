@@ -300,7 +300,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         params.put("name", searchParams.getName());
         params.put("typeCode", searchParams.getTypeCode());
         params.put("roleTypeCode", searchParams.getRoleTypeCode());
-        params.put("child", searchParams.isChild());
+       // params.put("child", searchParams.isChild());
         return getRepository().getEntityList(PartySearchResult.class, params);
     }
 

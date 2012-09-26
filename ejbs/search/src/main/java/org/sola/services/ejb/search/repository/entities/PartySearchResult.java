@@ -47,8 +47,7 @@ public class PartySearchResult extends AbstractReadOnlyEntity {
             + "WHERE (POSITION(LOWER(#{name}) in LOWER(COALESCE(p.name, ''))) > 0 "
             + "OR POSITION(LOWER(#{name}) in LOWER(COALESCE(p.last_name, ''))) > 0) "
             + "AND (#{typeCode} = '' OR LOWER(p.type_code) = LOWER(#{typeCode})) "
-            + "AND POSITION(LOWER(#{roleTypeCode}) in LOWER(COALESCE(pr.type_code, ''))) > 0 "
-            + "AND ((p.is_child) = (#{child})) "
+            + "AND POSITION(LOWER(#{roleTypeCode}) in LOWER(COALESCE(pr.type_code, ''))) > 0 "           
             + "ORDER BY p.name, p.last_name "
             + "LIMIT 101";
     //#{child} = false OR 
