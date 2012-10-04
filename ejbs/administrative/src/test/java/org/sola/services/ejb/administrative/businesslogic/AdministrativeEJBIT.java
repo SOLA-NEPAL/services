@@ -85,7 +85,8 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
     public void testGetLocs() throws Exception{
         System.out.println("====> Getting Locs by ID");
         AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
-        List<RrrLoc> rrrLocs = instance.getRrrLocsById("a7fdc18d-b76a-43aa-9878-2e115bb52b86");
+        //List<RrrLoc> rrrLocs = instance.getRrrLocsById("a7fdc18d-b76a-43aa-9878-2e115bb52b86");
+        List<Loc> rrrLocs=instance.getLocList("32861b4a-727d-4837-99b9-5e03497aac15");
         assertNotNull("No RrrLocs found", rrrLocs);
         assertTrue("RrrLoc list is empty", rrrLocs.size()>0);
         System.out.println("====> Found " + rrrLocs.size() + " RRRLocs.");
