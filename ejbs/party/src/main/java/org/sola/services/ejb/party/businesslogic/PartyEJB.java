@@ -137,4 +137,9 @@ public class PartyEJB extends AbstractEJB implements PartyEJBLocal {
     public List<GrandFatherType> getGrandFatherTypes(String languageCode) {
         return getRepository().getCodeList(GrandFatherType.class, languageCode);
     }
+
+    @Override
+    public List<FatherType> getFatherTypes(String languageCode) {
+        return getRepository().getCodeList(FatherType.class, languageCode);
+    }
 }

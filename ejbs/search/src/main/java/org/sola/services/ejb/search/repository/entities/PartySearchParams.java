@@ -34,9 +34,18 @@ import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 public class PartySearchParams extends AbstractReadOnlyEntity {
 
     private String name;
+    private String lastName;
+    private String fatherName;
+    private String grandFartherName;
+    private Integer idIssueDate;
+    private String idNumber;
+    private String districtCode;
+    private String wardNumber;
+    private String vdcCode;
+    private String street;
     private String typeCode;
     private String roleTypeCode;
-    //private boolean child;
+    private String langCode;
 
     public PartySearchParams() {
     }
@@ -65,11 +74,83 @@ public class PartySearchParams extends AbstractReadOnlyEntity {
         this.typeCode = typeCode;
     }
 
-//    public boolean isChild() {
-//        return child;
-//    }
-//
-//    public void setChild(boolean child) {
-//        this.child = child;
-//    }
+    public String getDistrictCode() {
+        return districtCode;
+    }
+
+    public void setDistrictCode(String districtCode) {
+        this.districtCode = districtCode;
+    }
+
+    public String getFatherName() {
+        return fatherName;
+    }
+
+    public void setFatherName(String fatherName) {
+        this.fatherName = fatherName;
+    }
+
+    public String getGrandFartherName() {
+        return grandFartherName;
+    }
+
+    public void setGrandFartherName(String grandFartherName) {
+        this.grandFartherName = grandFartherName;
+    }
+
+    public Integer getIdIssueDate() {
+        return idIssueDate;
+    }
+
+    public void setIdIssueDate(Integer idIssueDate) {
+        this.idIssueDate = idIssueDate;
+    }
+
+    public String getIdNumber() {
+        return idNumber;
+    }
+
+    public void setIdNumber(String idNumber) {
+        this.idNumber = idNumber;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getVdcCode() {
+        return vdcCode;
+    }
+
+    public void setVdcCode(String vdcCode) {
+        this.vdcCode = vdcCode;
+    }
+
+    public String getWardNumber() {
+        return wardNumber;
+    }
+
+    public void setWardNumber(String wardNumber) {
+        this.wardNumber = wardNumber;
+    }
+
+    public String getLangCode() {
+        return langCode;
+    }
+
+    public void setLangCode(String langCode) {
+        this.langCode = langCode;
+    }
 }

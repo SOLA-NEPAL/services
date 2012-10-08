@@ -438,7 +438,7 @@ public class CommonRepositoryImpl implements CommonRepository {
 
         // Note that the correct way to disassociate a child from the parent is to use
         // EntityAction.DISASSOCIATE rather than attempting to set the child to null. 
-        if (child != null && !childInfo.isReadOnly()) {
+        if (child != null && (!childInfo.isReadOnly() || child.toDisassociate())) {
 
             // Determine if the child should be saved. There are four possiblities.
             // 1) If the child references the parent (isInsertBeforeParent == false) it should be
@@ -449,8 +449,8 @@ public class CommonRepositoryImpl implements CommonRepository {
             //    saved before the parent unless
             // 4) The parent references the child (isInsertBeforeParet == true) and the child is
             //    being removed. In this case the child should be saved after the parent.  
-            if (((beforeSave == childInfo.isInsertBeforeParent()) && !child.toRemove())
-                    || ((beforeSave != childInfo.isInsertBeforeParent()) && child.toRemove())) {
+            if (!childInfo.isReadOnly() && ((beforeSave == childInfo.isInsertBeforeParent() && !child.toRemove())
+                    || (beforeSave != childInfo.isInsertBeforeParent() && child.toRemove()))) {
 
                 if (!childInfo.isInsertBeforeParent()) {
                     // Need to set the parent Id on the child before inserting/updating the child. 

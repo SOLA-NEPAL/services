@@ -285,6 +285,36 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         if (searchParams.getName() == null) {
             searchParams.setName("");
         }
+        if (searchParams.getLastName() == null) {
+            searchParams.setLastName("");
+        }
+        if (searchParams.getDistrictCode() == null) {
+            searchParams.setDistrictCode("");
+        }
+        if (searchParams.getFatherName() == null) {
+            searchParams.setFatherName("");
+        }
+        if (searchParams.getGrandFartherName() == null) {
+            searchParams.setGrandFartherName("");
+        }
+        if (searchParams.getIdIssueDate() == null) {
+            searchParams.setIdIssueDate(0);
+        }
+        if (searchParams.getIdNumber() == null) {
+            searchParams.setIdNumber("");
+        }
+        if (searchParams.getLangCode() == null) {
+            searchParams.setName("en");
+        }
+        if (searchParams.getStreet() == null) {
+            searchParams.setStreet("");
+        }
+        if (searchParams.getVdcCode() == null) {
+            searchParams.setVdcCode("");
+        }
+        if (searchParams.getWardNumber() == null) {
+            searchParams.setWardNumber("");
+        }
         if (searchParams.getTypeCode() == null) {
             searchParams.setTypeCode("");
         }
@@ -292,15 +322,23 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
             searchParams.setRoleTypeCode("");
         }
 
-
         searchParams.setName(searchParams.getName().trim());
 
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_QUERY, PartySearchResult.SEARCH_QUERY);
-        params.put("name", searchParams.getName());
-        params.put("typeCode", searchParams.getTypeCode());
-        params.put("roleTypeCode", searchParams.getRoleTypeCode());
-       // params.put("child", searchParams.isChild());
+        params.put(PartySearchResult.PARAM_NAME, searchParams.getName());
+        params.put(PartySearchResult.PARAM_TYPE_CODE, searchParams.getTypeCode());
+        params.put(PartySearchResult.PARAM_ROLE_TYPE_CODE, searchParams.getRoleTypeCode());
+        params.put(PartySearchResult.PARAM_LAST_NAME, searchParams.getLastName());
+        params.put(PartySearchResult.PARAM_DISTRICT_CODE, searchParams.getDistrictCode());
+        params.put(PartySearchResult.PARAM_FATHER_NAME, searchParams.getFatherName());
+        params.put(PartySearchResult.PARAM_GRANDFATHER_NAME, searchParams.getGrandFartherName());
+        params.put(PartySearchResult.PARAM_ID_ISSUE_DATE, searchParams.getIdIssueDate());
+        params.put(PartySearchResult.PARAM_ID_NUMBER, searchParams.getIdNumber());
+        params.put(PartySearchResult.PARAM_LANG, searchParams.getLangCode());
+        params.put(PartySearchResult.PARAM_STREET, searchParams.getStreet());
+        params.put(PartySearchResult.PARAM_VDC_CODE, searchParams.getVdcCode());
+        params.put(PartySearchResult.PARAM_WARD, searchParams.getWardNumber());
         return getRepository().getEntityList(PartySearchResult.class, params);
     }
 
@@ -416,21 +454,37 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
     public List<BaUnitSearchResult> searchBaUnits(BaUnitSearchParams searchParams) {
         Map params = new HashMap<String, Object>();
 
-        if (searchParams.getNameFirstPart() == null) {
-            searchParams.setNameFirstPart("");
+        if (searchParams.getParcelNo() == null) {
+            searchParams.setParcelNo("");
         }
-        if (searchParams.getNameLastPart() == null) {
-            searchParams.setNameLastPart("");
+        if (searchParams.getVdcCode() == null) {
+            searchParams.setVdcCode("");
         }
-        if (searchParams.getOwnerName() == null) {
-            searchParams.setOwnerName("");
+        if (searchParams.getWardNo() == null) {
+            searchParams.setWardNo("");
+        }
+        if (searchParams.getMapSheetCode() == null) {
+            searchParams.setMapSheetCode("");
+        }
+        if (searchParams.getMoth() == null) {
+            searchParams.setMoth("");
+        }
+        if (searchParams.getLoc() == null) {
+            searchParams.setLoc("");
+        }
+        if (searchParams.getRightHolderId() == null) {
+            searchParams.setRightHolderId("");
         }
 
         params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY);
-        params.put("ownerName", searchParams.getOwnerName());
-        params.put("nameFirstPart", searchParams.getNameFirstPart());
-        params.put("nameLastPart", searchParams.getNameLastPart());
-        params.put(BaUnitSearchResult.SEARCH_PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        params.put(BaUnitSearchResult.PARAM_VDC_CODE, searchParams.getVdcCode());
+        params.put(BaUnitSearchResult.PARAM_WARD, searchParams.getWardNo());
+        params.put(BaUnitSearchResult.PARAM_MAPSHEET_CODE, searchParams.getMapSheetCode());
+        params.put(BaUnitSearchResult.PARAM_PARCEL_NO, searchParams.getParcelNo());
+        params.put(BaUnitSearchResult.PARAM_MOTH, searchParams.getMoth());
+        params.put(BaUnitSearchResult.PARAM_LOC, searchParams.getLoc());
+        params.put(BaUnitSearchResult.PARAM_RIGHTHOLDER_ID, searchParams.getRightHolderId());
+        params.put(BaUnitSearchResult.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntityList(BaUnitSearchResult.class, params);
     }
 
@@ -533,8 +587,8 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
     public BaUnitSearchResult searchBaUnitById(String baUnitId) {
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_BY_ID_QUERY);
-        params.put(BaUnitSearchResult.SEARCH_PARAM_BA_UNIT_ID, baUnitId);
-        params.put(BaUnitSearchResult.SEARCH_PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        params.put(BaUnitSearchResult.PARAM_BA_UNIT_ID, baUnitId);
+        params.put(BaUnitSearchResult.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntity(BaUnitSearchResult.class, params);
     }
 
@@ -546,7 +600,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
 
         Map params = new HashMap<String, Object>();
         String query = BaUnitSearchResult.SELECT_PART + "WHERE b.office_code = #{"
-                + BaUnitSearchResult.SEARCH_PARAM_OFFICE_CODE + "} AND b.id IN (";
+                + BaUnitSearchResult.PARAM_OFFICE_CODE + "} AND b.id IN (";
         int i = 0;
         for (String id : ids) {
             query = query + "#{idVal" + i + "}, ";
@@ -556,7 +610,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         query = query.substring(0, query.length() - 2) + ")";
 
         params.put(CommonSqlProvider.PARAM_QUERY, query);
-        params.put(BaUnitSearchResult.SEARCH_PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        params.put(BaUnitSearchResult.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntityList(BaUnitSearchResult.class, params);
     }
 
@@ -570,7 +624,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.QUERY_WITH_ACTION);
         params.put(BaUnitSearchResult.PARAM_TRANSACTION_ID, transaction.getId());
-        params.put(BaUnitSearchResult.SEARCH_PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        params.put(BaUnitSearchResult.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntityList(BaUnitSearchResult.class, params);
     }
 }

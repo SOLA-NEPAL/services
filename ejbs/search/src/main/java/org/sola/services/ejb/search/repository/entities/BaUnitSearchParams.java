@@ -27,38 +27,36 @@
  */
 package org.sola.services.ejb.search.repository.entities;
 
-import org.sola.services.common.repository.entities.AbstractEntity;
-
-public class BaUnitSearchParams extends AbstractEntity {
-    private String nameFirstPart;
-    private String nameLastPart;
-    private String ownerName;
+public class BaUnitSearchParams extends CadastreObjectSearchParams {
+    private String moth;
+    private String loc;
+    private String rightHolderId;
     
     public BaUnitSearchParams(){
         super();
     }
 
-    public String getNameFirstPart() {
-        return nameFirstPart;
+    public String getLoc() {
+        return loc;
     }
 
-    public void setNameFirstPart(String nameFirstPart) {
-        this.nameFirstPart = nameFirstPart;
+    public void setLoc(String loc) {
+        this.loc = loc;
     }
 
-    public String getNameLastPart() {
-        return nameLastPart;
+    public String getMoth() {
+        return moth;
     }
 
-    public void setNameLastPart(String nameLastPart) {
-        this.nameLastPart = nameLastPart;
+    public void setMoth(String moth) {
+        this.moth = moth;
     }
 
-    public String getOwnerName() {
-        return ownerName;
+    public String getRightHolderId() {
+        return rightHolderId;
     }
 
-    public void setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
+    public void setRightHolderId(String rightHolderId) {
+        this.rightHolderId = rightHolderId;
     }
 }

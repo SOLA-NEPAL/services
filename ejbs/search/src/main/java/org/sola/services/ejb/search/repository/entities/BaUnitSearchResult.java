@@ -35,8 +35,15 @@ import org.sola.services.common.repository.entities.AbstractEntity;
 
 public class BaUnitSearchResult extends AbstractEntity {
 
-    public static final String SEARCH_PARAM_OFFICE_CODE = "officeCode";
-    public static final String SEARCH_PARAM_BA_UNIT_ID = "baUnitId";
+    public static final String PARAM_BA_UNIT_ID = "baUnitId";
+    public static final String PARAM_VDC_CODE = "vdcCode";
+    public static final String PARAM_WARD = "ward";
+    public static final String PARAM_MAPSHEET_CODE = "mapSheetCode";
+    public static final String PARAM_PARCEL_NO = "parcelNo";
+    public static final String PARAM_MOTH = "moth";
+    public static final String PARAM_LOC = "loc";
+    public static final String PARAM_RIGHTHOLDER_ID = "rightHolderId";
+    
     public static final String SELECT_PART =
             "SELECT DISTINCT b.id, b.name, b.name_firstpart, b.name_lastpart, b.status_code, b.office_code, b.fy_code, "
             + "(SELECT string_agg(COALESCE(p.name, '') || ' ' || COALESCE(p.last_name, ''), '::::') "
@@ -45,7 +52,8 @@ public class BaUnitSearchResult extends AbstractEntity {
             + "WHERE rrr.status_code = 'current' AND rrr.ba_unit_id = b.id) AS rightholders, "
             + "l.id as loc_id, m.id as moth_id, l.pana_no as pana_no, m.mothluj_no as moth_no, a.ward_no, "
             + "a.vdc_code, co.parcel_no, msh.map_number, co.map_sheet_id, '' as action "
-            + "FROM (administrative.ba_unit b LEFT JOIN (administrative.rrr r inner join "
+            + "FROM (administrative.ba_unit b LEFT JOIN ((administrative.rrr r "
+            + "LEFT JOIN administrative.party_for_rrr pr ON r.id = pr.rrr_id and r.status_code='current') inner join "
             + "(administrative.loc l INNER JOIN administrative.moth m on l.moth_id=m.id) on r.loc_id=l.id) "
             + "ON b.id = r.ba_unit_id and r.status_code='current') LEFT JOIN "
             + "((cadastre.cadastre_object co LEFT JOIN cadastre.map_sheet msh on co.map_sheet_id=msh.id) "
@@ -83,24 +91,28 @@ public class BaUnitSearchResult extends AbstractEntity {
             + "SELECT but.ba_unit_id as id FROM administrative.ba_unit_target but WHERE but.transaction_id=#{" + PARAM_TRANSACTION_ID + "} UNION "
             + "SELECT bur.from_ba_unit_id as id FROM administrative.required_relationship_baunit bur WHERE bur.transaction_id=#{" + PARAM_TRANSACTION_ID + "} UNION "
             + "SELECT rr.ba_unit_id as id FROM administrative.rrr rr WHERE rr.transaction_id=#{" + PARAM_TRANSACTION_ID + "}) "
-            + "AND b.office_code = #{" + SEARCH_PARAM_OFFICE_CODE + "}"
+            + "AND b.office_code = #{" + PARAM_OFFICE_CODE + "}"
             + ") m "
             + "ORDER BY action";
     
-//    (SELECT string_agg(COALESCE(p.name, '') || ' ' || COALESCE(p.last_name, ''), '::::') "
-//            + "FROM administrative.rrr rrr INNER JOIN (administrative.party_for_rrr pr "
-//            + "INNER JOIN party.party p ON pr.party_id = p.id) ON rrr.id = pr.rrr_id "
-//            + "WHERE rrr.status_code = 'current' AND "
-//            + "(POSITION(LOWER(#{ownerName}) IN LOWER(COALESCE(p.name, ''))) > 0 OR "
-//            + "POSITION(LOWER(#{ownerName}) IN LOWER(COALESCE(p.last_name, ''))) > 0) AND rrr.ba_unit_id = b.id)"
     public static final String SEARCH_QUERY = SELECT_PART
-            + "WHERE POSITION(LOWER(#{nameFirstPart}) IN LOWER(COALESCE(b.name_firstpart, ''))) > 0 "
-            + "AND POSITION(LOWER(#{nameLastPart}) IN LOWER(COALESCE(b.name_lastpart, ''))) > 0 "
-            + "AND b.office_code = #{" + SEARCH_PARAM_OFFICE_CODE + "} AND b.status_code != 'pending' "
-            + "ORDER BY b.name_firstpart, b.name_lastpart "
+            + "WHERE (COALESCE(a.vdc_code, '') = #{" + PARAM_VDC_CODE + "} OR #{" + PARAM_VDC_CODE + "}='') "
+            + "AND (COALESCE(a.ward_no, '') = #{" + PARAM_WARD + "} OR #{" + PARAM_WARD + "}='') "
+            + "AND (COALESCE(co.map_sheet_id, '') = #{" + PARAM_MAPSHEET_CODE + "} OR "
+            + "COALESCE(co.map_sheet_id2, '') = #{" + PARAM_MAPSHEET_CODE + "} OR "
+            + "COALESCE(co.map_sheet_id3, '') = #{" + PARAM_MAPSHEET_CODE + "} OR "
+            + "COALESCE(co.map_sheet_id4, '') = #{" + PARAM_MAPSHEET_CODE + "} OR "
+            + "#{" + PARAM_MAPSHEET_CODE + "}='') AND (co.status_code = 'current' OR COALESCE(co.status_code, '') = '') "
+            + "AND (COALESCE(co.parcel_no, '') = #{" + PARAM_PARCEL_NO + "} OR #{" + PARAM_PARCEL_NO + "}='') "
+            + "AND (COALESCE(m.mothluj_no, '') = #{" + PARAM_MOTH + "} OR #{" + PARAM_MOTH + "}='') "
+            + "AND (COALESCE(l.pana_no, '') = #{" + PARAM_LOC + "} OR #{" + PARAM_LOC + "}='') "
+            + "AND (COALESCE(pr.party_id, '') = #{" + PARAM_RIGHTHOLDER_ID + "} OR #{" + PARAM_RIGHTHOLDER_ID + "}='') "
+            + "AND b.office_code = #{" + PARAM_OFFICE_CODE + "} AND b.status_code != 'pending' "
+            + "ORDER BY a.vdc_code "
             + "LIMIT 101";
+    
     public static final String SEARCH_BY_ID_QUERY = SELECT_PART
-            + "WHERE b.id = #{" + SEARCH_PARAM_BA_UNIT_ID + "} AND b.office_code = #{" + SEARCH_PARAM_OFFICE_CODE + "}";
+            + "WHERE b.id = #{" + PARAM_BA_UNIT_ID + "} AND b.office_code = #{" + PARAM_OFFICE_CODE + "}";
     @Id
     @Column
     private String id;

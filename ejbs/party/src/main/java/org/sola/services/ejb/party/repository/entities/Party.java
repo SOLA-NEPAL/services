@@ -66,6 +66,8 @@ public class Party extends AbstractVersionedEntity {
     private boolean child;
     @Column(name = "parent_id")
     private String parentId;
+    @ChildEntity(childIdField="parentId", readOnly=true)
+    Party parent;
     @Column(name = "ext_id")
     private String extId;
     @Column(name = "type_code")
@@ -95,7 +97,7 @@ public class Party extends AbstractVersionedEntity {
     @Column(name = "id_number")
     private String idNumber;
     @Column(name = "id_issue_date")
-    private Date idIssueDate;
+    private Integer idIssueDate;
     @Column(name = "id_office_type_code")
     private String idOfficeTypeCode;
     @Column(name = "id_office_district_code")
@@ -111,7 +113,7 @@ public class Party extends AbstractVersionedEntity {
     @Column(name = "preferred_communication_code")
     private String preferredCommunicationCode;
     @Column(name = "date_of_birth")
-    private Date birthDate;
+    private Integer birthDate;
     @Column(name = "remarks")
     private String remarks;
     @Column(name = "office_code")
@@ -154,6 +156,14 @@ public class Party extends AbstractVersionedEntity {
 
     public Party() {
         super();
+    }
+
+    public Party getParent() {
+        return parent;
+    }
+
+    public void setParent(Party parent) {
+        this.parent = parent;
     }
 
     public Document getLeftFingerDoc() {
@@ -232,11 +242,11 @@ public class Party extends AbstractVersionedEntity {
         this.signatureId = signatureId;
     }
 
-    public Date getBirthDate() {
+    public Integer getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(Integer birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -248,11 +258,11 @@ public class Party extends AbstractVersionedEntity {
         this.grandfatherName = grandfatherName;
     }
 
-    public Date getIdIssueDate() {
+    public Integer getIdIssueDate() {
         return idIssueDate;
     }
 
-    public void setIdIssueDate(Date idIssueDate) {
+    public void setIdIssueDate(Integer idIssueDate) {
         this.idIssueDate = idIssueDate;
     }
 
