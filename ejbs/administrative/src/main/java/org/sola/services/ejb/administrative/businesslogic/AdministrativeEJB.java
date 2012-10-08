@@ -386,6 +386,7 @@ public class AdministrativeEJB extends AbstractEJB implements AdministrativeEJBL
     public Moth saveMoth(Moth moth) {
         if (moth.isNew()) {
             moth.setOfficeCode(adminEJB.getCurrentOfficeCode());
+            moth.setFiscalYearCode(adminEJB.getCurrentFiscalYearCode());
         } else {
             adminEJB.checkOfficeCode(moth.getOfficeCode());
         }
@@ -797,6 +798,7 @@ public class AdministrativeEJB extends AbstractEJB implements AdministrativeEJBL
     public List<Loc> getLocList(String mothId) {
         HashMap params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, Loc.GET_BY_MOTH_ID);
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         params.put(Loc.MOTH_ID_PARAM, mothId);
         List<Loc> loc = getRepository().getEntityList(Loc.class, params);
         return loc;
