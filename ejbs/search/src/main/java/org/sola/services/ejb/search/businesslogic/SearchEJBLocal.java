@@ -47,6 +47,9 @@ import org.sola.services.ejb.search.repository.entities.CadastreObjectSearchResu
 import org.sola.services.ejb.search.repository.entities.ConfigMapLayer;
 import org.sola.services.ejb.search.repository.entities.DynamicQuery;
 import org.sola.services.ejb.search.repository.entities.GenericResult;
+import org.sola.services.ejb.search.repository.entities.LocDetails;
+import org.sola.services.ejb.search.repository.entities.LocSearchParams;
+import org.sola.services.ejb.search.repository.entities.LocSearchResult;
 import org.sola.services.ejb.search.repository.entities.PartySearchParams;
 import org.sola.services.ejb.search.repository.entities.PartySearchResult;
 import org.sola.services.ejb.search.repository.entities.SourceSearchParams;
@@ -111,4 +114,8 @@ public interface SearchEJBLocal extends AbstractEJBLocal {
     List<CadastreObjectSearchResultExt> searchCadastreObjects(String langCode, CadastreObjectSearchParams searchParams);
     
     List<BaUnitSearchResult> getAllBaUnitsByService(String serviceId);
+    
+    LocDetails getLocDetails(String locId, String lang);
+    
+    List<LocSearchResult> searchLocs(LocSearchParams  params);
 }

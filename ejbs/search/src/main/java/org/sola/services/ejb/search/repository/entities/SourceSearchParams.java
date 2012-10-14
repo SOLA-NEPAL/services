@@ -35,20 +35,29 @@ public class SourceSearchParams extends AbstractReadOnlyEntity {
     private String typeCode;
     private String laNumber;
     private String refNumber;
-    private Date fromRecordationDate;
-    private Date toRecordationDate;
+    private Integer fromRecordationDate;
+    private Integer toRecordationDate;
     private Date fromSubmissionDate;
     private Date toSubmissionDate;
+    private String appNumber;
     
     public SourceSearchParams(){
         super();
     }
 
-    public Date getFromRecordationDate() {
+    public String getAppNumber() {
+        return appNumber;
+    }
+
+    public void setAppNumber(String appNumber) {
+        this.appNumber = appNumber;
+    }
+
+    public Integer getFromRecordationDate() {
         return fromRecordationDate;
     }
 
-    public void setFromRecordationDate(Date fromRecordationDate) {
+    public void setFromRecordationDate(Integer fromRecordationDate) {
         this.fromRecordationDate = fromRecordationDate;
     }
 
@@ -84,11 +93,11 @@ public class SourceSearchParams extends AbstractReadOnlyEntity {
         this.typeCode = typeCode;
     }
 
-    public Date getToRecordationDate() {
+    public Integer getToRecordationDate() {
         return toRecordationDate;
     }
 
-    public void setToRecordationDate(Date toRecordationDate) {
+    public void setToRecordationDate(Integer toRecordationDate) {
         this.toRecordationDate = toRecordationDate;
     }
 

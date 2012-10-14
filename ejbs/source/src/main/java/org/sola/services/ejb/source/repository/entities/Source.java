@@ -27,10 +27,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * *********************************************************************************************
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.sola.services.ejb.source.repository.entities;
 
 import java.util.Date;
@@ -76,7 +72,7 @@ public class Source extends AbstractVersionedEntity {
     @Column(name = "acceptance")
     private Date acceptance;
     @Column(name = "recordation")
-    private Date recordation;
+    private Integer recordation;
     @Column(name = "submission")
     private Date submission;
     @Column(name = "ext_archive_id")
@@ -222,11 +218,11 @@ public class Source extends AbstractVersionedEntity {
         this.mainType = mainType;
     }
 
-    public Date getRecordation() {
+    public Integer getRecordation() {
         return recordation;
     }
 
-    public void setRecordation(Date recordation) {
+    public void setRecordation(Integer recordation) {
         this.recordation = recordation;
     }
 

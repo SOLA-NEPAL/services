@@ -162,9 +162,9 @@ public class SearchEJBIT extends AbstractEJBTest {
             SourceSearchParams params = new SourceSearchParams();
             Date dateTo = new GregorianCalendar(2500, 1, 1).getTime();
             Date dateFrom = new GregorianCalendar(1, 1, 1).getTime();
-            params.setFromRecordationDate(dateFrom);
+            params.setFromRecordationDate(11111111);
             params.setFromSubmissionDate(dateFrom);
-            params.setToRecordationDate(dateTo);
+            params.setToRecordationDate(99999999);
             params.setToSubmissionDate(dateTo);
             params.setLocale("it");
             params.setLaNumber("");

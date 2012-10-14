@@ -46,20 +46,25 @@ public class SourceSearchResult extends AbstractReadOnlyEntity {
     public static final String QUERY_PARAM_TO_RECORDATION_DATE = "toRecordationDate";
     public static final String QUERY_PARAM_FROM_SUBMISSION_DATE = "fromSubmissionDate";
     public static final String QUERY_PARAM_TO_SUBMISSION_DATE = "toSubmissionDate";
+    public static final String QUERY_PARAM_APPLICATION_NUMBER = "applicationNumber";
+    
     public static final String SEARCH_QUERY =
-            "SELECT id, la_nr, reference_nr, archive_id, ext_archive_id, type_code, "
-            + " get_translation(st.display_value, #{" + CommonSqlProvider.PARAM_LANGUAGE_CODE + "}) AS typeDisplayValue, "
-            + " acceptance, recordation, submission, status_code, office_code, "
-            + " get_translation(t.display_value, #{" + CommonSqlProvider.PARAM_LANGUAGE_CODE + "}) AS statusDisplayValue "
-            + " FROM (source.source AS s LEFT JOIN transaction.reg_status_type AS t on s.status_code = t.code) "
-            + " LEFT JOIN source.administrative_source_type AS st ON s.type_code = st.code "
-            + " WHERE (type_code = #{" + QUERY_PARAM_TYPE_CODE + "} OR COALESCE(#{" + QUERY_PARAM_TYPE_CODE + "}, '') = '') "
-            + " AND POSITION(COALESCE(#{" + QUERY_PARAM_LA_NUMBER + "}, '') IN COALESCE(la_nr, '')) > 0 "
-            + " AND POSITION(COALESCE(#{" + QUERY_PARAM_REF_NUMBER + "}, '') IN COALESCE(reference_nr, '')) > 0 "
-            + " AND (recordation BETWEEN #{" + QUERY_PARAM_FROM_RECORDATION_DATE + "} "
-            + " AND #{" + QUERY_PARAM_TO_RECORDATION_DATE + "} OR (recordation IS NULL)) "
-            + " AND (submission BETWEEN #{" + QUERY_PARAM_FROM_SUBMISSION_DATE + "} "
-            + " AND #{" + QUERY_PARAM_TO_SUBMISSION_DATE + "} OR (submission IS NULL)) "
+            "SELECT DISTINCT s.id, s.la_nr, s.reference_nr, s.archive_id, s.ext_archive_id, s.type_code, "
+            + "get_translation(st.display_value, #{" + CommonSqlProvider.PARAM_LANGUAGE_CODE + "}) AS typeDisplayValue, "
+            + "s.acceptance, s.recordation, s.submission, s.status_code, s.office_code, "
+            + "get_translation(t.display_value, #{" + CommonSqlProvider.PARAM_LANGUAGE_CODE + "}) AS statusDisplayValue "
+            + "FROM ((source.source s LEFT JOIN (application.application_uses_source aus "
+            + "INNER JOIN application.application app ON aus.application_id=app.id) ON s.id=aus.source_id) "
+            + "LEFT JOIN transaction.reg_status_type t on s.status_code = t.code) "
+            + "LEFT JOIN source.administrative_source_type AS st ON s.type_code = st.code "
+            + "WHERE (type_code = #{" + QUERY_PARAM_TYPE_CODE + "} OR COALESCE(#{" + QUERY_PARAM_TYPE_CODE + "}, '') = '') "
+            + "AND POSITION(COALESCE(#{" + QUERY_PARAM_LA_NUMBER + "}, '') IN COALESCE(la_nr, '')) > 0 "
+            + "AND POSITION(COALESCE(#{" + QUERY_PARAM_REF_NUMBER + "}, '') IN COALESCE(reference_nr, '')) > 0 "
+            + "AND (recordation BETWEEN #{" + QUERY_PARAM_FROM_RECORDATION_DATE + "} "
+            + "AND #{" + QUERY_PARAM_TO_RECORDATION_DATE + "} OR (recordation IS NULL)) "
+            + "AND (submission BETWEEN #{" + QUERY_PARAM_FROM_SUBMISSION_DATE + "} "
+            + "AND #{" + QUERY_PARAM_TO_SUBMISSION_DATE + "} OR (submission IS NULL)) "
+            + "AND (COALESCE(app.nr, '') = #{" + QUERY_PARAM_APPLICATION_NUMBER + "} OR #{" + QUERY_PARAM_APPLICATION_NUMBER + "}='') "
             + "LIMIT 101";
     @Id
     @Column
@@ -80,8 +85,7 @@ public class SourceSearchResult extends AbstractReadOnlyEntity {
     @Temporal(TemporalType.DATE)
     private Date acceptance;
     @Column(name = "recordation")
-    @Temporal(TemporalType.DATE)
-    private Date recordation;
+    private Integer recordation;
     @Column(name = "submission")
     @Temporal(TemporalType.DATE)
     private Date submission;
@@ -128,11 +132,11 @@ public class SourceSearchResult extends AbstractReadOnlyEntity {
         this.laNr = laNr;
     }
 
-    public Date getRecordation() {
+    public Integer getRecordation() {
         return recordation;
     }
 
-    public void setRecordation(Date recordation) {
+    public void setRecordation(Integer recordation) {
         this.recordation = recordation;
     }
 

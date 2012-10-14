@@ -89,11 +89,11 @@ public class Rrr extends AbstractVersionedEntity {
     @Column(name = "is_primary")
     private boolean primary;
     @Column(name = "registration_date")
-    private Date registrationDate;
+    private Integer registrationDate;
     @Column(name = "transaction_id", updatable = false)
     private String transactionId;
     @Column(name = "expiration_date")
-    private Date expirationDate;
+    private Integer expirationDate;
     @Column(name = "mortgage_amount")
     private BigDecimal mortgageAmount;
     @Column(name = "mortgage_interest_rate")
@@ -193,11 +193,11 @@ public class Rrr extends AbstractVersionedEntity {
         this.baUnitId = baUnitId;
     }
 
-    public Date getExpirationDate() {
+    public Integer getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(Date expirationDate) {
+    public void setExpirationDate(Integer expirationDate) {
         this.expirationDate = expirationDate;
     }
 
@@ -249,11 +249,11 @@ public class Rrr extends AbstractVersionedEntity {
         this.primary = primary;
     }
 
-    public Date getRegistrationDate() {
+    public Integer getRegistrationDate() {
         return registrationDate;
     }
 
-    public void setRegistrationDate(Date registrationDate) {
+    public void setRegistrationDate(Integer registrationDate) {
         this.registrationDate = registrationDate;
     }
 

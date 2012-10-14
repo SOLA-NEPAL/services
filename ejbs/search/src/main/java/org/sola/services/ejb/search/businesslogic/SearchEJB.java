@@ -187,12 +187,10 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
 
         params.put(SourceSearchResult.QUERY_PARAM_FROM_RECORDATION_DATE,
                 searchParams.getFromRecordationDate() == null
-                ? new GregorianCalendar(1, 1, 1).getTime()
-                : searchParams.getFromRecordationDate());
+                ? 0 : searchParams.getFromRecordationDate());
         params.put(SourceSearchResult.QUERY_PARAM_TO_RECORDATION_DATE,
                 searchParams.getToRecordationDate() == null
-                ? new GregorianCalendar(2500, 1, 1).getTime()
-                : searchParams.getToRecordationDate());
+                ? 99999999 : searchParams.getToRecordationDate());
         params.put(SourceSearchResult.QUERY_PARAM_FROM_SUBMISSION_DATE,
                 searchParams.getFromSubmissionDate() == null
                 ? new GregorianCalendar(1, 1, 1).getTime()
@@ -209,7 +207,9 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
                 searchParams.getLaNumber() == null ? "" : searchParams.getLaNumber());
         params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE,
                 searchParams.getLocale() == null ? "en" : searchParams.getLocale());
-
+        params.put(SourceSearchResult.QUERY_PARAM_APPLICATION_NUMBER,
+                searchParams.getAppNumber() == null ? "" : searchParams.getAppNumber());
+        
         params.put(CommonSqlProvider.PARAM_QUERY, SourceSearchResult.SEARCH_QUERY);
         return getRepository().getEntityList(SourceSearchResult.class, params);
     }
@@ -626,5 +626,50 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         params.put(BaUnitSearchResult.PARAM_TRANSACTION_ID, transaction.getId());
         params.put(BaUnitSearchResult.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntityList(BaUnitSearchResult.class, params);
+    }
+
+    @Override
+    public LocDetails getLocDetails(String locId, String lang) {
+        LocDetails locDetails = new LocDetails();
+        
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, PartyLoc.QUERY_GET_BY_LOC);
+        params.put(PartyLoc.PARAM_LOC_ID, locId);
+        params.put(PartyLoc.PARAM_LANG, lang);
+        
+        locDetails.setParties(getRepository().getEntityList(PartyLoc.class, params));
+        
+        params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, RrrLocDetails.QUERY_SELECT);
+        params.put(RrrLocDetails.PARAM_LOC_ID, locId);
+        params.put(RrrLocDetails.PARAM_LANG, lang);
+        
+        locDetails.setRrrs(getRepository().getEntityList(RrrLocDetails.class, params));
+        return locDetails;
+    }
+
+    @Override
+    public List<LocSearchResult> searchLocs(LocSearchParams searchParams) {
+        if(searchParams==null){
+            return null;
+        }
+        
+        if(searchParams.getBaUnitId() == null){
+            searchParams.setBaUnitId("");
+        }
+        if(searchParams.getPartyId() == null){
+            searchParams.setPartyId("");
+        }
+        if(searchParams.getLocId() == null){
+            searchParams.setLocId("");
+        }
+        
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, LocSearchResult.QUERY_SELECT);
+        params.put(LocSearchResult.PARAM_BA_UNIT_ID, searchParams.getBaUnitId());
+        params.put(LocSearchResult.PARAM_LOC_ID, searchParams.getLocId());
+        params.put(LocSearchResult.PARAM_PARTY_ID, searchParams.getPartyId());
+        
+        return getRepository().getEntityList(LocSearchResult.class, params);
     }
 }
