@@ -52,6 +52,8 @@ import org.sola.services.ejb.search.repository.entities.LocSearchParams;
 import org.sola.services.ejb.search.repository.entities.LocSearchResult;
 import org.sola.services.ejb.search.repository.entities.PartySearchParams;
 import org.sola.services.ejb.search.repository.entities.PartySearchResult;
+import org.sola.services.ejb.search.repository.entities.RestrictionSearchParams;
+import org.sola.services.ejb.search.repository.entities.RestrictionSearchResult;
 import org.sola.services.ejb.search.repository.entities.SourceSearchParams;
 import org.sola.services.ejb.search.repository.entities.SourceSearchResult;
 import org.sola.services.ejb.search.repository.entities.UserSearchParams;
@@ -118,4 +120,6 @@ public interface SearchEJBLocal extends AbstractEJBLocal {
     LocDetails getLocDetails(String locId, String lang);
     
     List<LocSearchResult> searchLocs(LocSearchParams  params);
+    
+    List<RestrictionSearchResult> searchRestrictions(RestrictionSearchParams params);
 }

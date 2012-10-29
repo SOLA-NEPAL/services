@@ -29,6 +29,7 @@
  */
 package org.sola.services.ejb.search.businesslogic;
 
+import java.math.BigDecimal;
 import java.util.*;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -671,5 +672,103 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         params.put(LocSearchResult.PARAM_PARTY_ID, searchParams.getPartyId());
         
         return getRepository().getEntityList(LocSearchResult.class, params);
+    }
+
+    @Override
+    public List<RestrictionSearchResult> searchRestrictions(RestrictionSearchParams searchParams) {
+        if(searchParams==null){
+            return null;
+        }
+        
+        if(searchParams.getBundleNo()==null){
+            searchParams.setBundleNo("");
+        }
+        if(searchParams.getBundlePageNo()==null){
+            searchParams.setBundlePageNo("");
+        }
+        if(searchParams.getLanguageCode()==null){
+            searchParams.setLanguageCode("en");
+        }
+        if(searchParams.getMapSheetId()==null){
+            searchParams.setMapSheetId("");
+        }
+        if(searchParams.getOwnerLastName()==null){
+            searchParams.setOwnerLastName("");
+        }
+        if(searchParams.getOwnerName()==null){
+            searchParams.setOwnerName("");
+        }
+        if(searchParams.getParcelNo()==null){
+            searchParams.setParcelNo("");
+        }
+        if(searchParams.getPriceFrom()==null){
+            searchParams.setPriceFrom(new BigDecimal(0));
+        }
+        if(searchParams.getPriceTo()==null){
+            searchParams.setPriceTo(new BigDecimal("99999999999999999999"));
+        }
+        if(searchParams.getRefDateFrom()==null){
+            searchParams.setRefDateFrom(0);
+        }
+        if(searchParams.getRefDateTo()==null){
+            searchParams.setRefDateTo(99999999);
+        }
+        if(searchParams.getReferenceNo()==null){
+            searchParams.setReferenceNo("");
+        }
+        if(searchParams.getRegDateFrom()==null){
+            searchParams.setRegDateFrom(0);
+        }
+        if(searchParams.getRegDateTo()==null){
+            searchParams.setRegDateTo(99999999);
+        }
+        if(searchParams.getRegNumber()==null){
+            searchParams.setRegNumber("");
+        }
+        if(searchParams.getRestrictionReasonCode()==null){
+            searchParams.setRestrictionReasonCode("");
+        }
+        if(searchParams.getRestrtictionOfficeName()==null){
+            searchParams.setRestrtictionOfficeName("");
+        }
+        if(searchParams.getSerialNo()==null){
+            searchParams.setSerialNo("");
+        }
+        if(searchParams.getSourceTypeCode()==null){
+            searchParams.setSourceTypeCode("");
+        }
+        if(searchParams.getVdcCode()==null){
+            searchParams.setVdcCode("");
+        }
+        if(searchParams.getWardNo()==null){
+            searchParams.setWardNo("");
+        }
+        
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, RestrictionSearchResult.QUERY_SELECT);
+        params.put(RestrictionSearchResult.PARAM_BUNDLE_NO, searchParams.getBundleNo());
+        params.put(RestrictionSearchResult.PARAM_BUNDLE_PAGE_NO, searchParams.getBundlePageNo());
+        params.put(RestrictionSearchResult.PARAM_LANG, searchParams.getLanguageCode());
+        params.put(RestrictionSearchResult.PARAM_MAP_SHEET_ID, searchParams.getMapSheetId());
+        params.put(RestrictionSearchResult.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        params.put(RestrictionSearchResult.PARAM_OWNER_LAST_NAME, searchParams.getOwnerLastName());
+        params.put(RestrictionSearchResult.PARAM_OWNER_NAME, searchParams.getOwnerName());
+        params.put(RestrictionSearchResult.PARAM_PARCEL_NO, searchParams.getParcelNo());
+        params.put(RestrictionSearchResult.PARAM_PRICE_FROM, searchParams.getPriceFrom());
+        params.put(RestrictionSearchResult.PARAM_PRICE_TO, searchParams.getPriceTo());
+        params.put(RestrictionSearchResult.PARAM_REFERENCE_NO, searchParams.getReferenceNo());
+        params.put(RestrictionSearchResult.PARAM_REF_DATE_FROM, searchParams.getRefDateFrom());
+        params.put(RestrictionSearchResult.PARAM_REF_DATE_TO, searchParams.getRefDateTo());
+        params.put(RestrictionSearchResult.PARAM_REG_DATE_FROM, searchParams.getRegDateFrom());
+        params.put(RestrictionSearchResult.PARAM_REG_DATE_TO, searchParams.getRegDateTo());
+        params.put(RestrictionSearchResult.PARAM_REG_NUMBER, searchParams.getRegNumber());
+        params.put(RestrictionSearchResult.PARAM_RESTR_OFFICE, searchParams.getRestrtictionOfficeName());
+        params.put(RestrictionSearchResult.PARAM_RESTR_REASON_CODE, searchParams.getRestrictionReasonCode());
+        params.put(RestrictionSearchResult.PARAM_SERIAL_NO, searchParams.getSerialNo());
+        params.put(RestrictionSearchResult.PARAM_SOURCE_TYPE_CODE, searchParams.getSourceTypeCode());
+        params.put(RestrictionSearchResult.PARAM_VDC_CODE, searchParams.getVdcCode());
+        params.put(RestrictionSearchResult.PARAM_WARD_NO, searchParams.getWardNo());
+        
+        return getRepository().getEntityList(RestrictionSearchResult.class, params);
     }
 }
