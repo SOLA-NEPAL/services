@@ -52,6 +52,8 @@ public interface AdministrativeEJBLocal extends AbstractSolaTransactionEJBLocal 
 
     BaUnit getBaUnitById(String id);
 
+    Rrr getRrr(String id);
+
     BaUnit getBaUnitByCode(String nameFirstpart, String nameLastpart);
 
     BaUnit saveBaUnit(String serviceId, BaUnit baUnit);
@@ -65,7 +67,7 @@ public interface AdministrativeEJBLocal extends AbstractSolaTransactionEJBLocal 
     BaUnit cancelBaUnitTermination(String baUnitId);
 
     List<RrrLoc> getRrrLocsById(String locId);
-    
+
     Moth saveMoth(Moth moth);
 
     Moth getMoth(String id);
@@ -77,26 +79,26 @@ public interface AdministrativeEJBLocal extends AbstractSolaTransactionEJBLocal 
     Loc saveLoc(Loc loc);
 
     Loc getLoc(String id);
-    
+
     LocWithMoth getLocWithMoth(String id);
 
     BaUnit saveBaUnit(BaUnit baUnit);
 
     LocWithMoth getLocByPageNoAndMoth(LocSearchByMothParams searchParams);
-    
-    List<Loc> getLocList(String mothId);   
-    
+
+    List<Loc> getLocList(String mothId);
+
     List<RestrictionReason> getRestrictionReasons(String languageCode);
 
     List<RestrictionReleaseReason> getRestrictionReleaseReasons(String languageCode);
 
     List<RestrictionOffice> getRestrictionOffices(String languageCode);
-    
+
     List<OwnerType> getOwnerTypes(String languageCode);
 
     List<OwnershipType> getOwnershipTypes(String languageCode);
 
     List<TenancyType> getTenancyTypes(String languageCode);
-    
+
     void deletePendingBaUnit(String baUnitId);
 }

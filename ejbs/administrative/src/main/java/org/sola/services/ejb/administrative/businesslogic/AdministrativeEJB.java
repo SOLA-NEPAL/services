@@ -52,7 +52,6 @@ import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
 import org.sola.services.ejb.party.repository.entities.Party;
 import org.sola.services.ejb.search.businesslogic.SearchEJBLocal;
 import org.sola.services.ejb.source.businesslogic.SourceEJBLocal;
-import org.sola.services.ejb.source.repository.entities.Source;
 import org.sola.services.ejb.system.businesslogic.SystemEJBLocal;
 import org.sola.services.ejb.system.repository.entities.BrValidation;
 import org.sola.services.ejb.transaction.businesslogic.TransactionEJBLocal;
@@ -888,5 +887,14 @@ public class AdministrativeEJB extends AbstractEJB implements AdministrativeEJBL
                 throw new SOLAException(ServiceMessage.EJB_ADMINISTRATIVE_BAUNIT_MODIFICATION_NOT_ALLOWED);
             }
         }
+    }
+
+    @Override
+    public Rrr getRrr(String id) {
+        Rrr result = null;
+        if (id != null) {
+            result = getRepository().getEntity(Rrr.class, id);
+        }
+        return result;
     }
 }
