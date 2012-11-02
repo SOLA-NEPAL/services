@@ -34,30 +34,7 @@ import java.util.List;
 import java.util.Map;
 import javax.ejb.Local;
 import org.sola.services.common.ejbs.AbstractEJBLocal;
-import org.sola.services.ejb.search.repository.entities.ApplicationLogResult;
-import org.sola.services.ejb.search.repository.entities.ApplicationSearchParams;
-import org.sola.services.ejb.search.repository.entities.ApplicationSearchResult;
-import org.sola.services.ejb.search.repository.entities.BaUnitSearchParams;
-import org.sola.services.ejb.search.repository.entities.BaUnitSearchResult;
-import org.sola.services.ejb.search.repository.entities.BrSearchParams;
-import org.sola.services.ejb.search.repository.entities.BrSearchResult;
-import org.sola.services.ejb.search.repository.entities.CadastreObjectSearchParams;
-import org.sola.services.ejb.search.repository.entities.CadastreObjectSearchResult;
-import org.sola.services.ejb.search.repository.entities.CadastreObjectSearchResultExt;
-import org.sola.services.ejb.search.repository.entities.ConfigMapLayer;
-import org.sola.services.ejb.search.repository.entities.DynamicQuery;
-import org.sola.services.ejb.search.repository.entities.GenericResult;
-import org.sola.services.ejb.search.repository.entities.LocDetails;
-import org.sola.services.ejb.search.repository.entities.LocSearchParams;
-import org.sola.services.ejb.search.repository.entities.LocSearchResult;
-import org.sola.services.ejb.search.repository.entities.PartySearchParams;
-import org.sola.services.ejb.search.repository.entities.PartySearchResult;
-import org.sola.services.ejb.search.repository.entities.RestrictionSearchParams;
-import org.sola.services.ejb.search.repository.entities.RestrictionSearchResult;
-import org.sola.services.ejb.search.repository.entities.SourceSearchParams;
-import org.sola.services.ejb.search.repository.entities.SourceSearchResult;
-import org.sola.services.ejb.search.repository.entities.UserSearchParams;
-import org.sola.services.ejb.search.repository.entities.UserSearchResult;
+import org.sola.services.ejb.search.repository.entities.*;
 import org.sola.services.ejb.search.spatial.QueryForNavigation;
 import org.sola.services.ejb.search.spatial.QueryForSelect;
 import org.sola.services.ejb.search.spatial.ResultForNavigationInfo;
@@ -122,4 +99,6 @@ public interface SearchEJBLocal extends AbstractEJBLocal {
     List<LocSearchResult> searchLocs(LocSearchParams  params);
     
     List<RestrictionSearchResult> searchRestrictions(RestrictionSearchParams params);
+    
+    List<RestrictionInfo> searchRestrictionInfo(RestrictionInfoParams params);
 }
