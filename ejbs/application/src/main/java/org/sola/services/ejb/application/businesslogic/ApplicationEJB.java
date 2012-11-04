@@ -377,27 +377,11 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
     }
 
     @Override
-    @RolesAllowed(RolesConstants.APPLICATION_WITHDRAW)
-    public List<ValidationResult> applicationActionWithdraw(
-            String applicationId, String languageCode, int rowVersion) {
-        return this.takeActionAgainstApplication(
-                applicationId, ApplicationActionType.WITHDRAW, languageCode, rowVersion);
-    }
-
-    @Override
     @RolesAllowed(RolesConstants.APPLICATION_REJECT)
     public List<ValidationResult> applicationActionCancel(
             String applicationId, String languageCode, int rowVersion) {
         return this.takeActionAgainstApplication(
                 applicationId, ApplicationActionType.CANCEL, languageCode, rowVersion);
-    }
-
-    @Override
-    @RolesAllowed(RolesConstants.APPLICATION_REQUISITE)
-    public List<ValidationResult> applicationActionRequisition(
-            String applicationId, String languageCode, int rowVersion) {
-        return this.takeActionAgainstApplication(
-                applicationId, ApplicationActionType.REQUISITION, languageCode, rowVersion);
     }
 
     @Override
@@ -422,22 +406,6 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
             String applicationId, String languageCode, int rowVersion) {
         return this.takeActionAgainstApplication(
                 applicationId, ApplicationActionType.ARCHIVE, languageCode, rowVersion);
-    }
-
-    @Override
-    @RolesAllowed(RolesConstants.APPLICATION_DESPATCH)
-    public List<ValidationResult> applicationActionDespatch(
-            String applicationId, String languageCode, int rowVersion) {
-        return this.takeActionAgainstApplication(
-                applicationId, ApplicationActionType.DESPATCH, languageCode, rowVersion);
-    }
-
-    @Override
-    @RolesAllowed(RolesConstants.APPLICATION_LAPSE)
-    public List<ValidationResult> applicationActionLapse(
-            String applicationId, String languageCode, int rowVersion) {
-        return this.takeActionAgainstApplication(
-                applicationId, ApplicationActionType.LAPSE, languageCode, rowVersion);
     }
 
     @Override
@@ -551,35 +519,6 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
                     actionedApplication.getRowVerion()));
         }
         return validationResults;
-    }
-
-    @Override
-    @RolesAllowed({RolesConstants.APPLICATION_UNASSIGN_FROM_OTHERS, RolesConstants.APPLICATION_UNASSIGN_FROM_YOURSELF})
-    @Deprecated
-    /**
-     * This method will be removed, since it is not used in the push model of
-     * assigning and transferring applications.
-     */
-    public List<ValidationResult> applicationActionUnassign(
-            String applicationId, String languageCode, int rowVersion) {
-        return new ArrayList<ValidationResult>();
-//        ApplicationActionTaker application =
-//                getRepository().getEntity(ApplicationActionTaker.class, applicationId);
-//        if (application == null) {
-//            throw new SOLAException(ServiceMessage.EJB_APPLICATION_APPLICATION_NOT_FOUND);
-//        }
-//        application.setAssigneeId(null);
-//        application.setAssignedDatetime(null);
-//        return this.takeActionAgainstApplication(
-//                application, ApplicationActionType.UNASSIGN, languageCode, rowVersion);
-    }
-
-    @Override
-    @RolesAllowed(RolesConstants.APPLICATION_RESUBMIT)
-    public List<ValidationResult> applicationActionResubmit(
-            String applicationId, String languageCode, int rowVersion) {
-        return this.takeActionAgainstApplication(
-                applicationId, ApplicationActionType.RESUBMIT, languageCode, rowVersion);
     }
 
     /**

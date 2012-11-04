@@ -29,7 +29,6 @@
  */
 package org.sola.services.common.ejbs;
 
-import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -48,38 +47,26 @@ import org.sola.services.common.repository.CommonRepository;
 import org.sola.services.common.repository.CommonRepositoryImpl;
 import org.sola.services.common.repository.DatabaseConnectionManager;
 import org.sola.services.common.repository.entities.AbstractEntity;
-import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 
 @DeclareRoles({
-    RolesConstants.DASHBOARD_VIEW_ASSIGNED_APPS,
-    RolesConstants.DASHBOARD_VIEW_UNASSIGNED_APPS,
-    RolesConstants.DASHBOARD_VIEW_OWN_APPS,
     RolesConstants.APPLICATION_VIEW_APPS,
     RolesConstants.APPLICATION_CREATE_APPS,
     RolesConstants.APPLICATION_EDIT_APPS,
     RolesConstants.APPLICATION_PRINT_STATUS_REPORT,
-    RolesConstants.APPLICATION_ASSIGN_TO_ALL,
     RolesConstants.APPLICATION_ASSIGN_TO_DEPARTMENT,
-    RolesConstants.APPLICATION_UNASSIGN_FROM_YOURSELF,
-    RolesConstants.APPLICATION_UNASSIGN_FROM_OTHERS,
+    RolesConstants.APPLICATION_ASSIGN_TO_ALL,
     RolesConstants.APPLICATION_SERVICE_START,
     RolesConstants.APPLICATION_SERVICE_COMPLETE,
     RolesConstants.APPLICATION_SERVICE_CANCEL,
     RolesConstants.APPLICATION_SERVICE_REVERT,
-    RolesConstants.APPLICATION_REQUISITE,
-    RolesConstants.APPLICATION_RESUBMIT,
     RolesConstants.APPLICATION_APPROVE,
-    RolesConstants.APPLICATION_WITHDRAW,
     RolesConstants.APPLICATION_REJECT,
     RolesConstants.APPLICATION_VALIDATE,
-    RolesConstants.APPLICATION_DESPATCH,
     RolesConstants.APPLICATION_ARCHIVE,
     RolesConstants.ADMINISTRATIVE_BA_UNIT_SAVE,
-    RolesConstants.ADMINISTRATIVE_RRR_SAVE,
-    RolesConstants.ADMINISTRATIVE_PARCEL_SAVE,
-    RolesConstants.ADMINISTRATIVE_NOTATION_SAVE,
     RolesConstants.ADMINISTRATIVE_BA_UNIT_PRINT_CERT,
     RolesConstants.ADMINISTRATIVE_BA_UNIT_SEARCH,
+    RolesConstants.ADMINISTRATIVE_MOTH_MANAGEMENT,
     RolesConstants.SOURCE_TRANSACTIONAL,
     RolesConstants.SOURCE_SAVE,
     RolesConstants.SOURCE_SEARCH,
@@ -87,13 +74,16 @@ import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
     RolesConstants.GIS_VIEW_MAP,
     RolesConstants.GIS_PRINT,
     RolesConstants.CADASTRE_PARCEL_SAVE,
+    RolesConstants.CADASTRE_MAP_SHEET_SAVE,
+    RolesConstants.CADASTRE_PARCEL_DETAILS_SAVE,
     RolesConstants.PARTY_SAVE,
     RolesConstants.PARTY_RIGHTHOLDERS_SAVE,
     RolesConstants.REPORTS_VIEW,
     RolesConstants.ARCHIVE_ARCHIVE_APPS,
     RolesConstants.ADMIN_MANAGE_SECURITY,
     RolesConstants.ADMIN_MANAGE_REFDATA,
-    RolesConstants.ADMIN_MANAGE_SETTINGS
+    RolesConstants.ADMIN_MANAGE_SETTINGS,
+    RolesConstants.ADMIN_MANAGE_BR,
 })
 public abstract class AbstractEJB implements AbstractEJBLocal {
 
