@@ -336,7 +336,7 @@ public class AdministrativeEJB extends AbstractEJB implements AdministrativeEJBL
         return getBaUnitById(baUnitId);
     }
 
-    public void terminateBaUnitByTransactionId(String baUnitId, String transactionId) {
+    private void terminateBaUnitByTransactionId(String baUnitId, String transactionId) {
         if (baUnitId == null || transactionId == null) {
             return;
         }
@@ -451,7 +451,6 @@ public class AdministrativeEJB extends AbstractEJB implements AdministrativeEJBL
 
         if (baUnit.isNew()) {
             baUnit.setStatusCode(StatusConstants.PENDING);
-            baUnit.setTypeCode("administrativeUnit");
             baUnit.setOfficeCode(adminEJB.getCurrentOfficeCode());
             baUnit.setFiscalYearCode(adminEJB.getCurrentFiscalYearCode());
             // Check cadastre object

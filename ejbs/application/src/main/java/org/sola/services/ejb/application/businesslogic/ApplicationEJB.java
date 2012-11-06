@@ -30,37 +30,20 @@
 package org.sola.services.ejb.application.businesslogic;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import org.sola.common.DateUtility;
-import org.sola.common.Money;
+import org.sola.common.RolesConstants;
 import org.sola.common.SOLAException;
 import org.sola.common.messaging.ServiceMessage;
+import org.sola.services.common.StatusConstants;
 import org.sola.services.common.br.ValidationResult;
-import org.sola.services.ejb.administrative.businesslogic.AdministrativeEJBLocal;
-import org.sola.services.ejb.application.repository.entities.Application;
-import org.sola.services.ejb.application.repository.entities.ApplicationActionTaker;
-import org.sola.services.ejb.application.repository.entities.ApplicationActionType;
-import org.sola.services.ejb.application.repository.entities.ApplicationLog;
-import org.sola.services.ejb.application.repository.entities.ApplicationProperty;
-import org.sola.services.ejb.application.repository.entities.ApplicationStatusType;
-import org.sola.services.ejb.application.repository.entities.RequestCategoryType;
-import org.sola.services.ejb.application.repository.entities.RequestType;
-import org.sola.services.ejb.application.repository.entities.Service;
 import org.sola.services.common.ejbs.AbstractEJB;
-import org.sola.common.RolesConstants;
-import org.sola.services.common.EntityAction;
 import org.sola.services.common.faults.SOLAValidationException;
 import org.sola.services.common.repository.CommonSqlProvider;
+import org.sola.services.ejb.administrative.businesslogic.AdministrativeEJBLocal;
 import org.sola.services.ejb.application.repository.entities.*;
 import org.sola.services.ejb.cadastre.businesslogic.CadastreEJBLocal;
 import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
@@ -232,6 +215,12 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
             application.setOfficeCode(adminEJB.getCurrentOfficeCode());
             application.setFiscalYearCode(adminEJB.getCurrentFiscalYearCode());
         } else {
+            Object statusCode = application.getOriginalValue("statusCode");
+            if (statusCode != null) {
+                if (!statusCode.toString().equals(StatusConstants.LODGED) && application.isModified()) {
+                    throw new SOLAException(ServiceMessage.EJB_APPLICATION_APPLICATION_MODIFICATION_NOT_ALLOWED);
+                }
+            }
             adminEJB.checkOfficeCode(application.getOfficeCode());
         }
         
