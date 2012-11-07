@@ -54,8 +54,6 @@ import org.sola.services.ejb.address.repository.entities.Address;
 @DefaultSorter(sortString = "name, last_name")
 public class Party extends AbstractVersionedEntity {
 
-    public static final String TYPE_CODE_NON_NATURAL_PERSON = "nonNaturalPerson";
-    public static final String TYPE_CODE_NATURAL_PERSON = "naturalPerson";
     public static final String QUERY_WHERE_BYTYPECODE = "type_code = #{partyTypeCode} and office_code=#{" + AbstractReadOnlyEntity.PARAM_OFFICE_CODE + "}";
     public static final String QUERY_WHERE_LODGING_AGENTS = "party.id in (select party_id from party.party_role where party.party_role.type_code = 'lodgingAgent') "
             + "AND office_code=#{" + AbstractReadOnlyEntity.PARAM_OFFICE_CODE + "}";

@@ -36,6 +36,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import org.sola.common.DateUtility;
 import org.sola.common.RolesConstants;
+import org.sola.common.SOLAAccessException;
 import org.sola.common.SOLAException;
 import org.sola.common.messaging.ServiceMessage;
 import org.sola.services.common.StatusConstants;
@@ -132,7 +133,7 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
         application.setAssigneeId(adminEJB.getCurrentUser().getId());
         application.setOfficeCode(adminEJB.getCurrentOfficeCode());
         application.setFiscalYearCode(adminEJB.getCurrentFiscalYearCode());
-        
+
         if (application.getLodgingDatetime() == null) {
             application.setLodgingDatetime(DateUtility.now());
         }
@@ -144,7 +145,6 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
 
         calculateCompletionDates(application);
         treatApplicationSources(application);
-        application.getContactPerson().setTypeCode("naturalPerson");
         application = getRepository().saveEntity(application);
 
         return application;
@@ -210,8 +210,8 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
         if (application == null) {
             return application;
         }
-        
-        if(application.isNew()){
+
+        if (application.isNew()) {
             application.setOfficeCode(adminEJB.getCurrentOfficeCode());
             application.setFiscalYearCode(adminEJB.getCurrentFiscalYearCode());
         } else {
@@ -223,7 +223,7 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
             }
             adminEJB.checkOfficeCode(application.getOfficeCode());
         }
-        
+
         Date now = DateUtility.now();
         if (application.getServiceList() != null) {
             List<RequestType> requestTypes = this.getRequestTypes("en");
@@ -334,11 +334,39 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
     }
 
     @Override
-    @RolesAllowed(RolesConstants.APPLICATION_SERVICE_COMPLETE)
     public List<ValidationResult> serviceActionComplete(
             String serviceId, String languageCode, int rowVersion) {
+        checkServiceRunRole(serviceId);
         return this.takeActionAgainstService(
                 serviceId, ServiceActionType.COMPLETE, languageCode, rowVersion);
+    }
+
+    private void checkServiceRunRole(String serviceId) {
+        Service service = getRepository().getEntity(Service.class, serviceId);
+        boolean allowed;
+        
+        if (service != null) {
+            RequestType requestType = getRepository().getCode(RequestType.class, service.getRequestTypeCode(), "en");
+            if (requestType != null) {
+                String requestCatCode = requestType.getRequestCategoryCode();
+
+                if (requestCatCode.equalsIgnoreCase("cadastreServices") 
+                        && isInRole(RolesConstants.APPLICATION_RUN_CADASTRE_SERVICES)) {
+                    allowed = true;
+                } else if (requestCatCode.equalsIgnoreCase("informationServices")
+                        && isInRole(RolesConstants.APPLICATION_RUN_INFORMATION_SERVICES)) {
+                    allowed = true;
+                } else if (requestCatCode.equalsIgnoreCase("registrationServices")
+                        && isInRole(RolesConstants.APPLICATION_RUN_REG_SERVICES)) {
+                    allowed = true;
+                } else {
+                    allowed = isInRole(RolesConstants.APPLICATION_RUN_REG_SERVICES);
+                }
+                if(!allowed){
+                    throw new SOLAAccessException();
+                }
+            }
+        }
     }
 
     @Override
@@ -350,9 +378,9 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
     }
 
     @Override
-    @RolesAllowed(RolesConstants.APPLICATION_SERVICE_START)
     public List<ValidationResult> serviceActionStart(
             String serviceId, String languageCode, int rowVersion) {
+        checkServiceRunRole(serviceId);
         return this.takeActionAgainstService(
                 serviceId, ServiceActionType.START, languageCode, rowVersion);
     }
@@ -465,7 +493,7 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
                 // Check current assignee
                 checkUser(application.getAssigneeId());
             }
-            
+
             application.setAssigneeId(userId);
             application.setAssignedDatetime(Calendar.getInstance().getTime());
             validationResults.addAll(this.takeActionAgainstApplication(application,
@@ -588,21 +616,21 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
 
     private List<ValidationResult> takeActionAgainstService(
             String serviceId, String actionCode, String languageCode, int rowVersion) {
-        
+
         ServiceActionTaker service = getRepository().getEntity(ServiceActionTaker.class, serviceId);
-        
+
         if (service == null) {
             throw new SOLAException(ServiceMessage.EJB_APPLICATION_SERVICE_NOT_FOUND);
         }
 
         adminEJB.checkOfficeCode(service.getOfficeCode());
-        
+
         ServiceActionType serviceActionType =
                 getRepository().getCode(ServiceActionType.class, actionCode, languageCode);
-        
+
         List<ValidationResult> validationResultList = this.validateService(
                 service, languageCode, serviceActionType);
-        
+
         if (systemEJB.validationSucceeded(validationResultList)) {
             transactionEJB.changeTransactionStatusFromService(
                     serviceId, serviceActionType.getStatusToSet());
@@ -631,7 +659,7 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
             String languageCode, int rowVersion) {
 
         adminEJB.checkOfficeCode(application.getOfficeCode());
-        
+
         List<BrValidation> brValidationList =
                 systemEJB.getBrForValidatingApplication(actionCode);
 

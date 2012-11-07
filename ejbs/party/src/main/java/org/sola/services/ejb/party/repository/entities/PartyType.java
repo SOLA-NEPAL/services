@@ -31,6 +31,7 @@
  */
 package org.sola.services.ejb.party.repository.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Table;
 import org.sola.services.common.repository.DefaultSorter;
 import org.sola.services.common.repository.entities.AbstractCodeEntity;
@@ -42,8 +43,18 @@ import org.sola.services.common.repository.entities.AbstractCodeEntity;
 @Table(name = "party_type", schema = "party")
 @DefaultSorter(sortString="display_value")
 public class PartyType extends AbstractCodeEntity {
-
+    @Column
+    private boolean individual;
+    
     public PartyType() {
         super();
+    }
+
+    public boolean isIndividual() {
+        return individual;
+    }
+
+    public void setIndividual(boolean individual) {
+        this.individual = individual;
     }
 }

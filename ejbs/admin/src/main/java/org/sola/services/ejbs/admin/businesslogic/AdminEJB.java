@@ -148,6 +148,35 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
             return false;
         }
     }
+    
+    @Override
+    public boolean changeCurrentUserPassword(String oldPassword, String newPassword){
+        User user = getCurrentUser();
+        if(user==null || oldPassword == null || newPassword == null){
+            return false;
+        }
+        
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, User.QUERY_GET_PASSWORD);
+        params.put(User.PARAM_USERNAME, getCurrentUser().getUserName());
+        
+        ArrayList<HashMap> list = getRepository().executeFunction(params);
+
+        if (list.size() > 0 && list.get(0) != null && list.get(0).size() > 0) {
+            String currentPassword = (String) ((Entry) list.get(0).entrySet().iterator().next()).getValue();
+            if(currentPassword == null){
+                return false;
+            }
+            
+            oldPassword = getPasswordHash(oldPassword);
+            if(!oldPassword.equals(currentPassword)){
+                return false;
+            }
+            return changePassword(user.getUserName(), newPassword);
+        } else {
+            return false;
+        }
+    }
 
     /**
      * Returns SHA-256 hash for the password.

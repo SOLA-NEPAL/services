@@ -45,6 +45,8 @@ public class User extends AbstractVersionedEntity {
     public static final String QUERY_WHERE_USERNAME = "username = #{" + PARAM_USERNAME + "}";
     public static final String QUERY_SET_PASSWORD = "select system.setPassword(#{" + 
             PARAM_USERNAME + "}, #{" + PARAM_PASSWORD + "})";
+    public static final String QUERY_GET_PASSWORD = "select passwd from system.appuser where username=#{" + 
+            PARAM_USERNAME + "} limit 1";
     
     @Id
     @Column(name = "id")

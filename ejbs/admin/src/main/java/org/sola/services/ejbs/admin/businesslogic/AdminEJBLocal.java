@@ -57,6 +57,11 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
      * Sets password for user.
      */
     boolean changePassword(String userName, String password);
+    
+    /**
+     * Sets new password for the current user.
+     */
+    boolean changeCurrentUserPassword(String oldPassword, String newPassword);
 
     /**
      * Returns all application roles.
