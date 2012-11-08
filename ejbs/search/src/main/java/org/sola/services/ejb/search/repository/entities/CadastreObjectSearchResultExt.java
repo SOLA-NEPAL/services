@@ -19,7 +19,8 @@ public class CadastreObjectSearchResultExt extends AbstractReadOnlyEntity {
             "SELECT DISTINCT pcl.id, pcl.map_sheet_id, pcl.map_sheet_id2, pcl.map_sheet_id3, pcl.map_sheet_id4, "
             + "pcl.parcel_no, pcl.name_firstpart, pcl.name_lastpart, m1.map_number, m2.map_number as map_number2, "
             + "m3.map_number as map_number3, m4.map_number as map_number4, ad.ward_no, ad.vdc_code, "
-            + "get_translation(vdc.display_value, #{" + LANGUAGE_CODE_PARAM + "}) as vdc_name "
+            + "get_translation(vdc.display_value, #{" + LANGUAGE_CODE_PARAM + "}) as vdc_name, "
+            + "(SELECT id FROM administrative.ba_unit WHERE cadastre_object_id = pcl.id LIMIT 1) AS ba_unit_id "
             + "FROM ((((cadastre.cadastre_object as pcl LEFT JOIN cadastre.map_sheet m1 ON pcl.map_sheet_id = m1.id) "
             + "LEFT JOIN cadastre.map_sheet m2 ON pcl.map_sheet_id2 = m2.id) "
             + "LEFT JOIN cadastre.map_sheet m3 ON pcl.map_sheet_id3 = m3.id) "
@@ -68,13 +69,23 @@ public class CadastreObjectSearchResultExt extends AbstractReadOnlyEntity {
     private String vdcCode;
     @Column(name = "vdc_name")
     private String vdcName;
-
+    @Column(name = "ba_unit_id")
+    private String baUnitId;
+    
     public CadastreObjectSearchResultExt() {
         super();
     }
 
     public String getId() {
         return id;
+    }
+
+    public String getBaUnitId() {
+        return baUnitId;
+    }
+
+    public void setBaUnitId(String baUnitId) {
+        this.baUnitId = baUnitId;
     }
 
     public void setId(String id) {
