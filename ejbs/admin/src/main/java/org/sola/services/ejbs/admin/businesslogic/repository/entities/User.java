@@ -70,6 +70,9 @@ public class User extends AbstractVersionedEntity {
     @ChildEntityList(parentIdField = "userId")
     private List<UserGroup> userGroups;
 
+    @ChildEntityList(parentIdField="userId")
+    private List<UserVdc> vdcs;
+    
     public User() {
         super();
     }
@@ -147,5 +150,13 @@ public class User extends AbstractVersionedEntity {
 
     public void setDepartment(Department department) {
         this.department = department;
+    }
+
+    public List<UserVdc> getVdcs() {
+        return vdcs;
+    }
+
+    public void setVdcs(List<UserVdc> vdcs) {
+        this.vdcs = vdcs;
     }
 }

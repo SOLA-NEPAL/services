@@ -445,8 +445,19 @@ public class AdministrativeEJB extends AbstractEJB implements AdministrativeEJBL
     @Override
     @RolesAllowed(RolesConstants.ADMINISTRATIVE_BA_UNIT_SAVE)
     public BaUnit saveBaUnit(BaUnit baUnit) {
+        if(baUnit==null){
+            return null;
+        }
+        
+        // Check VDC access
+        if(baUnit.getCadastreObject()!=null && baUnit.getCadastreObject().getAddress()!=null){
+            adminEJB.checkVdcWardAccess(baUnit.getCadastreObject().getAddress().getVdcCode(), 
+                    baUnit.getCadastreObject().getAddress().getWardNo(), true);
+        }
+        
         Object statusCode;
 
+        
         if (baUnit.isNew()) {
             baUnit.setStatusCode(StatusConstants.PENDING);
             baUnit.setOfficeCode(adminEJB.getCurrentOfficeCode());
