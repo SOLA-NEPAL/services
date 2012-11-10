@@ -18,7 +18,7 @@ public class CadastreObjectSearchResultExt extends AbstractReadOnlyEntity {
     public static final String PARCEL_SEARCH_QUERY =
             "SELECT DISTINCT pcl.id, pcl.map_sheet_id, pcl.map_sheet_id2, pcl.map_sheet_id3, pcl.map_sheet_id4, "
             + "pcl.parcel_no, pcl.name_firstpart, pcl.name_lastpart, m1.map_number, m2.map_number as map_number2, "
-            + "m3.map_number as map_number3, m4.map_number as map_number4, ad.ward_no, ad.vdc_code, "
+            + "pcl.dataset_id, m3.map_number as map_number3, m4.map_number as map_number4, ad.ward_no, ad.vdc_code, "
             + "get_translation(vdc.display_value, #{" + LANGUAGE_CODE_PARAM + "}) as vdc_name, "
             + "(SELECT id FROM administrative.ba_unit WHERE cadastre_object_id = pcl.id LIMIT 1) AS ba_unit_id "
             + "FROM ((((cadastre.cadastre_object as pcl LEFT JOIN cadastre.map_sheet m1 ON pcl.map_sheet_id = m1.id) "
@@ -71,6 +71,8 @@ public class CadastreObjectSearchResultExt extends AbstractReadOnlyEntity {
     private String vdcName;
     @Column(name = "ba_unit_id")
     private String baUnitId;
+    @Column(name="dataset_id")
+    private String datasetId;
     
     public CadastreObjectSearchResultExt() {
         super();
@@ -203,5 +205,13 @@ public class CadastreObjectSearchResultExt extends AbstractReadOnlyEntity {
 
     public void setWardNumber(String wardNumber) {
         this.wardNumber = wardNumber;
+    }
+
+    public String getDatasetId() {
+        return datasetId;
+    }
+
+    public void setDatasetId(String datasetId) {
+        this.datasetId = datasetId;
     }
 }

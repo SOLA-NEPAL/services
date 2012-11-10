@@ -483,4 +483,30 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     public List<BuildingUnitType> getBuildingUnitTypes(String languageCode) {
         return getRepository().getCodeList(BuildingUnitType.class, languageCode);
     }
+
+    @Override
+    public List<Dataset> getDatasetsByOffice(String officeCode) {
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Dataset.WHERE_BY_OFFICE_CODE);
+        params.put(Dataset.PARAM_OFFICE_CODE, officeCode);
+        return getRepository().getEntityList(Dataset.class, params);
+    }
+
+    @Override
+    public List<Dataset> getDatasetsByUser(String username) {
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Dataset.WHERE_BY_USERNAME);
+        params.put(Dataset.PARAM_USERNAME, username);
+        return getRepository().getEntityList(Dataset.class, params);
+    }
+
+    @Override
+    public List<Dataset> getDatasetsByCurrentOffice() {
+        return getDatasetsByOffice(adminEJB.getCurrentOfficeCode());
+    }
+
+    @Override
+    public List<Dataset> getDatasetsByCurrentUser() {
+        return getDatasetsByUser(getUserName());
+    }
 }

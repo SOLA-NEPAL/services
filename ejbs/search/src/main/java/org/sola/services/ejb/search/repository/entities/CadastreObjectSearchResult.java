@@ -54,7 +54,7 @@ public class CadastreObjectSearchResult extends AbstractReadOnlyEntity {
             + "compare_strings(#{search_string}, name_firstpart || ' ' || name_lastpart) "
             + "AND " + QUERY_WHERE_BY_OFFICE;
     
-    public static final String QUERY_SELECT_SEARCHBY_BAUNIT = "distinct co.id, "
+    public static final String QUERY_SELECT_SEARCHBY_BAUNIT = "distinct co.id, co.dataset_id, "
             + "ba_unit.name_firstpart || '/ ' || ba_unit.name_lastpart || "
             + "' > ' || co.name_firstpart || '/ ' || co.name_lastpart as label, "
             + "st_asewkb(geom_polygon) as the_geom, co.office_code";
@@ -67,7 +67,7 @@ public class CadastreObjectSearchResult extends AbstractReadOnlyEntity {
             + "and compare_strings(#{search_string}, "
             + "ba_unit.name_firstpart || ' ' || ba_unit.name_lastpart) AND " + QUERY_WHERE_BY_OFFICE2;
 
-    public static final String QUERY_SELECT_SEARCHBY_OWNER_OF_BAUNIT = " distinct co.id, "
+    public static final String QUERY_SELECT_SEARCHBY_OWNER_OF_BAUNIT = " distinct co.id, co.dataset_id, "
             + "coalesce(party.name, '') || ' ' || coalesce(party.last_name, '') || "
             + "' > ' || co.name_firstpart || '/ ' || co.name_lastpart as label, "
             + "st_asewkb(co.geom_polygon) as the_geom, co.office_code";
@@ -109,16 +109,8 @@ public class CadastreObjectSearchResult extends AbstractReadOnlyEntity {
     private byte[] theGeom;
     @Column(name = "office_code", updatable = false)
     private String officeCode;
-//    @ChildEntity(childIdField = "mapSheetCode",readOnly=true)
-//    private MapSheet mapSheet;
-//
-//    public MapSheet getMapSheet() {
-//        return mapSheet;
-//    }
-//
-//    public void setMapSheet(MapSheet mapSheet) {
-//        this.mapSheet = mapSheet;
-//    }
+    @Column(name="dataset_id")
+    private String datasetId;
 
     public String getId() {
         return id;
@@ -150,5 +142,13 @@ public class CadastreObjectSearchResult extends AbstractReadOnlyEntity {
 
     public void setOfficeCode(String officeCode) {
         this.officeCode = officeCode;
+    }
+
+    public String getDatasetId() {
+        return datasetId;
+    }
+
+    public void setDatasetId(String datasetId) {
+        this.datasetId = datasetId;
     }
 }

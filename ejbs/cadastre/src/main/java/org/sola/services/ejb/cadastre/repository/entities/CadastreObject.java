@@ -105,7 +105,7 @@ public class CadastreObject extends AbstractVersionedEntity {
             + AbstractReadOnlyEntity.PARAM_OFFICE_CODE + "} OR office_code IS NULL)";
     public static final String GET_BY_ADMIN_BOUNDARY_SELECT_PART =
             "p.id, p.type_code, p.map_sheet_id, p.fy_code, p.approval_datetime, p.historic_datetime,"
-            + "p.name_firstpart, p.name_lastpart, p.status_code, p.transaction_id,"
+            + "p.name_firstpart, p.name_lastpart, p.status_code, p.transaction_id, p.dataset_id, "
             + "st_asewkb(p.geom_polygon) as geom_polygon, p.parcel_no, p.parcel_note, p.land_type_code, p.land_use_code, p.land_class_code,p.address_id,"
             + "p.rowversion, p.change_user, p.rowidentifier, p.office_code";
     public static final String GET_BY_ADMIN_BOUNDARY_FROM_PART =
@@ -189,7 +189,9 @@ public class CadastreObject extends AbstractVersionedEntity {
     private String officeCode;
     @Column(name = "fy_code", updatable = false)
     private String fiscalYearCode;
-
+    @Column(name="dataset_id")
+    private String datasetId;
+    
     public String getMapSheetId() {
         return mapSheetId;
     }
@@ -431,6 +433,14 @@ public class CadastreObject extends AbstractVersionedEntity {
 
     public void setAreaUnitTypeCode(String areaUnitTypeCode) {
         this.areaUnitTypeCode = areaUnitTypeCode;
+    }
+
+    public String getDatasetId() {
+        return datasetId;
+    }
+
+    public void setDatasetId(String datasetId) {
+        this.datasetId = datasetId;
     }
 
     @Override
