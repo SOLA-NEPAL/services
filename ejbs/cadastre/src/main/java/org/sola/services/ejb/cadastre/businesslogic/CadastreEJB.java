@@ -106,6 +106,13 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     @Override
     @RolesAllowed({RolesConstants.CADASTRE_PARCEL_SAVE, RolesConstants.CADASTRE_PARCEL_DETAILS_SAVE})
     public CadastreObject saveCadastreObject(CadastreObject cadastreObject) {
+
+        // Check VDC access
+        if (cadastreObject != null && cadastreObject.getAddress() != null) {
+            adminEJB.checkVdcWardAccess(cadastreObject.getAddress().getVdcCode(),
+                    cadastreObject.getAddress().getWardNo(), true);
+        }
+
         if (cadastreObject.isNew()) {
             cadastreObject.setOfficeCode(adminEJB.getCurrentOfficeCode());
             cadastreObject.setFiscalYearCode(adminEJB.getCurrentFiscalYearCode());

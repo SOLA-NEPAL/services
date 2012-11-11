@@ -45,6 +45,8 @@ public class User extends AbstractVersionedEntity {
     public static final String QUERY_WHERE_USERNAME = "username = #{" + PARAM_USERNAME + "}";
     public static final String QUERY_SET_PASSWORD = "select system.setPassword(#{" + 
             PARAM_USERNAME + "}, #{" + PARAM_PASSWORD + "})";
+    public static final String QUERY_GET_PASSWORD = "select passwd from system.appuser where username=#{" + 
+            PARAM_USERNAME + "} limit 1";
     
     @Id
     @Column(name = "id")
@@ -68,6 +70,9 @@ public class User extends AbstractVersionedEntity {
     @ChildEntityList(parentIdField = "userId")
     private List<UserGroup> userGroups;
 
+    @ChildEntityList(parentIdField="userId")
+    private List<UserVdc> vdcs;
+    
     public User() {
         super();
     }
@@ -145,5 +150,13 @@ public class User extends AbstractVersionedEntity {
 
     public void setDepartment(Department department) {
         this.department = department;
+    }
+
+    public List<UserVdc> getVdcs() {
+        return vdcs;
+    }
+
+    public void setVdcs(List<UserVdc> vdcs) {
+        this.vdcs = vdcs;
     }
 }

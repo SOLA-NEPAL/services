@@ -30,37 +30,21 @@
 package org.sola.services.ejb.application.businesslogic;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import org.sola.common.DateUtility;
-import org.sola.common.Money;
+import org.sola.common.RolesConstants;
+import org.sola.common.SOLAAccessException;
 import org.sola.common.SOLAException;
 import org.sola.common.messaging.ServiceMessage;
+import org.sola.services.common.StatusConstants;
 import org.sola.services.common.br.ValidationResult;
-import org.sola.services.ejb.administrative.businesslogic.AdministrativeEJBLocal;
-import org.sola.services.ejb.application.repository.entities.Application;
-import org.sola.services.ejb.application.repository.entities.ApplicationActionTaker;
-import org.sola.services.ejb.application.repository.entities.ApplicationActionType;
-import org.sola.services.ejb.application.repository.entities.ApplicationLog;
-import org.sola.services.ejb.application.repository.entities.ApplicationProperty;
-import org.sola.services.ejb.application.repository.entities.ApplicationStatusType;
-import org.sola.services.ejb.application.repository.entities.RequestCategoryType;
-import org.sola.services.ejb.application.repository.entities.RequestType;
-import org.sola.services.ejb.application.repository.entities.Service;
 import org.sola.services.common.ejbs.AbstractEJB;
-import org.sola.common.RolesConstants;
-import org.sola.services.common.EntityAction;
 import org.sola.services.common.faults.SOLAValidationException;
 import org.sola.services.common.repository.CommonSqlProvider;
+import org.sola.services.ejb.administrative.businesslogic.AdministrativeEJBLocal;
 import org.sola.services.ejb.application.repository.entities.*;
 import org.sola.services.ejb.cadastre.businesslogic.CadastreEJBLocal;
 import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
@@ -149,7 +133,7 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
         application.setAssigneeId(adminEJB.getCurrentUser().getId());
         application.setOfficeCode(adminEJB.getCurrentOfficeCode());
         application.setFiscalYearCode(adminEJB.getCurrentFiscalYearCode());
-        
+
         if (application.getLodgingDatetime() == null) {
             application.setLodgingDatetime(DateUtility.now());
         }
@@ -161,7 +145,6 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
 
         calculateCompletionDates(application);
         treatApplicationSources(application);
-        application.getContactPerson().setTypeCode("naturalPerson");
         application = getRepository().saveEntity(application);
 
         return application;
@@ -227,14 +210,20 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
         if (application == null) {
             return application;
         }
-        
-        if(application.isNew()){
+
+        if (application.isNew()) {
             application.setOfficeCode(adminEJB.getCurrentOfficeCode());
             application.setFiscalYearCode(adminEJB.getCurrentFiscalYearCode());
         } else {
+            Object statusCode = application.getOriginalValue("statusCode");
+            if (statusCode != null) {
+                if (!statusCode.toString().equals(StatusConstants.LODGED) && application.isModified()) {
+                    throw new SOLAException(ServiceMessage.EJB_APPLICATION_APPLICATION_MODIFICATION_NOT_ALLOWED);
+                }
+            }
             adminEJB.checkOfficeCode(application.getOfficeCode());
         }
-        
+
         Date now = DateUtility.now();
         if (application.getServiceList() != null) {
             List<RequestType> requestTypes = this.getRequestTypes("en");
@@ -345,11 +334,39 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
     }
 
     @Override
-    @RolesAllowed(RolesConstants.APPLICATION_SERVICE_COMPLETE)
     public List<ValidationResult> serviceActionComplete(
             String serviceId, String languageCode, int rowVersion) {
+        checkServiceRunRole(serviceId);
         return this.takeActionAgainstService(
                 serviceId, ServiceActionType.COMPLETE, languageCode, rowVersion);
+    }
+
+    private void checkServiceRunRole(String serviceId) {
+        Service service = getRepository().getEntity(Service.class, serviceId);
+        boolean allowed;
+        
+        if (service != null) {
+            RequestType requestType = getRepository().getCode(RequestType.class, service.getRequestTypeCode(), "en");
+            if (requestType != null) {
+                String requestCatCode = requestType.getRequestCategoryCode();
+
+                if (requestCatCode.equalsIgnoreCase("cadastreServices") 
+                        && isInRole(RolesConstants.APPLICATION_RUN_CADASTRE_SERVICES)) {
+                    allowed = true;
+                } else if (requestCatCode.equalsIgnoreCase("informationServices")
+                        && isInRole(RolesConstants.APPLICATION_RUN_INFORMATION_SERVICES)) {
+                    allowed = true;
+                } else if (requestCatCode.equalsIgnoreCase("registrationServices")
+                        && isInRole(RolesConstants.APPLICATION_RUN_REG_SERVICES)) {
+                    allowed = true;
+                } else {
+                    allowed = isInRole(RolesConstants.APPLICATION_RUN_REG_SERVICES);
+                }
+                if(!allowed){
+                    throw new SOLAAccessException();
+                }
+            }
+        }
     }
 
     @Override
@@ -361,9 +378,9 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
     }
 
     @Override
-    @RolesAllowed(RolesConstants.APPLICATION_SERVICE_START)
     public List<ValidationResult> serviceActionStart(
             String serviceId, String languageCode, int rowVersion) {
+        checkServiceRunRole(serviceId);
         return this.takeActionAgainstService(
                 serviceId, ServiceActionType.START, languageCode, rowVersion);
     }
@@ -377,27 +394,11 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
     }
 
     @Override
-    @RolesAllowed(RolesConstants.APPLICATION_WITHDRAW)
-    public List<ValidationResult> applicationActionWithdraw(
-            String applicationId, String languageCode, int rowVersion) {
-        return this.takeActionAgainstApplication(
-                applicationId, ApplicationActionType.WITHDRAW, languageCode, rowVersion);
-    }
-
-    @Override
     @RolesAllowed(RolesConstants.APPLICATION_REJECT)
     public List<ValidationResult> applicationActionCancel(
             String applicationId, String languageCode, int rowVersion) {
         return this.takeActionAgainstApplication(
                 applicationId, ApplicationActionType.CANCEL, languageCode, rowVersion);
-    }
-
-    @Override
-    @RolesAllowed(RolesConstants.APPLICATION_REQUISITE)
-    public List<ValidationResult> applicationActionRequisition(
-            String applicationId, String languageCode, int rowVersion) {
-        return this.takeActionAgainstApplication(
-                applicationId, ApplicationActionType.REQUISITION, languageCode, rowVersion);
     }
 
     @Override
@@ -422,22 +423,6 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
             String applicationId, String languageCode, int rowVersion) {
         return this.takeActionAgainstApplication(
                 applicationId, ApplicationActionType.ARCHIVE, languageCode, rowVersion);
-    }
-
-    @Override
-    @RolesAllowed(RolesConstants.APPLICATION_DESPATCH)
-    public List<ValidationResult> applicationActionDespatch(
-            String applicationId, String languageCode, int rowVersion) {
-        return this.takeActionAgainstApplication(
-                applicationId, ApplicationActionType.DESPATCH, languageCode, rowVersion);
-    }
-
-    @Override
-    @RolesAllowed(RolesConstants.APPLICATION_LAPSE)
-    public List<ValidationResult> applicationActionLapse(
-            String applicationId, String languageCode, int rowVersion) {
-        return this.takeActionAgainstApplication(
-                applicationId, ApplicationActionType.LAPSE, languageCode, rowVersion);
     }
 
     @Override
@@ -508,7 +493,7 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
                 // Check current assignee
                 checkUser(application.getAssigneeId());
             }
-            
+
             application.setAssigneeId(userId);
             application.setAssignedDatetime(Calendar.getInstance().getTime());
             validationResults.addAll(this.takeActionAgainstApplication(application,
@@ -551,35 +536,6 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
                     actionedApplication.getRowVerion()));
         }
         return validationResults;
-    }
-
-    @Override
-    @RolesAllowed({RolesConstants.APPLICATION_UNASSIGN_FROM_OTHERS, RolesConstants.APPLICATION_UNASSIGN_FROM_YOURSELF})
-    @Deprecated
-    /**
-     * This method will be removed, since it is not used in the push model of
-     * assigning and transferring applications.
-     */
-    public List<ValidationResult> applicationActionUnassign(
-            String applicationId, String languageCode, int rowVersion) {
-        return new ArrayList<ValidationResult>();
-//        ApplicationActionTaker application =
-//                getRepository().getEntity(ApplicationActionTaker.class, applicationId);
-//        if (application == null) {
-//            throw new SOLAException(ServiceMessage.EJB_APPLICATION_APPLICATION_NOT_FOUND);
-//        }
-//        application.setAssigneeId(null);
-//        application.setAssignedDatetime(null);
-//        return this.takeActionAgainstApplication(
-//                application, ApplicationActionType.UNASSIGN, languageCode, rowVersion);
-    }
-
-    @Override
-    @RolesAllowed(RolesConstants.APPLICATION_RESUBMIT)
-    public List<ValidationResult> applicationActionResubmit(
-            String applicationId, String languageCode, int rowVersion) {
-        return this.takeActionAgainstApplication(
-                applicationId, ApplicationActionType.RESUBMIT, languageCode, rowVersion);
     }
 
     /**
@@ -660,21 +616,21 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
 
     private List<ValidationResult> takeActionAgainstService(
             String serviceId, String actionCode, String languageCode, int rowVersion) {
-        
+
         ServiceActionTaker service = getRepository().getEntity(ServiceActionTaker.class, serviceId);
-        
+
         if (service == null) {
             throw new SOLAException(ServiceMessage.EJB_APPLICATION_SERVICE_NOT_FOUND);
         }
 
         adminEJB.checkOfficeCode(service.getOfficeCode());
-        
+
         ServiceActionType serviceActionType =
                 getRepository().getCode(ServiceActionType.class, actionCode, languageCode);
-        
+
         List<ValidationResult> validationResultList = this.validateService(
                 service, languageCode, serviceActionType);
-        
+
         if (systemEJB.validationSucceeded(validationResultList)) {
             transactionEJB.changeTransactionStatusFromService(
                     serviceId, serviceActionType.getStatusToSet());
@@ -703,7 +659,7 @@ public class ApplicationEJB extends AbstractEJB implements ApplicationEJBLocal {
             String languageCode, int rowVersion) {
 
         adminEJB.checkOfficeCode(application.getOfficeCode());
-        
+
         List<BrValidation> brValidationList =
                 systemEJB.getBrForValidatingApplication(actionCode);
 

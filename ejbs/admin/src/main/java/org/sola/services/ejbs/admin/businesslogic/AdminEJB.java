@@ -38,6 +38,9 @@ import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import org.sola.common.RolesConstants;
+import org.sola.common.SOLAException;
+import org.sola.common.StringUtility;
+import org.sola.common.messaging.ServiceMessage;
 import org.sola.services.common.LocalInfo;
 import org.sola.services.common.ejbs.AbstractEJB;
 import org.sola.services.common.repository.CommonSqlProvider;
@@ -144,6 +147,35 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
 
         if (list.size() > 0 && list.get(0) != null && list.get(0).size() > 0) {
             return ((Integer) ((Entry) list.get(0).entrySet().iterator().next()).getValue()) > 0;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean changeCurrentUserPassword(String oldPassword, String newPassword) {
+        User user = getCurrentUser();
+        if (user == null || oldPassword == null || newPassword == null) {
+            return false;
+        }
+
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, User.QUERY_GET_PASSWORD);
+        params.put(User.PARAM_USERNAME, getCurrentUser().getUserName());
+
+        ArrayList<HashMap> list = getRepository().executeFunction(params);
+
+        if (list.size() > 0 && list.get(0) != null && list.get(0).size() > 0) {
+            String currentPassword = (String) ((Entry) list.get(0).entrySet().iterator().next()).getValue();
+            if (currentPassword == null) {
+                return false;
+            }
+
+            oldPassword = getPasswordHash(oldPassword);
+            if (!oldPassword.equals(currentPassword)) {
+                return false;
+            }
+            return changePassword(user.getUserName(), newPassword);
         } else {
             return false;
         }
@@ -384,5 +416,48 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
     @Override
     public List<FiscalYear> getFiscalYears(String languageCode) {
         return getRepository().getCodeList(FiscalYear.class, languageCode);
+    }
+
+    @Override
+    public boolean checkVdcWardAccess(String vdcCode, String wardNumber, boolean throwException) {
+        User user = LocalInfo.get(LocalInfo.CURRENT_USER, User.class, true);
+        if (user == null) {
+            user = getCurrentUser();
+            if (user != null) {
+                LocalInfo.set(LocalInfo.CURRENT_USER, user, true, true);
+            }
+        }
+        return checkVdcWardAccess(user, vdcCode, wardNumber, throwException);
+    }
+
+    @RolesAllowed(RolesConstants.ADMIN_MANAGE_SECURITY)
+    @Override
+    public boolean checkVdcWardAccess(User user, String vdcCode, String wardNumber, boolean throwException) {
+        if (vdcCode == null || vdcCode.isEmpty()) {
+            return true;
+        }
+
+        if (user == null || user.getVdcs() == null || user.getVdcs().size() < 1) {
+            if (throwException) {
+                throw new SOLAException(ServiceMessage.EXCEPTION_VDC_ACCESS_DENIED);
+            }
+            return false;
+        }
+
+        for (UserVdc uservdc : user.getVdcs()) {
+            if(StringUtility.empty(uservdc.getVdcCode()).equals(StringUtility.empty(vdcCode))){
+                if(StringUtility.isEmpty(uservdc.getWardNumber())){
+                    return true;
+                }
+                if(StringUtility.empty(uservdc.getWardNumber()).equals(StringUtility.empty(wardNumber))){
+                    return true;
+                }
+            }
+        }
+        
+        if (throwException) {
+            throw new SOLAException(ServiceMessage.EXCEPTION_VDC_ACCESS_DENIED);
+        }
+        return false;
     }
 }

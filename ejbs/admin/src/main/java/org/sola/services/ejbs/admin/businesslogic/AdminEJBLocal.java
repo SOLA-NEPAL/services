@@ -57,6 +57,11 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
      * Sets password for user.
      */
     boolean changePassword(String userName, String password);
+    
+    /**
+     * Sets new password for the current user.
+     */
+    boolean changeCurrentUserPassword(String oldPassword, String newPassword);
 
     /**
      * Returns all application roles.
@@ -218,4 +223,21 @@ public interface AdminEJBLocal extends AbstractEJBLocal {
      * Returns list of fiscal year entity
      */
     List<FiscalYear> getFiscalYears(String languageCode);
+    
+    /** 
+     * Checks current user rights for the given VDC and/or Ward. Returns true if user has access.
+     * @param vdcCode Code of VDC to check.
+     * @param wardNumber Ward number to check.
+     * @param throwException Flag, indicating whether to throw an exception or not in case of the lack of access.
+     */
+    boolean checkVdcWardAccess(String vdcCode, String wardNumber, boolean throwException);
+    
+    /** 
+     * Checks user rights for the given VDC and/or Ward. Returns true if user has access.
+     * @param userName User name to check
+     * @param vdcCode Code of VDC to check.
+     * @param wardNumber Ward number to check.
+     * @param throwException Flag, indicating whether to throw an exception or not in case of the lack of access.
+     */
+    boolean checkVdcWardAccess(User user, String vdcCode, String wardNumber, boolean throwException);
 }

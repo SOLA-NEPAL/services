@@ -110,10 +110,6 @@ public class PartyEJBIT extends AbstractEJBTest {
         List<Party> result = instance.getAgents();
         assertNotNull(result);
         assertTrue(result.size() > 0);
-        for (Party p : result) {
-            assertEquals(Party.TYPE_CODE_NON_NATURAL_PERSON, p.getTypeCode());
-        }
-
     }
 
     @Ignore

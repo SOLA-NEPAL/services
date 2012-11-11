@@ -30,7 +30,10 @@
 package org.sola.services.ejb.administrative.businesslogic;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -59,9 +62,6 @@ import org.sola.services.ejb.transaction.repository.entities.Transaction;
 import org.sola.services.ejb.transaction.repository.entities.TransactionBasic;
 import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
 
-/**
- *
- */
 @Stateless
 @EJB(name = "java:global/SOLA/AdministrativeEJBLocal", beanInterface = AdministrativeEJBLocal.class)
 public class AdministrativeEJB extends AbstractEJB implements AdministrativeEJBLocal {
@@ -334,7 +334,7 @@ public class AdministrativeEJB extends AbstractEJB implements AdministrativeEJBL
         return getBaUnitById(baUnitId);
     }
 
-    public void terminateBaUnitByTransactionId(String baUnitId, String transactionId) {
+    private void terminateBaUnitByTransactionId(String baUnitId, String transactionId) {
         if (baUnitId == null || transactionId == null) {
             return;
         }
@@ -443,11 +443,21 @@ public class AdministrativeEJB extends AbstractEJB implements AdministrativeEJBL
     @Override
     @RolesAllowed(RolesConstants.ADMINISTRATIVE_BA_UNIT_SAVE)
     public BaUnit saveBaUnit(BaUnit baUnit) {
+        if(baUnit==null){
+            return null;
+        }
+        
+        // Check VDC access
+        if(baUnit.getCadastreObject()!=null && baUnit.getCadastreObject().getAddress()!=null){
+            adminEJB.checkVdcWardAccess(baUnit.getCadastreObject().getAddress().getVdcCode(), 
+                    baUnit.getCadastreObject().getAddress().getWardNo(), true);
+        }
+        
         Object statusCode;
 
+        
         if (baUnit.isNew()) {
             baUnit.setStatusCode(StatusConstants.PENDING);
-            baUnit.setTypeCode("administrativeUnit");
             baUnit.setOfficeCode(adminEJB.getCurrentOfficeCode());
             baUnit.setFiscalYearCode(adminEJB.getCurrentFiscalYearCode());
             // Check cadastre object

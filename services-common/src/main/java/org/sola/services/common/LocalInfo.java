@@ -65,6 +65,7 @@ public final class LocalInfo {
     public static String TRANSACTION_ID = "Local.TransactionId";
     public static String CURRENT_OFFICE = "Local.CurrentOffice";
     public static String CURRENT_FISCAL_YEAR = "Local.CurrentFiscalYear";
+    public static String CURRENT_USER = "Local.CurrentUser";
 
     /**
      * @return The Transaction Synchronization Registry from the JEE container or null if it is not

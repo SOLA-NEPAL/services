@@ -86,13 +86,7 @@ public interface ApplicationEJBLocal extends AbstractEJBLocal {
     List<ValidationResult> serviceActionCancel(
             String serviceId, String languageCode, int rowVersion);
     
-    List<ValidationResult> applicationActionWithdraw(
-            String applicationId, String languageCode, int rowVersion);
-
     List<ValidationResult> applicationActionCancel(
-            String applicationId, String languageCode, int rowVersion);
-
-    List<ValidationResult> applicationActionRequisition(
             String applicationId, String languageCode, int rowVersion);
 
     List<ValidationResult> applicationActionValidate(
@@ -102,15 +96,6 @@ public interface ApplicationEJBLocal extends AbstractEJBLocal {
             String applicationId, String languageCode, int rowVersion);
 
     List<ValidationResult> applicationActionArchive(
-            String applicationId, String languageCode, int rowVersion);
-
-    List<ValidationResult> applicationActionDespatch(
-            String applicationId, String languageCode, int rowVersion);
-
-    List<ValidationResult> applicationActionLapse(
-            String applicationId, String languageCode, int rowVersion);
-
-    List<ValidationResult> applicationActionUnassign(
             String applicationId, String languageCode, int rowVersion);
 
     List<ValidationResult> applicationActionAssign(
@@ -124,9 +109,6 @@ public interface ApplicationEJBLocal extends AbstractEJBLocal {
     
     List<ValidationResult> applicationActionTransferBulk(
             List<ActionedApplication> applications, String userId, String languageCode);
-
-    List<ValidationResult> applicationActionResubmit(
-            String applicationId, String languageCode, int rowVersion);
 
     Service saveInformationService(Service service, String languageCode);
     
