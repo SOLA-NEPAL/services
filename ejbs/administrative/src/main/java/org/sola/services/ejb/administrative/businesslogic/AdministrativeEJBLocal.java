@@ -86,6 +86,8 @@ public interface AdministrativeEJBLocal extends AbstractSolaTransactionEJBLocal 
 
     LocWithMoth getLocByPageNoAndMoth(LocSearchByMothParams searchParams);
 
+    List<LocWithMoth> getLocListByPageNoAndMoth(LocSearchByMothParams searchParams);
+
     List<Loc> getLocList(String mothId);
 
     List<RestrictionReason> getRestrictionReasons(String languageCode);
@@ -101,4 +103,6 @@ public interface AdministrativeEJBLocal extends AbstractSolaTransactionEJBLocal 
     List<TenancyType> getTenancyTypes(String languageCode);
 
     void deletePendingBaUnit(String baUnitId);
+
+    List<Moth> searchMoths(MothSearchParams params);
 }

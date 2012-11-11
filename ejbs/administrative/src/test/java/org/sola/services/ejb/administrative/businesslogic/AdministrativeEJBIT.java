@@ -602,4 +602,54 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             fail(e.getMessage());
         }
     }
+
+    @Test
+    @Ignore
+    public void getLocListByMothIdAndPanaNo() throws Exception {
+        System.out.println("Testing getting Loc");
+        UserTransaction tx = getUserTransaction();
+        try {
+            AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
+            tx.begin();
+            MothBasic moth = new MothBasic();
+            moth.setId("5ab0cbad-3e5b-4623-8df7-84524065b533");
+            LocSearchByMothParams params = new LocSearchByMothParams();
+            params.setMoth(moth);
+            params.setPageNumber("1");
+            List<LocWithMoth> result = instance.getLocListByPageNoAndMoth(params);
+            if (result == null) {
+                System.out.println(">>> Found null");
+            } else {
+                System.out.println(">>> Found " + result.size() + " Locs");
+            }
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            fail(e.getMessage());
+        }
+    }
+
+    /**
+     * Test moths search
+     */
+    @Ignore
+    @Test
+    public void testMothSearch() throws Exception {
+        if (skipIntegrationTest()) {
+            return;
+        }
+        MothSearchParams params = new MothSearchParams();
+        //params.setVdcCode("4305");
+        params.setMothlujNumber("100");
+        params.setMothLuj("L");
+        AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
+        List<Moth> result = instance.searchMoths(params);
+        assertNotNull(result);
+
+        if (result != null && result.size() > 0) {
+            System.out.println("Found " + result.size() + " Moths");
+        } else {
+            System.out.println("Can't find any Moths");
+        }
+    }
 }

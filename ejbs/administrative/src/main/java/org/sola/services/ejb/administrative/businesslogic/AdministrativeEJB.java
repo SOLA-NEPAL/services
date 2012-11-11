@@ -34,7 +34,6 @@ import java.util.*;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import org.sola.common.DateUtility;
 import org.sola.common.RolesConstants;
 import org.sola.common.SOLAException;
 import org.sola.common.mapping.MappingManager;
@@ -377,8 +376,6 @@ public class AdministrativeEJB extends AbstractEJB implements AdministrativeEJBL
 
         return getBaUnitById(baUnitId);
     }
-    //<editor-fold defaultstate="collapsed" desc="By Kumar">
-    //***********************************************************************************************************
 
     @Override
     @RolesAllowed(RolesConstants.ADMINISTRATIVE_BA_UNIT_SAVE)
@@ -897,4 +894,51 @@ public class AdministrativeEJB extends AbstractEJB implements AdministrativeEJBL
         }
         return result;
     }
+
+    @Override
+    public List<LocWithMoth> getLocListByPageNoAndMoth(LocSearchByMothParams searchParams) {
+        if (searchParams.getMoth().getId() == null) {
+            searchParams.getMoth().setId("");
+        }
+
+        if (searchParams.getPageNumber() == null) {
+            searchParams.setPageNumber("");
+        }
+
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Loc.MothPage_Search_Query);
+        params.put(Loc.MOTH_ID_PARAM, searchParams.getMoth().getId());
+        params.put((Loc.PANA_NO_PARAM), searchParams.getPageNumber());
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(LocWithMoth.class, params);
+    }
+
+    @Override
+    public List<Moth> searchMoths(MothSearchParams searchParams) {
+        if (searchParams == null) {
+            return null;
+        }
+
+        if (searchParams.getVdcCode() == null) {
+            searchParams.setVdcCode("");
+        }
+        if (searchParams.getMothLuj() == null) {
+            searchParams.setMothLuj("");
+        }
+        if (searchParams.getMothlujNumber() == null) {
+            searchParams.setMothlujNumber("");
+        }
+
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, Moth.Search_Query);
+        params.put(Moth.VDC_PARAM, searchParams.getVdcCode());
+        params.put(Moth.MOTH_LUJ_PARAM, searchParams.getMothLuj());
+        params.put(Moth.MOTH_LUJ_NUMBER_PARAM, searchParams.getMothlujNumber());
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(Moth.class, params);
+    }
+//    @Override
+//    public LocWithMoth getLocByTmpPageNoAndMoth(LocSearchByMothParams searchParams) {
+//      
+//    }
 }
