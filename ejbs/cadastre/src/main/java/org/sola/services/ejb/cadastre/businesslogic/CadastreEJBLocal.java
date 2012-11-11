@@ -133,4 +133,8 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
     List<Dataset> getDatasetsByCurrentOffice();
     
     List<Dataset> getDatasetsByCurrentUser();
+    
+    List<Dataset> getDatasetsByVdc(String vdcCode);
+    
+    Dataset getDataset(String id);
 }

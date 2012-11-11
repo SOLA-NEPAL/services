@@ -37,6 +37,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import org.sola.common.RolesConstants;
+import org.sola.common.StringUtility;
 import org.sola.services.common.ejbs.AbstractEJB;
 import org.sola.services.common.repository.CommonSqlProvider;
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
@@ -508,5 +509,22 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     @Override
     public List<Dataset> getDatasetsByCurrentUser() {
         return getDatasetsByUser(getUserName());
+    }
+    
+    @Override
+    public List<Dataset> getDatasetsByVdc(String vdcCode){
+        if(StringUtility.isEmpty(vdcCode)){
+            return null;
+        }
+        
+        HashMap params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, Dataset.WHERE_BY_VDC_CODE);
+        params.put(Dataset.PARAM_VDC_CODE, vdcCode);
+        return getRepository().getEntityList(Dataset.class, params);
+    }
+
+    @Override
+    public Dataset getDataset(String id) {
+        return getRepository().getEntity(Dataset.class, id);
     }
 }
