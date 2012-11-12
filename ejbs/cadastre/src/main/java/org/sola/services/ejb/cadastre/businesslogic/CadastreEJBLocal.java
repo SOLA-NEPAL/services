@@ -125,4 +125,16 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
     List<MapSheet> loadVDCMapSheet(int mapSheetType, String vdccode);
 
     List<MapSheet> getMapSheetsByOffice(String officeCode);
+    
+    List<Dataset> getDatasetsByOffice(String officeCode);
+    
+    List<Dataset> getDatasetsByUser(String username);
+    
+    List<Dataset> getDatasetsByCurrentOffice();
+    
+    List<Dataset> getDatasetsByCurrentUser();
+    
+    List<Dataset> getDatasetsByVdc(String vdcCode);
+    
+    Dataset getDataset(String id);
 }

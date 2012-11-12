@@ -99,6 +99,8 @@ public interface SearchEJBLocal extends AbstractEJBLocal {
     List<LocSearchResult> searchLocs(LocSearchParams params);
 
     List<RestrictionSearchResult> searchRestrictions(RestrictionSearchParams params);
-
-    List<RestrictionInfo> searchRestrictionInfo(RestrictionInfoParams params);    
+    
+    List<RestrictionInfo> searchRestrictionInfo(RestrictionInfoParams params);
+    
+    String getCrs(int srid);
 }

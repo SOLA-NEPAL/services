@@ -31,6 +31,7 @@ package org.sola.services.ejb.search.businesslogic;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.Map.Entry;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -346,12 +347,17 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
     @Override
     public ResultForNavigationInfo getSpatialResult(
             QueryForNavigation spatialQuery, String officeCode) {
+        if(spatialQuery.getDatasetId()==null){
+            spatialQuery.setDatasetId("");
+        }
+        
         Map params = new HashMap<String, Object>();
         params.put("minx", spatialQuery.getWest());
         params.put("miny", spatialQuery.getSouth());
         params.put("maxx", spatialQuery.getEast());
         params.put("maxy", spatialQuery.getNorth());
         params.put("srid", spatialQuery.getSrid());
+        params.put("datasetId", spatialQuery.getDatasetId());
         params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, officeCode);
         ResultForNavigationInfo spatialResultInfo = new ResultForNavigationInfo();
         getRepository().setLoadInhibitors(new Class[]{DynamicQueryField.class});
@@ -811,5 +817,20 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
             }
         }
         return result;
+    }
+    
+    @Override
+    public String getCrs(int srid){
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, "select srtext from public.spatial_ref_sys where srid=#{srid}");
+        params.put("srid", srid);
+
+        ArrayList<HashMap> list = getRepository().executeFunction(params);
+
+        if (list.size() > 0 && list.get(0) != null && list.get(0).size() > 0) {
+            return (String)((Entry) list.get(0).entrySet().iterator().next()).getValue();
+        } else {
+            return null;
+        }
     }
 }

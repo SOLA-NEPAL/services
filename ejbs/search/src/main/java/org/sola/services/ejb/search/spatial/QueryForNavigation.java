@@ -43,6 +43,7 @@ public class QueryForNavigation extends Query {
     private double south;
     private double east;
     private double north;
+    private String datasetId;
     
     public double getEast() {
         return east;
@@ -82,5 +83,13 @@ public class QueryForNavigation extends Query {
 
     public void setFidsPresent(ArrayList<String> fidsPresent) {
         this.fidsPresent = fidsPresent;
+    }
+
+    public String getDatasetId() {
+        return datasetId;
+    }
+
+    public void setDatasetId(String datasetId) {
+        this.datasetId = datasetId;
     }
 }
