@@ -3,10 +3,11 @@ package org.sola.services.ejb.cadastre.repository.entities;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import org.sola.services.common.repository.AccessFunctions;
+import org.sola.services.common.repository.DefaultSorter;
 import org.sola.services.common.repository.entities.AbstractEntity;
 
 @Table(schema="cadastre", name="dataset")
+@DefaultSorter(sortString="name")
 public class Dataset extends AbstractEntity {
     public static final String PARAM_USERNAME = "userName";
     public static final String PARAM_VDC_CODE = "vdcCode";
