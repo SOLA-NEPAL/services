@@ -79,19 +79,21 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         logout();
     }
 
-    /** Test getting RrrLoc */
+    /**
+     * Test getting RrrLoc
+     */
     @Ignore
     @Test
-    public void testGetLocs() throws Exception{
+    public void testGetLocs() throws Exception {
         System.out.println("====> Getting Locs by ID");
         AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
         //List<RrrLoc> rrrLocs = instance.getRrrLocsById("a7fdc18d-b76a-43aa-9878-2e115bb52b86");
-        List<Loc> rrrLocs=instance.getLocList("32861b4a-727d-4837-99b9-5e03497aac15");
+        List<Loc> rrrLocs = instance.getLocList("32861b4a-727d-4837-99b9-5e03497aac15");
         assertNotNull("No RrrLocs found", rrrLocs);
-        assertTrue("RrrLoc list is empty", rrrLocs.size()>0);
+        assertTrue("RrrLoc list is empty", rrrLocs.size() > 0);
         System.out.println("====> Found " + rrrLocs.size() + " RRRLocs.");
     }
-    
+
     /**
      * Test of createBaUnit method, of class AdministrativeEJB.
      */
@@ -163,7 +165,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         BaUnitNotation notation = new BaUnitNotation();
         notation.setNotationText(notationText);
         notation.setRrrId(rrr.getId());
-        
+
         rrr.setNotation(notation);
 
         if (type.equals("ownership")) {
@@ -345,8 +347,6 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         }
     }
 
-    //<editor-fold defaultstate="collapsed" desc="By Kumar">
-    //***********************************************************************************************************
     @Ignore
     @Test
     public void getMoths() throws Exception {
@@ -450,7 +450,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
         try {
             AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
             BaUnit baUnit = new BaUnit();
-            tx.begin();           
+            tx.begin();
             baUnit.setTypeCode("administrativeUnit");
             baUnit.setName("TestBaunit");
             baUnit.setNameFirstpart("TestBaunit");
@@ -482,7 +482,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             loc.setMothId(moth.getId());
             loc.setPanaNo("1");
 
-            BaUnit baUnit = new BaUnit();         
+            BaUnit baUnit = new BaUnit();
             baUnit.setTypeCode("administrativeUnit");
             baUnit.setName("TestBaunit");
             baUnit.setNameFirstpart("TestBaunit");
@@ -511,7 +511,7 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
 
             List<SpatialValueArea> spatialValAreaList = new ArrayList<SpatialValueArea>();
             spatialValAreaList.add(spValA);
-           // cobj.setSpatialValueAreaList(spatialValAreaList);
+            // cobj.setSpatialValueAreaList(spatialValAreaList);
             List<CadastreObject> cadObjList = new ArrayList<CadastreObject>();
             cadObjList.add(cobj);
             baUnit.setCadastreObject(cobj);
@@ -586,6 +586,70 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
 
         }
     }
-    //***********************************************************************************************************
-    //</editor-fold>
+
+    @Ignore
+    @Test
+    public void getRrr() throws Exception {
+        System.out.println(">>> Testing getting Moth");
+        UserTransaction tx = getUserTransaction();
+        try {
+            AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
+            tx.begin();
+            Rrr result = instance.getRrr("e7c3a331-bd70-4f78-94fe-97cf66d64e1a");
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    @Ignore
+    public void getLocListByMothIdAndPanaNo() throws Exception {
+        System.out.println("Testing getting Loc");
+        UserTransaction tx = getUserTransaction();
+        try {
+            AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
+            tx.begin();
+            MothBasic moth = new MothBasic();
+            moth.setId("5ab0cbad-3e5b-4623-8df7-84524065b533");
+            LocSearchByMothParams params = new LocSearchByMothParams();
+            params.setMoth(moth);
+            params.setPageNumber("1");
+            List<LocWithMoth> result = instance.getLocListByPageNoAndMoth(params);
+            if (result == null) {
+                System.out.println(">>> Found null");
+            } else {
+                System.out.println(">>> Found " + result.size() + " Locs");
+            }
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            fail(e.getMessage());
+        }
+    }
+
+    /**
+     * Test moths search
+     */
+    @Ignore
+    @Test
+    public void testMothSearch() throws Exception {
+        if (skipIntegrationTest()) {
+            return;
+        }
+        MothSearchParams params = new MothSearchParams();
+        //params.setVdcCode("4305");
+        params.setMothlujNumber("100");
+        params.setMothLuj("L");
+        AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
+        List<Moth> result = instance.searchMoths(params);
+        assertNotNull(result);
+
+        if (result != null && result.size() > 0) {
+            System.out.println("Found " + result.size() + " Moths");
+        } else {
+            System.out.println("Can't find any Moths");
+        }
+    }
 }

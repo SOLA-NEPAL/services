@@ -25,6 +25,10 @@ public class Loc extends AbstractVersionedEntity {
             + " and office_code=#{" + PARAM_OFFICE_CODE + "}";
     public static final String GET_BY_ID = "id=#{" + LOC_ID_PARAM + "}"
             + " and office_code=#{" + PARAM_OFFICE_CODE + "}";
+    public static final String MothPage_Search_Query =
+            "(#{" + PANA_NO_PARAM + "} = '' OR POSITION(LOWER(#{" + PANA_NO_PARAM + "}) IN LOWER(COALESCE(pana_no, ''))) > 0) "
+            + "AND (#{" + MOTH_ID_PARAM + "} = '' OR POSITION(LOWER(#{" + MOTH_ID_PARAM + "}) IN LOWER(COALESCE(moth_id, ''))) > 0) "
+            + "AND (COALESCE(office_code, '') = #{" + PARAM_OFFICE_CODE + "} OR #{" + PARAM_OFFICE_CODE + "}='') ";
     @Id
     @Column(name = "id")
     private String id;
@@ -34,11 +38,11 @@ public class Loc extends AbstractVersionedEntity {
     private String panaNo;
     @Column(name = "tmp_pana_no")
     private String tmpPanaNo;
-    @Column(name = "office_code", updatable=false)
+    @Column(name = "office_code", updatable = false)
     private String officeCode;
-    @Column(name="creation_date", insertable=false, updatable=false)
+    @Column(name = "creation_date", insertable = false, updatable = false)
     private Date creationDate;
-    
+
     public Loc() {
         super();
     }

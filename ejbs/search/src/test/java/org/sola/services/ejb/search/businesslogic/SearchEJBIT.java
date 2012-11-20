@@ -189,7 +189,7 @@ public class SearchEJBIT extends AbstractEJBTest {
     /**
      * Test party search
      */
-   // @Ignore
+    @Ignore
     @Test
     public void testPartySearch() throws Exception {
         if (skipIntegrationTest()) {
