@@ -418,4 +418,30 @@ public class SearchEJBIT extends AbstractEJBTest {
             System.out.println("Can't find any parcels");
         }
     }
+    
+    
+            
+            /**
+     * Test loc search
+     */
+    @Ignore
+    @Test
+    public void testSearchLocs() throws Exception {
+        if (skipIntegrationTest()) {
+            return;
+        }
+        LocSearchParams params = new LocSearchParams();
+        //params.setWardNo("5");
+        // params.setParcelNo(5);
+        //params.setVdcCode("27009");
+        SearchEJBLocal instance = (SearchEJBLocal) getEJBInstance(SearchEJB.class.getSimpleName());
+        List<LocSearchResult> result = instance.searchLocs(params);
+        assertNotNull(result);
+
+        if (result != null && result.size() > 0) {
+            System.out.println("Found " + result.size() + " Locs");
+        } else {
+            System.out.println("Can't find any parcels");
+        }
+    }
 }
