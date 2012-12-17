@@ -54,7 +54,7 @@ public interface AdministrativeEJBLocal extends AbstractSolaTransactionEJBLocal 
 
     Rrr getRrr(String id);
 
-    BaUnit getBaUnitByCode(String nameFirstpart, String nameLastpart);
+    BaUnit getBaUnitByCode(String nameFirstPart, String nameLastPart);
 
     BaUnit saveBaUnit(String serviceId, BaUnit baUnit);
 
