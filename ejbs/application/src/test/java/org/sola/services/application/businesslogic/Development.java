@@ -234,8 +234,8 @@ public class Development extends AbstractEJBTest{
     private BaUnit getBaUnit()  throws Exception{
             BaUnit baUnit = new BaUnit();
             baUnit.setName("Test BA Unit Name");
-            baUnit.setNameFirstpart("nameFirstPart");
-            baUnit.setNameLastpart("nameLastPart");
+            baUnit.setNameFirstPart("nameFirstPart");
+            baUnit.setNameLastPart("nameLastPart");
             baUnit.setTypeCode("administrativeUnit");
 
             baUnit.setBaUnitNotationList(new ArrayList<BaUnitNotation>());
@@ -272,8 +272,8 @@ public class Development extends AbstractEJBTest{
 
     private CadastreObject getCadastreObject(String firstPart, String lastPart) {
         CadastreObject co = new CadastreObject();
-        co.setNameFirstpart(firstPart);
-        co.setNameLastpart(lastPart + DateUtility.now());
+        co.setNameFirstPart(firstPart);
+        co.setNameLastPart(lastPart + DateUtility.now());
         co.setTypeCode("parcel");
         return co;
     }

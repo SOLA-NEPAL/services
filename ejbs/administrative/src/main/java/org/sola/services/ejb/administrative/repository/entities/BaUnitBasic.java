@@ -46,9 +46,9 @@ public class BaUnitBasic extends AbstractReadOnlyEntity {
     @Column(name = "name")
     private String name;
     @Column(name = "name_firstpart")
-    private String nameFirstpart;
+    private String nameFirstPart;
     @Column(name = "name_lastpart")
-    private String nameLastpart;
+    private String nameLastPart;
     @Column(name = "status_code", updatable = false)
     private String statusCode;
     @Column(name = "transaction_id", updatable = false)
@@ -100,20 +100,20 @@ public class BaUnitBasic extends AbstractReadOnlyEntity {
         this.name = name;
     }
 
-    public String getNameFirstpart() {
-        return nameFirstpart;
+    public String getNameFirstPart() {
+        return nameFirstPart;
     }
 
-    public void setNameFirstpart(String nameFirstpart) {
-        this.nameFirstpart = nameFirstpart;
+    public void setNameFirstPart(String nameFirstPart) {
+        this.nameFirstPart = nameFirstPart;
     }
 
-    public String getNameLastpart() {
-        return nameLastpart;
+    public String getNameLastPart() {
+        return nameLastPart;
     }
 
-    public void setNameLastpart(String nameLastpart) {
-        this.nameLastpart = nameLastpart;
+    public void setNameLastpart(String nameLastPart) {
+        this.nameLastPart = nameLastPart;
     }
 
     public String getTypeCode() {

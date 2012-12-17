@@ -112,11 +112,11 @@ public class AdministrativeEJB extends AbstractEJB implements AdministrativeEJBL
     }
 
     @Override
-    public BaUnit getBaUnitByCode(String nameFirstpart, String nameLastpart) {
+    public BaUnit getBaUnitByCode(String nameFirstPart, String nameLastPart) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, BaUnit.QUERY_WHERE_BYPROPERTYCODE);
-        params.put(BaUnit.QUERY_PARAMETER_FIRSTPART, nameFirstpart);
-        params.put(BaUnit.QUERY_PARAMETER_LASTPART, nameLastpart);
+        params.put(BaUnit.QUERY_PARAMETER_FIRSTPART, nameFirstPart);
+        params.put(BaUnit.QUERY_PARAMETER_LASTPART, nameLastPart);
         return getRepository().getEntity(BaUnit.class, params);
     }
 
@@ -191,7 +191,7 @@ public class AdministrativeEJB extends AbstractEJB implements AdministrativeEJBL
         for (BaUnit baUnit : terminatingBaUnits) {
             if (baUnit.getStatusCode().equals(StatusConstants.PENDING) && !validateOnly) {
                 throw new SOLAException(ServiceMessage.EJB_ADMINISTRATIVE_PENGIN_BA_UNIT_STATUS,
-                        new String[]{baUnit.getNameFirstpart() + "/" + baUnit.getNameLastpart()});
+                        new String[]{baUnit.getNameFirstPart() + "/" + baUnit.getNameLastPart()});
             }
 
             adminEJB.checkOfficeCode(baUnit.getOfficeCode());
@@ -208,7 +208,7 @@ public class AdministrativeEJB extends AbstractEJB implements AdministrativeEJBL
                 for (Rrr rrr : baUnit.getRrrList()) {
                     if (rrr.getStatusCode().equals(StatusConstants.PENDING)) {
                         throw new SOLAException(ServiceMessage.EJB_ADMINISTRATIVE_PENGIN_RRR_EXISTS,
-                                new String[]{baUnit.getNameFirstpart() + "/" + baUnit.getNameLastpart()});
+                                new String[]{baUnit.getNameFirstPart() + "/" + baUnit.getNameLastPart()});
                     }
                     if (rrr.getStatusCode().equals(StatusConstants.CURRENT)) {
                         // Terminate current right by creating pending with terminating flag

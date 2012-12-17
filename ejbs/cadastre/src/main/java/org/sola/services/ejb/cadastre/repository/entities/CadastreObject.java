@@ -147,9 +147,9 @@ public class CadastreObject extends AbstractVersionedEntity {
     @Column(name = "historic_datetime")
     private Date historicDatetime;
     @Column(name = "name_firstpart", updatable = false)
-    private String nameFirstpart;
+    private String nameFirstPart;
     @Column(name = "name_lastpart", updatable = false)
-    private String nameLastpart;
+    private String nameLastPart;
     @Column(name = "status_code", insertable = false, updatable = false)
     private String statusCode;
     @Column(name = "transaction_id", updatable = false)
@@ -261,20 +261,20 @@ public class CadastreObject extends AbstractVersionedEntity {
         this.historicDatetime = historicDatetime;
     }
 
-    public String getNameFirstpart() {
-        return nameFirstpart;
+    public String getNameFirstPart() {
+        return nameFirstPart;
     }
 
-    public void setNameFirstpart(String nameFirstpart) {
-        this.nameFirstpart = nameFirstpart;
+    public void setNameFirstPart(String nameFirstPart) {
+        this.nameFirstPart = nameFirstPart;
     }
 
-    public String getNameLastpart() {
-        return nameLastpart;
+    public String getNameLastPart() {
+        return nameLastPart;
     }
 
-    public void setNameLastpart(String nameLastpart) {
-        this.nameLastpart = nameLastpart;
+    public void setNameLastPart(String nameLastPart) {
+        this.nameLastPart = nameLastPart;
     }
 
     public String getTransactionId() {
@@ -450,14 +450,17 @@ public class CadastreObject extends AbstractVersionedEntity {
         }
         if (isNew()) {
             // Check first/last part names
-            String firstPart = getNameFirstpart() == null ? "" : getNameFirstpart();
-            String lastPart = getNameLastpart() == null ? "" : getNameLastpart();
-            if (!firstPart.equals(generateNameFirstPart())) {
-                setNameFirstpart(generateNameFirstPart());
-            }
-            if (!lastPart.equals(generateNameLastPart())) {
-                setNameLastpart(generateNameLastPart());
-            }
+            String firstPart = getNameFirstPart() == null ? "" : getNameFirstPart();
+            String lastPart = getNameLastPart() == null ? "" : getNameLastPart();
+//            if (!firstPart.equals(generateNameFirstPart())) {
+//                setNameFirstPart(generateNameFirstPart());
+//            }
+            setNameFirstPart(firstPart);//           
+            setNameLastPart(getParcelno());
+            Address add=getAddress();      
+            add.setVdcCode("27009");
+            add.setWardNo("1");
+            setAddress(add);
         }
         super.preSave();
     }

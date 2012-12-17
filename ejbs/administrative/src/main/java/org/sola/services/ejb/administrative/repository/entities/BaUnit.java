@@ -55,8 +55,10 @@ import org.sola.services.ejb.transaction.repository.entities.TransactionStatusTy
 public class BaUnit extends AbstractVersionedEntity {
 
     public static final String QUERY_PARAMETER_TRANSACTIONID = "transactionId";
-    public static final String QUERY_PARAMETER_FIRSTPART = "firstPart";
-    public static final String QUERY_PARAMETER_LASTPART = "lastPart";
+    //public static final String QUERY_PARAMETER_FIRSTPART = "firstPart";
+    public static final String QUERY_PARAMETER_FIRSTPART = "nameFirstPart";
+    //public static final String QUERY_PARAMETER_LASTPART = "lastPart";
+    public static final String QUERY_PARAMETER_LASTPART = "nameLastPart";
     public static final String QUERY_WHERE_BYTRANSACTIONID = "transaction_id = "
             + "#{" + QUERY_PARAMETER_TRANSACTIONID + "}";
     public static final String QUERY_WHERE_BY_TERMINATING = "id in "
@@ -81,9 +83,9 @@ public class BaUnit extends AbstractVersionedEntity {
     @Column(name = "name")
     private String name;
     @Column(name = "name_firstpart")
-    private String nameFirstpart;
+    private String nameFirstPart;
     @Column(name = "name_lastpart")
-    private String nameLastpart;
+    private String nameLastPart;
     @Column(name = "status_code", insertable = false, updatable = false)
     private String statusCode;
     @Column(name = "transaction_id", updatable = false)
@@ -209,20 +211,20 @@ public class BaUnit extends AbstractVersionedEntity {
         this.name = name;
     }
 
-    public String getNameFirstpart() {
-        return nameFirstpart;
+    public String getNameFirstPart() {
+        return nameFirstPart;
     }
 
-    public void setNameFirstpart(String nameFirstpart) {
-        this.nameFirstpart = nameFirstpart;
+    public void setNameFirstPart(String nameFirstPart) {
+        this.nameFirstPart = nameFirstPart;
     }
 
-    public String getNameLastpart() {
-        return nameLastpart;
+    public String getNameLastPart() {
+        return nameLastPart;
     }
 
-    public void setNameLastpart(String nameLastpart) {
-        this.nameLastpart = nameLastpart;
+    public void setNameLastPart(String nameLastPart) {
+        this.nameLastPart = nameLastPart;
     }
 
     public String getTypeCode() {
@@ -310,11 +312,11 @@ public class BaUnit extends AbstractVersionedEntity {
         if (this.isNew()) {
             setTransactionId(LocalInfo.getTransactionId());
         }
-        if (getNameFirstpart() == null || getNameFirstpart().length() < 1
-                || getNameLastpart() == null || getNameLastpart().length() < 1) {
+        if (getNameFirstPart() == null || getNameFirstPart().length() < 1
+                || getNameLastPart() == null || getNameLastPart().length() < 1) {
             if (getCadastreObject() != null) {
-                setNameFirstpart(getCadastreObject().generateNameFirstPart());
-                setNameLastpart(getCadastreObject().generateNameLastPart());
+                setNameFirstPart(getCadastreObject().generateNameFirstPart());
+                setNameLastPart(getCadastreObject().generateNameLastPart());
             }
 //            String baUnitNumber = generateBaUnitNumber();
 //            if (baUnitNumber != null && baUnitNumber.contains("/")) {

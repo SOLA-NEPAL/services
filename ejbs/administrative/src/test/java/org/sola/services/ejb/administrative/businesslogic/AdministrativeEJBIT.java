@@ -113,8 +113,8 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             System.out.println("Create new baunit with 2 rrrs, 2 cadastre objects");
             BaUnit baUnit = new BaUnit();
             baUnit.setName("Test BA Unit Name");
-            baUnit.setNameFirstpart("nameFirstPart");
-            baUnit.setNameLastpart("nameLastPart");
+            baUnit.setNameFirstPart("nameFirstPart");
+            baUnit.setNameLastPart("nameLastPart");
             baUnit.setTypeCode("administrativeUnit");
 
             baUnit.setBaUnitNotationList(new ArrayList<BaUnitNotation>());
@@ -189,8 +189,8 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
 
     private CadastreObject getCadastreObject(String firstPart, String lastPart) {
         CadastreObject co = new CadastreObject();
-        co.setNameFirstpart(firstPart);
-        co.setNameLastpart(DateUtility.now().toString());
+        co.setNameFirstPart(firstPart);
+        co.setNameLastPart(DateUtility.now().toString());
         co.setTypeCode("parcel");
         return co;
     }
@@ -453,8 +453,8 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             tx.begin();
             baUnit.setTypeCode("administrativeUnit");
             baUnit.setName("TestBaunit");
-            baUnit.setNameFirstpart("TestBaunit");
-            baUnit.setNameLastpart("TestBaunit");
+            baUnit.setNameFirstPart("TestBaunit");
+            baUnit.setNameLastPart("TestBaunit");
             baUnit.setStatusCode("current");
             instance.saveBaUnit(baUnit);
             tx.commit();
@@ -485,8 +485,8 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
             BaUnit baUnit = new BaUnit();
             baUnit.setTypeCode("administrativeUnit");
             baUnit.setName("TestBaunit");
-            baUnit.setNameFirstpart("TestBaunit");
-            baUnit.setNameLastpart("TestBaunit");
+            baUnit.setNameFirstPart("TestBaunit");
+            baUnit.setNameLastPart("TestBaunit");
             baUnit.setStatusCode("current");
 
             CadastreObject cobj = new CadastreObject();
