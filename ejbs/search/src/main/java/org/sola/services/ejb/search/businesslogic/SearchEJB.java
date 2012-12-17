@@ -496,8 +496,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
     }
 
     @Override
-    public List<CadastreObjectSearchResult> searchCadastreObjects(
-            String searchBy, String searchString) {
+    public List<CadastreObjectSearchResult> searchCadastreObjects(String searchBy, String searchString) {
         String wherePart = null;
         String selectPart = null;
         String fromPart = null;

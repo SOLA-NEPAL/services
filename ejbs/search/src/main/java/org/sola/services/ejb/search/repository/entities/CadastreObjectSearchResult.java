@@ -73,10 +73,10 @@ public class CadastreObjectSearchResult extends AbstractReadOnlyEntity {
             + "st_asewkb(co.geom_polygon) as the_geom, co.office_code";
     
     public static final String QUERY_FROM_SEARCHBY_OWNER_OF_BAUNIT = "cadastre.cadastre_object co "
-            + "inner join administrative.ba_unit "
+            + "inner join administrative.ba_unit ba "
             + "on co.id = ba.cadastre_object_id "
             + "inner join administrative.rrr "
-            + "on (ba_unit.id = rrr.ba_unit_id and rrr.status_code = 'current' "
+            + "on (ba.id = rrr.ba_unit_id and rrr.status_code = 'current' "
             + "and rrr.type_code = 'ownership') "
             + "inner join administrative.party_for_rrr pfr on rrr.id = pfr.rrr_id "
             + "inner join party.party on pfr.party_id= pfr.party_id ";
