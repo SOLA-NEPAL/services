@@ -175,9 +175,14 @@ public class AdministrativeEJB extends AbstractEJB implements AdministrativeEJBL
             params.put(CommonSqlProvider.PARAM_WHERE_PART, ParentBaUnitInfo.QUERY_WHERE_GET_FOR_TERMINATION);
             params.put(ParentBaUnitInfo.PARAM_TRANSACTION_ID, transactionId);
             List<ParentBaUnitInfo> parentBaUnits = getRepository().getEntityList(ParentBaUnitInfo.class, params);
+            HashMap<String, String> relatedBaUnitIds = new HashMap<String, String>();
+            
             if (parentBaUnits != null) {
                 for (ParentBaUnitInfo parentBaUnit : parentBaUnits) {
-                    terminateBaUnitByTransactionId(parentBaUnit.getRelatedBaUnitId(), transactionId);
+                    if(!relatedBaUnitIds.containsKey(parentBaUnit.getRelatedBaUnitId())){
+                        terminateBaUnitByTransactionId(parentBaUnit.getRelatedBaUnitId(), transactionId);
+                    }
+                    relatedBaUnitIds.put(parentBaUnit.getRelatedBaUnitId(), parentBaUnit.getRelatedBaUnitId());
                 }
             }
         }

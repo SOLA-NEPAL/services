@@ -452,15 +452,12 @@ public class CadastreObject extends AbstractVersionedEntity {
             // Check first/last part names
             String firstPart = getNameFirstPart() == null ? "" : getNameFirstPart();
             String lastPart = getNameLastPart() == null ? "" : getNameLastPart();
-//            if (!firstPart.equals(generateNameFirstPart())) {
-//                setNameFirstPart(generateNameFirstPart());
-//            }
-            setNameFirstPart(firstPart);//           
-            setNameLastPart(getParcelno());
-            Address add=getAddress();      
-            add.setVdcCode("27009");
-            add.setWardNo("1");
-            setAddress(add);
+            if (!firstPart.equals(generateNameFirstPart())) {
+                setNameFirstPart(generateNameFirstPart());
+            }
+            if (!lastPart.equals(generateNameLastPart())) {
+                setNameLastPart(generateNameLastPart());
+            }
         }
         super.preSave();
     }
