@@ -53,7 +53,6 @@ import org.sola.services.ejb.address.repository.entities.Address;
  */
 @Table(name = "cadastre_object", schema = "cadastre")
 public class CadastreObject extends AbstractVersionedEntity {
-
     private static final String QUERY_WHERE_BY_OFFICE = "(office_code=#{"
             + AbstractReadOnlyEntity.PARAM_OFFICE_CODE + "} OR office_code IS NULL)";
     public static final String QUERY_WHERE_SEARCHBYPARTS = "status_code= 'current' and "
@@ -64,7 +63,7 @@ public class CadastreObject extends AbstractVersionedEntity {
             + " and " + QUERY_WHERE_BY_OFFICE;
     public static final String QUERY_WHERE_SEARCHBYPARTS_PENDING = "status_code= 'pending' and "
             + "compare_strings(#{search_string}, name_firstpart || ' ' || name_lastpart) "
-            + "AND " + QUERY_WHERE_BY_OFFICE;
+            + "AND " + QUERY_WHERE_BY_OFFICE;    
     public static final String QUERY_WHERE_SEARCHBYPOINT = "status_code= 'current' and "
             + "ST_Intersects(geom_polygon, SetSRID(ST_Point(#{x}, #{y}), #{srid})) "
             + "AND " + QUERY_WHERE_BY_OFFICE;
@@ -146,9 +145,11 @@ public class CadastreObject extends AbstractVersionedEntity {
     private Date approvalDatetime;
     @Column(name = "historic_datetime")
     private Date historicDatetime;
-    @Column(name = "name_firstpart", updatable = false)
+   // @Column(name = "name_firstpart", updatable = false)
+     @Column(name = "name_firstpart", updatable = true)
     private String nameFirstPart;
-    @Column(name = "name_lastpart", updatable = false)
+    //@Column(name = "name_lastpart", updatable = false)
+     @Column(name = "name_lastpart", updatable = true)
     private String nameLastPart;
     @Column(name = "status_code", insertable = false, updatable = false)
     private String statusCode;

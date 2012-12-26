@@ -45,6 +45,8 @@ public class CadastreObjectTarget extends AbstractVersionedEntity{
 
      public static final String QUERY_WHERE_SEARCHBYTRANSACTION = 
              "transaction_id = #{transaction_id}";
+     public static final String QUERY_WHERE_SEARCH_BY_CADASTRE_OBJECT = 
+             "cadastre_object_id = #{cadastre_object_id}";
     
     @Id
     @Column(name = "cadastre_object_id")

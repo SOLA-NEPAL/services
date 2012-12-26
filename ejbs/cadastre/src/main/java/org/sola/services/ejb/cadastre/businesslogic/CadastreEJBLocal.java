@@ -58,6 +58,8 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
     List<CadastreObject> getCadastreObjectsByService(String serviceId);
 
     List<CadastreObjectTarget> getCadastreObjectTargetsByTransaction(String transactionId);
+    
+    List<CadastreObjectTarget> getCadastreObjectTargetsByCadastreObject(String cadastreObjectId);
 
     List<SurveyPoint> getSurveyPointsByTransaction(String transactionId);
 
@@ -109,6 +111,8 @@ public interface CadastreEJBLocal extends AbstractEJBLocal {
     List<CadastreObject> getCadastreObjectBy_ByteIntersection(String geom, int srid);
 
     List<CadastreObject> getPendingParcelByParts(String searchString);
+    
+    //List<CadastreObject> getPendingParcelById(String searchString);
 
     List<CadastreObject> getCadastreObjectListMem(List<String> mapSheetCode);
 

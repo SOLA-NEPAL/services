@@ -160,16 +160,16 @@ public class SearchEJBIT extends AbstractEJBTest {
         }
         try {
             SourceSearchParams params = new SourceSearchParams();
-            Date dateTo = new GregorianCalendar(2500, 1, 1).getTime();
-            Date dateFrom = new GregorianCalendar(1, 1, 1).getTime();
-            params.setFromRecordationDate(11111111);
-            params.setFromSubmissionDate(dateFrom);
-            params.setToRecordationDate(99999999);
-            params.setToSubmissionDate(dateTo);
-            params.setLocale("it");
-            params.setLaNumber("");
-            params.setRefNumber("");
-            params.setTypeCode("");
+            //Date dateTo = new GregorianCalendar(2500, 1, 1).getTime();
+           // Date dateFrom = new GregorianCalendar(1, 1, 1).getTime();
+           // params.setFromRecordationDate(11111111);
+            //params.setFromSubmissionDate(dateFrom);
+            //params.setToRecordationDate(99999999);
+            //params.setToSubmissionDate(dateTo);
+           // params.setLocale("it");
+            //params.setLaNumber("");
+            params.setRefNumber("1");
+           // params.setTypeCode("");
 
             SearchEJBLocal instance = (SearchEJBLocal) getEJBInstance(SearchEJB.class.getSimpleName());
             List<SourceSearchResult> result = instance.searchSources(params);

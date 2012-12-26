@@ -43,6 +43,7 @@ import org.junit.Test;
 import org.sola.services.common.test.AbstractEJBTest;
 import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
 import org.sola.services.ejb.cadastre.repository.entities.CadastreObjectNode;
+import org.sola.services.ejb.cadastre.repository.entities.CadastreObjectTarget;
 import org.sola.services.ejb.cadastre.repository.entities.MapSheet;
 
 /**
@@ -217,6 +218,28 @@ public class CadastreEJBIT extends AbstractEJBTest {
         }
 
     }
+    
+    @Test
+    @Ignore
+    public void testgetcadastreobjectTargetbyCadastreobjectid() throws Exception {
+        System.out.println(">>> Testing getting Map Sheet list");
+        UserTransaction tx = getUserTransaction();
+        try {
+            tx.begin();
+            CadastreEJBLocal instance = (CadastreEJBLocal) getEJBInstance(CadastreEJB.class.getSimpleName());
+            List<CadastreObjectTarget> Parcel = instance.getCadastreObjectTargetsByCadastreObject("799082db-ef48-4fc0-b3e3-42c03fe2cd27");
+            //CadastreObject Parcel = instance.getCadastreObject("41");
+
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            fail(e.getMessage());
+        }
+
+    }
+    
+    
+    
     //***********************************************************************************************************
     //</editor-fold>
 

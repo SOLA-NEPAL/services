@@ -510,13 +510,13 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     public List<Dataset> getDatasetsByCurrentUser() {
         return getDatasetsByUser(getUserName());
     }
-    
+
     @Override
-    public List<Dataset> getDatasetsByVdc(String vdcCode){
-        if(StringUtility.isEmpty(vdcCode)){
+    public List<Dataset> getDatasetsByVdc(String vdcCode) {
+        if (StringUtility.isEmpty(vdcCode)) {
             return null;
         }
-        
+
         HashMap params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, Dataset.WHERE_BY_VDC_CODE);
         params.put(Dataset.PARAM_VDC_CODE, vdcCode);
@@ -526,5 +526,26 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
     @Override
     public Dataset getDataset(String id) {
         return getRepository().getEntity(Dataset.class, id);
+    }
+
+//    @Override
+//    public List<CadastreObject> getPendingParcelById(String searchString) {
+//        //Integer numberOfMaxRecordsReturned = 10;
+//        HashMap params = new HashMap();
+//        params.put("search_string", searchString);
+//        //params.put(CommonSqlProvider.PARAM_LIMIT_PART, numberOfMaxRecordsReturned);
+//        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+//        return getRepository().getEntityList(CadastreObject.class,
+//                CadastreObject.QUERY_WHERE_SEARCHBYID_PENDING, params);
+//    }
+
+    @Override
+    public List<CadastreObjectTarget> getCadastreObjectTargetsByCadastreObject(String cadastreObjectId) {
+       Map params = new HashMap<String, Object>();
+        params.put(
+                CommonSqlProvider.PARAM_WHERE_PART,
+                CadastreObjectTarget.QUERY_WHERE_SEARCH_BY_CADASTRE_OBJECT);
+        params.put("cadastre_object_id", cadastreObjectId);
+        return getRepository().getEntityList(CadastreObjectTarget.class, params);
     }
 }
