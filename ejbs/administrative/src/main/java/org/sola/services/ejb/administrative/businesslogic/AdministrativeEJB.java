@@ -619,6 +619,12 @@ public class AdministrativeEJB extends AbstractEJB implements AdministrativeEJBL
                     newRrr.setRowVersion(0);
                     newRrr.setFiscalYearCode(adminEJB.getCurrentFiscalYearCode());
 
+                    if(newRrr.getNotation()!=null){
+                        newRrr.getNotation().setId(null);
+                        newRrr.getNotation().setRowId(null);
+                        newRrr.getNotation().setRowVersion(0);
+                    }
+                    
                     createUpdateRrrByRrrLoc(newRrr, pendingRrrLoc);
                     newRrrs.add(newRrr);
                     hasChanges = true;
@@ -787,20 +793,22 @@ public class AdministrativeEJB extends AbstractEJB implements AdministrativeEJBL
             searchParams.getMoth().setMothLuj("M");
         }
 
-        String tmpPageNumber = "";
-        String pageNumber = "";
-
+        if(searchParams.getPageNumber() == null){
+            searchParams.setPageNumber("");
+        }
+        
+        String mothType;
         if (searchParams.getMoth().getMothLuj().equalsIgnoreCase("M")) {
-            pageNumber = searchParams.getPageNumber();
+            mothType = "M";
         } else {
-            tmpPageNumber = searchParams.getPageNumber();
+            mothType = "L";
         }
 
         HashMap params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_WHERE_PART, Loc.GET_BY_MOTH_ID_AND_PANA_NO);
         params.put(Loc.MOTH_ID_PARAM, searchParams.getMoth().getId());
-        params.put((Loc.PANA_NO_PARAM), pageNumber);
-        params.put((Loc.TMP_PANA_NO_PARAM), tmpPageNumber);
+        params.put((Loc.PANA_NO_PARAM), searchParams.getPageNumber());
+        params.put((Loc.MOTH_TYPE_PARAM), mothType);
         params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntity(LocWithMoth.class, params);
     }

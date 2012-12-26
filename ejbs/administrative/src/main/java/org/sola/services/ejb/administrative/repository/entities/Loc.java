@@ -15,12 +15,12 @@ public class Loc extends AbstractVersionedEntity {
 
     public static final String PANA_NO_PARAM = "panaNo";
     public static final String LOC_ID_PARAM = "locId";
-    public static final String TMP_PANA_NO_PARAM = "tmpPanaNo";
+    public static final String MOTH_TYPE_PARAM = "mothType";
     public static final String MOTH_ID_PARAM = "mothId";
-    public static final String GET_BY_MOTH_ID_AND_PANA_NO = "(pana_no=#{"
-            + PANA_NO_PARAM + "} OR tmp_pana_no=#{" + TMP_PANA_NO_PARAM
-            + "}) and moth_id=#{" + MOTH_ID_PARAM
-            + "} and office_code=#{" + PARAM_OFFICE_CODE + "}";
+    public static final String GET_BY_MOTH_ID_AND_PANA_NO = 
+            "((pana_no=#{" + PANA_NO_PARAM + "} AND 'M' = #{" + MOTH_TYPE_PARAM + "}) OR "
+            + "(tmp_pana_no=#{" + PANA_NO_PARAM + "}) AND 'L' = #{" + MOTH_TYPE_PARAM + "}) "
+            + "and moth_id=#{" + MOTH_ID_PARAM + "} and office_code=#{" + PARAM_OFFICE_CODE + "}";
     public static final String GET_BY_MOTH_ID = "moth_id=#{" + MOTH_ID_PARAM + "}"
             + " and office_code=#{" + PARAM_OFFICE_CODE + "}";
     public static final String GET_BY_ID = "id=#{" + LOC_ID_PARAM + "}"
