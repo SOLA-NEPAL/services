@@ -23,7 +23,7 @@ public class RrrLocDetails extends AbstractReadOnlyEntity {
             + "ON ct.transaction_id=c1.transaction_id WHERE c1.id=b.cadastre_object_id)) AS old_parcels, "
             + "(SELECT string_agg(COALESCE(name, '') || ' ' || COALESCE(last_name, ''), ',') FROM party.party p INNER JOIN "
             + "(administrative.party_for_rrr pr INNER JOIN administrative.rrr r1 ON pr.rrr_id=r1.id) ON p.id=pr.party_id "
-            + "WHERE r1.status_code='current' AND r1.type_code='tenancy') AS tenants, get_translation(o.display_value, #{" + PARAM_LANG + "}) AS office_name, "
+            + "WHERE r1.status_code='current' AND r1.type_code='tenancy' AND r1.ba_unit_id=b.id) AS tenants, get_translation(o.display_value, #{" + PARAM_LANG + "}) AS office_name, "
             + "a.vdc_code, get_translation(vdc.display_value, #{" + PARAM_LANG + "}) AS vdc_name, a.ward_no, m.map_number, co.parcel_no, "
             + "co.land_use_code, r.ownership_type_code, r.owner_type_code, r.registration_number, r.registration_date, "
             + "(SELECT get_translation(rt.display_value, #{" + PARAM_LANG + "}) "
