@@ -50,6 +50,7 @@ import org.sola.services.common.repository.CommonSqlProvider;
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 import org.sola.services.ejb.administrative.repository.entities.*;
 import org.sola.services.ejb.cadastre.businesslogic.CadastreEJBLocal;
+import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
 import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
 import org.sola.services.ejb.party.repository.entities.Party;
 import org.sola.services.ejb.search.businesslogic.SearchEJBLocal;
@@ -960,8 +961,15 @@ public class AdministrativeEJB extends AbstractEJB implements AdministrativeEJBL
         params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntityList(Moth.class, params);
     }
-//    @Override
-//    public LocWithMoth getLocByTmpPageNoAndMoth(LocSearchByMothParams searchParams) {
-//      
-//    }
+    
+    @Override
+    public List<Moth> searchMothsByParts(String searchString) {
+        Integer numberOfMaxRecordsReturned = 10;
+        HashMap params = new HashMap();
+        params.put("search_string", searchString);
+        params.put(CommonSqlProvider.PARAM_LIMIT_PART, numberOfMaxRecordsReturned);
+        params.put(AbstractReadOnlyEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(Moth.class,
+                Moth.QUERY_WHERE_SEARCH_BY_MOTH_LUJ_VDC_CODE, params);
+    }
 }

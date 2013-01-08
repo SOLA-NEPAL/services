@@ -529,9 +529,6 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
 
             List<BaUnit> baUnitList = new ArrayList<BaUnit>();
             baUnitList.add(baUnit);
-            List<Loc> locList = new ArrayList<Loc>();
-            locList.add(loc);
-            moth.setLocList(locList);
             mothList.add(moth);
             tx.begin();
             for (Moth mh : mothList) {
@@ -632,16 +629,17 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
     /**
      * Test moths search
      */
-    @Ignore
+    //@Ignore
     @Test
     public void testMothSearch() throws Exception {
         if (skipIntegrationTest()) {
             return;
         }
         MothSearchParams params = new MothSearchParams();
-        //params.setVdcCode("4305");
-        params.setMothlujNumber("100");
-        params.setMothLuj("L");
+        params.setVdcCode("27009");
+        params.setMothlujNumber("1%");
+        params.setMothLuj("M");
+        //String testSearch="27009"+" "+"M";
         AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
         List<Moth> result = instance.searchMoths(params);
         assertNotNull(result);

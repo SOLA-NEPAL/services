@@ -105,4 +105,6 @@ public interface AdministrativeEJBLocal extends AbstractSolaTransactionEJBLocal 
     void deletePendingBaUnit(String baUnitId);
 
     List<Moth> searchMoths(MothSearchParams params);
+
+    List<Moth> searchMothsByParts(String searchString);
 }
