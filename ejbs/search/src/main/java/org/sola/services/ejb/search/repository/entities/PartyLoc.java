@@ -8,7 +8,20 @@ public class PartyLoc extends AbstractReadOnlyEntity {
 
     public static final String PARAM_LANG = "lang";
     public static final String PARAM_LOC_ID = "locId";
-    public static final String QUERY_GET_BY_LOC =
+    public static final String PARAM_STATUS = "statusCode";
+//    public static final String QUERY_GET_BY_LOC =
+//            "SELECT DISTINCT p.id, p.name, p.last_name, p.fathers_name, p.grandfather_name, p.id_number, p.id_issue_date, "
+//            + "(select body from document.document where id = p.photo_id) as photo, "
+//            + "(select body from document.document where id = p.left_finger_id) as left_fingerprint, "
+//            + "(select body from document.document where id = p.right_finger_id) as right_fingerprint, "
+//            + "a.vdc_code, get_translation(vdc.display_value, #{" + PARAM_LANG + "}) AS vdc_name, a.ward_no, a.street, "
+//            + "get_translation(o.display_value, #{" + PARAM_LANG + "}) AS office_name "
+//            + "FROM (party.party p LEFT JOIN (address.address a INNER JOIN address.vdc vdc ON a.vdc_code=vdc.code) ON p.address_id=a.id) INNER JOIN "
+//            + "(administrative.party_for_rrr pr INNER JOIN "
+//            + "(administrative.rrr r LEFT JOIN system.office o ON r.office_code=o.code) ON pr.rrr_id=r.id) ON p.id=pr.party_id "
+//            + "WHERE r.status_code=#{" + PARAM_STATUS + "} AND r.loc_id=#{" + PARAM_LOC_ID + "}";
+    
+        public static final String QUERY_GET_BY_LOC =
             "SELECT DISTINCT p.id, p.name, p.last_name, p.fathers_name, p.grandfather_name, p.id_number, p.id_issue_date, "
             + "(select body from document.document where id = p.photo_id) as photo, "
             + "(select body from document.document where id = p.left_finger_id) as left_fingerprint, "
@@ -18,7 +31,14 @@ public class PartyLoc extends AbstractReadOnlyEntity {
             + "FROM (party.party p LEFT JOIN (address.address a INNER JOIN address.vdc vdc ON a.vdc_code=vdc.code) ON p.address_id=a.id) INNER JOIN "
             + "(administrative.party_for_rrr pr INNER JOIN "
             + "(administrative.rrr r LEFT JOIN system.office o ON r.office_code=o.code) ON pr.rrr_id=r.id) ON p.id=pr.party_id "
-            + "WHERE r.status_code='current' AND r.loc_id=#{" + PARAM_LOC_ID + "}";
+            + "WHERE ((#{" + PARAM_STATUS + "}='pending' AND r.status_code='pending' AND r.nr NOT IN "
+            + "(SELECT nr FROM administrative.rrr WHERE ba_unit_id = r.ba_unit_id "
+            + "AND r.loc_id =#{" + PARAM_LOC_ID + "} AND status_code='current' AND nr = r.nr)) "
+            + "OR (#{" + PARAM_STATUS + "}='pending' AND r.status_code='current' AND r.nr NOT IN (SELECT nr FROM administrative.rrr "
+            + "WHERE ba_unit_id = r.ba_unit_id AND r.loc_id =#{" + PARAM_LOC_ID + "} AND status_code='pending' AND nr = r.nr)) "
+            + "OR (#{" + PARAM_STATUS + "}= 'current' AND r.status_code='current')) "             
+            + "AND r.loc_id  =#{" + PARAM_LOC_ID + "}";
+            
 
     @Id
     @Column
