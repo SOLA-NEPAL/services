@@ -43,14 +43,11 @@ import org.sola.services.common.ejbs.AbstractEJB;
 import org.sola.services.common.faults.SOLAValidationException;
 import org.sola.services.common.repository.CommonSqlProvider;
 import org.sola.services.ejb.cadastre.businesslogic.CadastreEJBLocal;
+import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
 import org.sola.services.ejb.cadastre.repository.entities.CadastreObjectStatusChanger;
 import org.sola.services.ejb.system.businesslogic.SystemEJBLocal;
 import org.sola.services.ejb.system.repository.entities.BrValidation;
-import org.sola.services.ejb.transaction.repository.entities.RegistrationStatusType;
-import org.sola.services.ejb.transaction.repository.entities.TransactionBasic;
-import org.sola.services.ejb.transaction.repository.entities.TransactionStatusChanger;
-import org.sola.services.ejb.transaction.repository.entities.TransactionStatusType;
-import org.sola.services.ejb.transaction.repository.entities.TransactionType;
+import org.sola.services.ejb.transaction.repository.entities.*;
 
 /**
  *
@@ -198,7 +195,22 @@ public class TransactionEJB extends AbstractEJB implements TransactionEJBLocal {
             this.saveEntity(tmpTransaction);
         }
 
-        //It adds it
+        // Reset row versions for cadastre transaction
+        if(transaction instanceof TransactionCadastreChange){
+            List<CadastreObject> lst = ((TransactionCadastreChange)transaction).getCadastreObjectList();
+            if(lst!=null){
+                for (CadastreObject cadastreObject : lst) {
+                    cadastreObject.setRowVersion(0);
+                    cadastreObject.setRowId(null);
+                }
+            }
+            
+            // Clear target objects list if there are no cadastre objects (no new parcels)
+            if(lst==null || lst.size()<1){
+                ((TransactionCadastreChange)transaction).getCadastreObjectTargetList().clear();
+            }
+        }
+        
         transaction = this.saveEntity(transaction);
 
         //It runs the validation

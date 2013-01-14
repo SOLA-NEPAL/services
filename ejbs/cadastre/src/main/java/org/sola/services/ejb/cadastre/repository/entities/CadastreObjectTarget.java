@@ -34,6 +34,7 @@ package org.sola.services.ejb.cadastre.repository.entities;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.sola.services.common.repository.AccessFunctions;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
 
 /**
@@ -43,8 +44,10 @@ import org.sola.services.common.repository.entities.AbstractVersionedEntity;
 @Table(name = "cadastre_object_target", schema = "cadastre")
 public class CadastreObjectTarget extends AbstractVersionedEntity{
 
+     public static final String PARAM_TRANSACTION_ID = "transaction_id";
+     
      public static final String QUERY_WHERE_SEARCHBYTRANSACTION = 
-             "transaction_id = #{transaction_id}";
+             "transaction_id = #{" + PARAM_TRANSACTION_ID + "}";
      public static final String QUERY_WHERE_SEARCH_BY_CADASTRE_OBJECT = 
              "cadastre_object_id = #{cadastre_object_id}";
     
@@ -54,9 +57,19 @@ public class CadastreObjectTarget extends AbstractVersionedEntity{
     @Id
     @Column(name = "transaction_id")
     private String transactionId;
-    @Column(name="office_code", updatable=false)
-    private String officeCode;
 
+    @Column(name = "datasetId", updatable=false, insertable=false)
+    @AccessFunctions(onSelect = "(SELECT co.dataset_id FROM cadastre.cadastre_object co WHERE co.id = cadastre_object_id)")
+    private String datasetId;
+
+    public String getDatasetId() {
+        return datasetId;
+    }
+
+    public void setDatasetId(String datasetId) {
+        this.datasetId = datasetId;
+    }
+    
     public String getCadastreObjectId() {
         return cadastreObjectId;
     }
@@ -71,13 +84,5 @@ public class CadastreObjectTarget extends AbstractVersionedEntity{
 
     public void setTransactionId(String transactionId) {
         this.transactionId = transactionId;
-    }
-
-    public String getOfficeCode() {
-        return officeCode;
-    }
-
-    public void setOfficeCode(String officeCode) {
-        this.officeCode = officeCode;
     }
 }

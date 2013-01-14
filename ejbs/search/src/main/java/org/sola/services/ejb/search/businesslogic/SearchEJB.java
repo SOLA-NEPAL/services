@@ -496,6 +496,27 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
     }
 
     @Override
+    public List<CadastreObjectSearchResult> searchCadastreObjects(List<String> ids){
+        if(ids == null || ids.size() < 1){
+            return null;
+        }
+        Map params = new HashMap<String, Object>();
+        String query = CadastreObjectSearchResult.QUERY_SELECT_SEARCHBY_IDS;
+        String strIds = "";
+        
+        for(String id: ids){
+            if(!strIds.isEmpty()){
+                strIds = strIds + "," + "'" + id + "'";
+            } else {
+                strIds = "'" + id + "'";
+            }
+        }
+        query = String.format(query, strIds);
+        params.put(CommonSqlProvider.PARAM_QUERY, query);
+        return getRepository().getEntityList(CadastreObjectSearchResult.class, params);
+    }
+    
+    @Override
     public List<CadastreObjectSearchResult> searchCadastreObjects(String searchBy, String searchString) {
         String wherePart = null;
         String selectPart = null;

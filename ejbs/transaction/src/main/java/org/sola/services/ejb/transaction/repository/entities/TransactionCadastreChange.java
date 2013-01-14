@@ -49,22 +49,19 @@ import org.sola.services.ejb.cadastre.repository.entities.SurveyPoint;
 public class TransactionCadastreChange extends Transaction {
 
     @ChildEntityList(parentIdField = "transactionId")
-    @ExternalEJB(
-            ejbLocalClass = CadastreEJBLocal.class, 
+    @ExternalEJB(ejbLocalClass = CadastreEJBLocal.class, 
             loadMethod = "getCadastreObjectsByTransaction", 
             saveMethod="saveCadastreObject")
     List<CadastreObject> CadastreObjectList;
 
     @ChildEntityList(parentIdField = "transactionId")
-    @ExternalEJB(
-            ejbLocalClass = CadastreEJBLocal.class, 
+    @ExternalEJB(ejbLocalClass = CadastreEJBLocal.class, 
             loadMethod = "getSurveyPointsByTransaction", 
             saveMethod="saveEntity")
     List<SurveyPoint> surveyPointList;
 
     @ChildEntityList(parentIdField = "transactionId")
-    @ExternalEJB(
-            ejbLocalClass = CadastreEJBLocal.class, 
+    @ExternalEJB(ejbLocalClass = CadastreEJBLocal.class, 
             loadMethod = "getCadastreObjectTargetsByTransaction", 
             saveMethod="saveEntity")
     private List<CadastreObjectTarget> cadastreObjectTargetList;
@@ -74,8 +71,7 @@ public class TransactionCadastreChange extends Transaction {
 
     //Addition by Kabindra
     @ChildEntityList(parentIdField = "transactionId")
-    @ExternalEJB(
-            ejbLocalClass = CadastreEJBLocal.class, 
+    @ExternalEJB(ejbLocalClass = CadastreEJBLocal.class, 
             loadMethod = "getCadastreObjectRedefinitionTargetsByTransaction", 
             saveMethod="saveEntity")
     private List<CadastreObjectTargetRedefinition> cadastreObjectNeighboursList;

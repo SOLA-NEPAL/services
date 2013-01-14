@@ -89,6 +89,8 @@ public interface SearchEJBLocal extends AbstractEJBLocal {
     List<DynamicQuery> getQueryListAll();
 
     List<CadastreObjectSearchResult> searchCadastreObjects(String searchBy, String searchString);
+    
+    List<CadastreObjectSearchResult> searchCadastreObjects(List<String> ids);
 
     List<CadastreObjectSearchResultExt> searchCadastreObjects(String langCode, CadastreObjectSearchParams searchParams);
 

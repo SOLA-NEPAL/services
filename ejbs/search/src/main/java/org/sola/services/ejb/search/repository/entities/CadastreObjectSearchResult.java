@@ -50,6 +50,11 @@ public class CadastreObjectSearchResult extends AbstractReadOnlyEntity {
     private static final String QUERY_WHERE_BY_OFFICE2 = "(co.office_code=#{"
             + AbstractReadOnlyEntity.PARAM_OFFICE_CODE + "} OR co.office_code IS NULL)";
     
+    public static final String QUERY_SELECT_SEARCHBY_IDS = "SELECT distinct co.id, co.dataset_id, "
+            + "(co.name_firstpart || '/ ' || co.name_lastpart) as label, "
+            + "st_asewkb(co.geom_polygon) as the_geom, co.office_code "
+            + "FROM cadastre.cadastre_object co WHERE co.id IN (%s)";
+    
     public static final String QUERY_WHERE_SEARCHBY_NUMBER = "status_code= 'current' and "
             + "compare_strings(#{search_string}, name_firstpart || ' ' || name_lastpart) "
             + "AND " + QUERY_WHERE_BY_OFFICE;

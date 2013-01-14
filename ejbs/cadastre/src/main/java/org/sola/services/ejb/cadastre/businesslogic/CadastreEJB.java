@@ -260,7 +260,7 @@ public class CadastreEJB extends AbstractEJB implements CadastreEJBLocal {
         Map params = new HashMap<String, Object>();
         params.put(
                 CommonSqlProvider.PARAM_WHERE_PART,
-                CadastreObjectTarget.QUERY_WHERE_SEARCHBYTRANSACTION);
+                CadastreObjectTargetRedefinition.WHERE_SEARCH_BY_TRANSACTION);
         params.put("transaction_id", transactionId);
         return getRepository().getEntityList(CadastreObjectTargetRedefinition.class, params);
     }

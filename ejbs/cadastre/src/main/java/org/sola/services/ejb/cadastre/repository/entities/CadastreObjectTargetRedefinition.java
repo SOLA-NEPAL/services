@@ -42,6 +42,9 @@ import org.sola.services.common.repository.AccessFunctions;
 @Table(name = "cadastre_object_target", schema = "cadastre")
 public class CadastreObjectTargetRedefinition extends CadastreObjectTarget{
     
+    public static final String WHERE_SEARCH_BY_TRANSACTION = 
+             "transaction_id = #{transaction_id} AND geom_polygon IS NOT NULL";
+    
     @Column(name = "geom_polygon")
     @AccessFunctions(onSelect = "st_asewkb(geom_polygon)",
     onChange = "get_geometry_with_srid(#{geomPolygon})")

@@ -45,7 +45,7 @@ public class BaUnitSearchResult extends AbstractEntity {
     public static final String PARAM_RIGHTHOLDER_ID = "rightHolderId";
     
     public static final String SELECT_PART =
-            "SELECT DISTINCT b.id, b.name, b.name_firstpart, b.name_lastpart, b.status_code, b.office_code, b.fy_code, "
+            "SELECT DISTINCT b.id, b.name, b.cadastre_object_id, b.name_firstpart, b.name_lastpart, b.status_code, b.office_code, b.fy_code, "
             + "(SELECT string_agg(COALESCE(p.name, '') || ' ' || COALESCE(p.last_name, ''), '::::') "
             + "FROM administrative.rrr rrr INNER JOIN (administrative.party_for_rrr pr "
             + "INNER JOIN party.party p ON pr.party_id = p.id) ON rrr.id = pr.rrr_id "
@@ -69,7 +69,7 @@ public class BaUnitSearchResult extends AbstractEntity {
             + "ELSE '' END) END) END) END) as action "
             + "FROM"
             + "("
-            + "SELECT DISTINCT b.id, b.name, b.name_firstpart, b.name_lastpart, b.status_code, b.office_code, b.fy_code, "
+            + "SELECT DISTINCT b.id, b.name, b.cadastre_object_id, b.name_firstpart, b.name_lastpart, b.status_code, b.office_code, b.fy_code, "
             + "(SELECT string_agg(COALESCE(p.name, '') || ' ' || COALESCE(p.last_name, ''), '::::') "
             + "FROM administrative.rrr rrr INNER JOIN (administrative.party_for_rrr pr "
             + "INNER JOIN party.party p ON pr.party_id = p.id) ON rrr.id = pr.rrr_id "
@@ -142,6 +142,8 @@ public class BaUnitSearchResult extends AbstractEntity {
     private String wardNo;
     @Column(name = "vdc_code")
     private String vdcCode;
+    @Column(name = "cadastre_object_id")
+    private String cadastreObjectId;
     @Column(name = "parcel_no")
     private String parcelNo;
     @Column(name = "map_number")
@@ -265,6 +267,14 @@ public class BaUnitSearchResult extends AbstractEntity {
 
     public void setMapSheetId(String mapSheetId) {
         this.mapSheetId = mapSheetId;
+    }
+
+    public String getCadastreObjectId() {
+        return cadastreObjectId;
+    }
+
+    public void setCadastreObjectId(String cadastreObjectId) {
+        this.cadastreObjectId = cadastreObjectId;
     }
 
     public String getParcelNo() {
