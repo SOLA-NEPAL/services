@@ -17,13 +17,44 @@ public class RrrLocDetails extends AbstractReadOnlyEntity {
 
     public static final String PARAM_LANG = "lang";
     public static final String PARAM_LOC_ID = "locId";
+    public static final String PARAM_STATUS = "statusCode";
+//    public static final String QUERY_SELECT = "SELECT DISTINCT l.id, b.name_firstpart, b.name_lastpart, "
+//            + "(SELECT string_agg(c.parcel_no, ',') FROM cadastre.cadastre_object c WHERE c.id IN "
+//            + "(SELECT cadastre_object_id FROM cadastre.cadastre_object_target ct INNER JOIN cadastre.cadastre_object c1 "
+//            + "ON ct.transaction_id=c1.transaction_id WHERE c1.id=b.cadastre_object_id)) AS old_parcels, "
+//            + "(SELECT string_agg(COALESCE(name, '') || ' ' || COALESCE(last_name, ''), ',') FROM party.party p INNER JOIN "
+//            + "(administrative.party_for_rrr pr INNER JOIN administrative.rrr r1 ON pr.rrr_id=r1.id) ON p.id=pr.party_id "
+//            + "WHERE r1.status_code='current' AND r1.type_code='tenancy' AND r1.ba_unit_id=b.id) AS tenants, get_translation(o.display_value, #{" + PARAM_LANG + "}) AS office_name, "
+//            + "a.vdc_code, get_translation(vdc.display_value, #{" + PARAM_LANG + "}) AS vdc_name, a.ward_no, m.map_number, co.parcel_no, "
+//            + "co.land_use_code, r.ownership_type_code, r.owner_type_code, r.registration_number, r.registration_date, "
+//            + "(SELECT get_translation(rt.display_value, #{" + PARAM_LANG + "}) "
+//            + " FROM transaction.transaction tr INNER JOIN (application.service ser INNER JOIN application.request_type rt ON ser.request_type_code = rt.code) "
+//            + "   ON tr.from_service_id = ser.id WHERE tr.id=r.transaction_id) AS request_name,"
+//            + "co.land_type_code, co.land_class_code, "
+//            + "co.official_area, co.area_unit_type_code, n.notation_text, l.pana_no, moth.mothluj_no "
+//            + "FROM (administrative.ba_unit b "
+//            + "INNER JOIN ((cadastre.cadastre_object co "
+//            + "  LEFT JOIN (address.address a "
+//            + "     LEFT JOIN address.vdc vdc ON a.vdc_code=vdc.code) "
+//            + "  ON co.address_id=a.id) "
+//            + "  LEFT JOIN cadastre.map_sheet m ON co.map_sheet_id=m.id) "
+//            + "ON b.cadastre_object_id = co.id) "
+//            + "INNER JOIN (((administrative.rrr r LEFT JOIN system.office o ON r.office_code=o.code) "
+//            + "LEFT JOIN administrative.notation n ON r.id=n.rrr_id) "
+//            + "  INNER JOIN (administrative.loc l INNER JOIN administrative.moth moth ON l.moth_id=moth.id) "
+//            + "ON r.loc_id=l.id) "
+//            + "ON b.id=r.ba_unit_id "
+//            + "WHERE r.status_code=#{" + PARAM_STATUS + "} AND r.loc_id  =#{" + PARAM_LOC_ID + "}";
     public static final String QUERY_SELECT = "SELECT DISTINCT l.id, b.name_firstpart, b.name_lastpart, "
             + "(SELECT string_agg(c.parcel_no, ',') FROM cadastre.cadastre_object c WHERE c.id IN "
             + "(SELECT cadastre_object_id FROM cadastre.cadastre_object_target ct INNER JOIN cadastre.cadastre_object c1 "
             + "ON ct.transaction_id=c1.transaction_id WHERE c1.id=b.cadastre_object_id)) AS old_parcels, "
             + "(SELECT string_agg(COALESCE(name, '') || ' ' || COALESCE(last_name, ''), ',') FROM party.party p INNER JOIN "
             + "(administrative.party_for_rrr pr INNER JOIN administrative.rrr r1 ON pr.rrr_id=r1.id) ON p.id=pr.party_id "
-            + "WHERE r1.status_code='current' AND r1.type_code='tenancy' AND r1.ba_unit_id=b.id) AS tenants, get_translation(o.display_value, #{" + PARAM_LANG + "}) AS office_name, "
+            + "WHERE ((#{" + PARAM_STATUS + "} = 'pending' AND r1.status_code='current' AND r1.nr NOT IN  "
+            + "(SELECT nr FROM administrative.rrr WHERE type_code='tenancy' AND ba_unit_id = b.id AND status_code='pending' AND nr = r1.nr)) "
+            + "OR (#{" + PARAM_STATUS + "} = 'pending' AND r1.status_code='pending') OR (#{" + PARAM_STATUS + "}= 'current' AND r1.status_code='current')) "
+            + "AND r1.type_code='tenancy' AND r1.ba_unit_id=b.id) AS tenants, get_translation(o.display_value, #{" + PARAM_LANG + "}) AS office_name, "
             + "a.vdc_code, get_translation(vdc.display_value, #{" + PARAM_LANG + "}) AS vdc_name, a.ward_no, m.map_number, co.parcel_no, "
             + "co.land_use_code, r.ownership_type_code, r.owner_type_code, r.registration_number, r.registration_date, "
             + "(SELECT get_translation(rt.display_value, #{" + PARAM_LANG + "}) "
@@ -43,7 +74,13 @@ public class RrrLocDetails extends AbstractReadOnlyEntity {
             + "  INNER JOIN (administrative.loc l INNER JOIN administrative.moth moth ON l.moth_id=moth.id) "
             + "ON r.loc_id=l.id) "
             + "ON b.id=r.ba_unit_id "
-            + "WHERE r.status_code = 'current' AND r.loc_id  =#{" + PARAM_LOC_ID + "}";
+            + "WHERE ((#{" + PARAM_STATUS + "}='pending' AND r.status_code='pending' AND r.nr NOT IN "
+            + "(SELECT nr FROM administrative.rrr WHERE ba_unit_id = r.ba_unit_id "
+            + "AND r.loc_id =#{" + PARAM_LOC_ID + "} AND status_code='current' AND nr = r.nr)) "
+            + "OR (#{" + PARAM_STATUS + "}='pending' AND r.status_code='current' AND r.nr NOT IN (SELECT nr FROM administrative.rrr "
+            + "WHERE ba_unit_id = r.ba_unit_id AND r.loc_id =#{" + PARAM_LOC_ID + "} AND status_code='pending' AND nr = r.nr)) "
+            + "OR (#{" + PARAM_STATUS + "}= 'current' AND r.status_code='current')) "             
+            + "AND r.loc_id  =#{" + PARAM_LOC_ID + "}";
     @Id
     @Column
     private String id;

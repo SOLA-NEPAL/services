@@ -347,10 +347,10 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
     @Override
     public ResultForNavigationInfo getSpatialResult(
             QueryForNavigation spatialQuery, String officeCode) {
-        if(spatialQuery.getDatasetId()==null){
+        if (spatialQuery.getDatasetId() == null) {
             spatialQuery.setDatasetId("");
         }
-        
+
         Map params = new HashMap<String, Object>();
         params.put("minx", spatialQuery.getWest());
         params.put("miny", spatialQuery.getSouth());
@@ -656,13 +656,21 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
     }
 
     @Override
-    public LocDetails getLocDetails(String locId, String lang) {
+    public LocDetails getLocDetails(String locId, boolean current, String lang) {
         LocDetails locDetails = new LocDetails();
+        String status;
+        if (current) {
+            status = "current";
+        } else {
+            status = "pending";
+        }
 
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_QUERY, PartyLoc.QUERY_GET_BY_LOC);
         params.put(PartyLoc.PARAM_LOC_ID, locId);
         params.put(PartyLoc.PARAM_LANG, lang);
+        params.put(PartyLoc.PARAM_STATUS, status);
+
 
         locDetails.setParties(getRepository().getEntityList(PartyLoc.class, params));
 
@@ -670,6 +678,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         params.put(CommonSqlProvider.PARAM_QUERY, RrrLocDetails.QUERY_SELECT);
         params.put(RrrLocDetails.PARAM_LOC_ID, locId);
         params.put(RrrLocDetails.PARAM_LANG, lang);
+        params.put(RrrLocDetails.PARAM_STATUS, status);
 
         locDetails.setRrrs(getRepository().getEntityList(RrrLocDetails.class, params));
         return locDetails;
@@ -838,9 +847,9 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         }
         return result;
     }
-    
+
     @Override
-    public String getCrs(int srid){
+    public String getCrs(int srid) {
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_QUERY, "select srtext from public.spatial_ref_sys where srid=#{srid}");
         params.put("srid", srid);
@@ -848,7 +857,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         ArrayList<HashMap> list = getRepository().executeFunction(params);
 
         if (list.size() > 0 && list.get(0) != null && list.get(0).size() > 0) {
-            return (String)((Entry) list.get(0).entrySet().iterator().next()).getValue();
+            return (String) ((Entry) list.get(0).entrySet().iterator().next()).getValue();
         } else {
             return null;
         }

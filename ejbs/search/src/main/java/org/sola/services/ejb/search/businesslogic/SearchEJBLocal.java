@@ -96,13 +96,13 @@ public interface SearchEJBLocal extends AbstractEJBLocal {
 
     List<BaUnitSearchResult> getAllBaUnitsByService(String serviceId);
 
-    LocDetails getLocDetails(String locId, String lang);
+    LocDetails getLocDetails(String locId, boolean current, String lang);
 
     List<LocSearchResult> searchLocs(LocSearchParams params);
 
     List<RestrictionSearchResult> searchRestrictions(RestrictionSearchParams params);
-    
+
     List<RestrictionInfo> searchRestrictionInfo(RestrictionInfoParams params);
-    
+
     String getCrs(int srid);
 }

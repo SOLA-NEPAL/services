@@ -8,7 +8,6 @@ public class LocSearchResult extends AbstractReadOnlyEntity {
     public static final String PARAM_BA_UNIT_ID = "baUnitId";
     public static final String PARAM_PARTY_ID = "partyId";
     public static final String PARAM_LOC_ID = "locId";
-    
     public static final String QUERY_SELECT =
             "SELECT DISTINCT l.id, l.pana_no, moth.mothluj_no, l.tmp_pana_no, moth.moth_luj, "
             + "(SELECT string_agg(COALESCE(p.name, '') || ' ' || COALESCE(p.last_name, ''), '; ') AS owners FROM "
@@ -20,20 +19,19 @@ public class LocSearchResult extends AbstractReadOnlyEntity {
             + "AND (r.ba_unit_id=#{" + PARAM_BA_UNIT_ID + "} OR #{" + PARAM_BA_UNIT_ID + "}='') "
             + "AND (l.id=#{" + PARAM_LOC_ID + "} OR #{" + PARAM_LOC_ID + "}='') "
             + "LIMIT 100";
-
-    @Column(name="id")
+    @Column(name = "id")
     private String id;
-    @Column(name="pana_no")
+    @Column(name = "pana_no")
     private String panaNumber;
-    @Column(name="mothluj_no")
+    @Column(name = "mothluj_no")
     private String mothNumber;
-    @Column(name="tmp_pana_no")
+    @Column(name = "tmp_pana_no")
     private String tmpPanaNumber;
-    @Column(name="moth_luj")
+    @Column(name = "moth_luj")
     private String mothLuj;
-    @Column(name="owners")
+    @Column(name = "owners")
     private String owners;
-    
+
     public LocSearchResult() {
         super();
     }
