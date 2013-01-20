@@ -629,16 +629,16 @@ public class AdministrativeEJBIT extends AbstractEJBTest {
     /**
      * Test moths search
      */
-    //@Ignore
+    @Ignore
     @Test
     public void testMothSearch() throws Exception {
         if (skipIntegrationTest()) {
             return;
         }
         MothSearchParams params = new MothSearchParams();
-        params.setVdcCode("27009");
-        params.setMothlujNumber("1%");
-        params.setMothLuj("M");
+//        params.setVdcCode("27009");
+//        params.setMothlujNumber("1%");
+//        params.setMothLuj("M");
         //String testSearch="27009"+" "+"M";
         AdministrativeEJBLocal instance = (AdministrativeEJBLocal) getEJBInstance(AdministrativeEJB.class.getSimpleName());
         List<Moth> result = instance.searchMoths(params);

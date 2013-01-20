@@ -954,7 +954,7 @@ public class AdministrativeEJB extends AbstractEJB implements AdministrativeEJBL
         }
 
         Map params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_QUERY, Moth.Search_Query);
+        params.put(CommonSqlProvider.PARAM_QUERY, Moth.SEARCH_QUERY);
         params.put(Moth.VDC_PARAM, searchParams.getVdcCode());
         params.put(Moth.MOTH_LUJ_PARAM, searchParams.getMothLuj());
         params.put(Moth.MOTH_LUJ_NUMBER_PARAM, searchParams.getMothlujNumber());

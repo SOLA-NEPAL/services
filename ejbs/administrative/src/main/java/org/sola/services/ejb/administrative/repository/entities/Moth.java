@@ -28,13 +28,14 @@ public class Moth extends MothBasic {
     public static final String GET_BY_VDC_MOTHLUJ_AND_MOTHLUJ_NUMBER = "vdc_code=#{"
             + VDC_PARAM + "} and moth_luj=#{" + MOTH_LUJ_PARAM + "} and mothluj_no=#{"
             + MOTH_LUJ_NUMBER_PARAM + "} and office_code=#{" + PARAM_OFFICE_CODE + "}";
-    public static final String Search_Query =
+    public static final String SEARCH_QUERY =
             "SELECT DISTINCT m.id, m.mothluj_no, m.moth_luj,m.office_code, m.vdc_code, m.rowversion, m.rowidentifier "
             + "FROM (administrative.moth m INNER JOIN address.vdc v ON m.vdc_code=v.code) "
             + "WHERE " + GET_BY_VDC_AND_MOTHLUJ 
             + " AND POSITION(LOWER(#{" + MOTH_LUJ_NUMBER_PARAM + "}) IN LOWER(COALESCE(m.mothluj_no, ''))) = 1 "
             + "ORDER BY m.mothluj_no "
             + "LIMIT 101";
+    
     public static final String QUERY_WHERE_SEARCH_BY_MOTH_LUJ_VDC_CODE = "compare_strings(#{search_string}, vdc_code || ' ' || moth_luj) "
             + "AND " + QUERY_WHERE_BY_OFFICE;
 }
