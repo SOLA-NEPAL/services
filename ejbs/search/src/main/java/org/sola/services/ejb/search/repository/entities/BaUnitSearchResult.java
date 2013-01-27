@@ -29,6 +29,7 @@
  */
 package org.sola.services.ejb.search.repository.entities;
 
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import org.sola.services.common.repository.entities.AbstractEntity;
@@ -43,7 +44,8 @@ public class BaUnitSearchResult extends AbstractEntity {
     public static final String PARAM_MOTH = "moth";
     public static final String PARAM_LOC = "loc";
     public static final String PARAM_RIGHTHOLDER_ID = "rightHolderId";
-    
+    public static final String PARAM_APROVAL_DATE_FROM="fromDate";
+    public static final String PARAM_APROVAL_DATE_TO="toDate";
     public static final String SELECT_PART =
             "SELECT DISTINCT b.id, b.name, b.cadastre_object_id, b.name_firstpart, b.name_lastpart, b.status_code, b.office_code, b.fy_code, "
             + "(SELECT string_agg(COALESCE(p.name, '') || ' ' || COALESCE(p.last_name, ''), '::::') "
@@ -97,6 +99,7 @@ public class BaUnitSearchResult extends AbstractEntity {
     
     public static final String SEARCH_QUERY = SELECT_PART
             + "WHERE (COALESCE(a.vdc_code, '') = #{" + PARAM_VDC_CODE + "} OR #{" + PARAM_VDC_CODE + "}='') "
+            + "AND co.approval_datetime BETWEEN #{" + PARAM_APROVAL_DATE_FROM + "} AND #{" + PARAM_APROVAL_DATE_TO + "} "
             + "AND (COALESCE(a.ward_no, '') = #{" + PARAM_WARD + "} OR #{" + PARAM_WARD + "}='') "
             + "AND (COALESCE(co.map_sheet_id, '') = #{" + PARAM_MAPSHEET_CODE + "} OR "
             + "COALESCE(co.map_sheet_id2, '') = #{" + PARAM_MAPSHEET_CODE + "} OR "
@@ -152,6 +155,8 @@ public class BaUnitSearchResult extends AbstractEntity {
     private String mapSheetId;
     @Column(name = "action")
     private String action;
+    @Column(name="approval_datetime")
+    private Date approvalDateTime;
 
     public BaUnitSearchResult() {
         super();
@@ -307,6 +312,14 @@ public class BaUnitSearchResult extends AbstractEntity {
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    public Date getApprovalDateTime() {
+        return approvalDateTime;
+    }
+
+    public void setApprovalDateTime(Date approvalDateTime) {
+        this.approvalDateTime = approvalDateTime;
     }
 
 }

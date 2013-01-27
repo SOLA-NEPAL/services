@@ -482,8 +482,11 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         if (searchParams.getRightHolderId() == null) {
             searchParams.setRightHolderId("");
         }
-
         params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY);
+        params.put(BaUnitSearchResult.PARAM_APROVAL_DATE_FROM,
+                searchParams.getFromDate() == null ? new GregorianCalendar(1, 1, 1).getTime() : searchParams.getFromDate());
+        params.put(BaUnitSearchResult.PARAM_APROVAL_DATE_TO,
+                searchParams.getToDate() == null ? new GregorianCalendar(2500, 1, 1).getTime() : searchParams.getToDate());
         params.put(BaUnitSearchResult.PARAM_VDC_CODE, searchParams.getVdcCode());
         params.put(BaUnitSearchResult.PARAM_WARD, searchParams.getWardNo());
         params.put(BaUnitSearchResult.PARAM_MAPSHEET_CODE, searchParams.getMapSheetCode());
@@ -496,16 +499,16 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
     }
 
     @Override
-    public List<CadastreObjectSearchResult> searchCadastreObjects(List<String> ids){
-        if(ids == null || ids.size() < 1){
+    public List<CadastreObjectSearchResult> searchCadastreObjects(List<String> ids) {
+        if (ids == null || ids.size() < 1) {
             return null;
         }
         Map params = new HashMap<String, Object>();
         String query = CadastreObjectSearchResult.QUERY_SELECT_SEARCHBY_IDS;
         String strIds = "";
-        
-        for(String id: ids){
-            if(!strIds.isEmpty()){
+
+        for (String id : ids) {
+            if (!strIds.isEmpty()) {
                 strIds = strIds + "," + "'" + id + "'";
             } else {
                 strIds = "'" + id + "'";
@@ -515,7 +518,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         params.put(CommonSqlProvider.PARAM_QUERY, query);
         return getRepository().getEntityList(CadastreObjectSearchResult.class, params);
     }
-    
+
     @Override
     public List<CadastreObjectSearchResult> searchCadastreObjects(String searchBy, String searchString) {
         String wherePart = null;

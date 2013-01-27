@@ -32,7 +32,10 @@ package org.sola.services.ejb.search.businesslogic;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKBWriter;
 import com.vividsolutions.jts.io.WKTReader;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.junit.After;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -80,6 +83,10 @@ public class SearchEJBIT extends AbstractEJBTest {
         }
         try {
             BaUnitSearchParams params = new BaUnitSearchParams();
+            Date dateFrom=new Date("2012-12-27");
+            Date dateTo=new Date("2012-12-30"); 
+            params.setFromDate(dateFrom);
+            params.setToDate(dateTo);
             SearchEJBLocal instance = (SearchEJBLocal) getEJBInstance(SearchEJB.class.getSimpleName());
             List<BaUnitSearchResult> result = instance.searchBaUnits(params);
 

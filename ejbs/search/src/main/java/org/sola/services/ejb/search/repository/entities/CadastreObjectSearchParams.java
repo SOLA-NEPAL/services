@@ -1,5 +1,6 @@
 package org.sola.services.ejb.search.repository.entities;
 
+import java.util.Date;
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 
 public class CadastreObjectSearchParams extends AbstractReadOnlyEntity {
@@ -8,7 +9,9 @@ public class CadastreObjectSearchParams extends AbstractReadOnlyEntity {
     private String parcelNo;
     private String wardNo;
     private String mapSheetCode;
-    
+    private Date fromDate;
+    private Date toDate;
+
     public CadastreObjectSearchParams() {
     }
 
@@ -42,5 +45,21 @@ public class CadastreObjectSearchParams extends AbstractReadOnlyEntity {
 
     public void setMapSheetCode(String mapSheetCode) {
         this.mapSheetCode = mapSheetCode;
+    }
+
+    public Date getFromDate() {
+        return fromDate;
+    }
+
+    public void setFromDate(Date fromDate) {
+        this.fromDate = fromDate;
+    }
+
+    public Date getToDate() {
+        return toDate;
+    }
+
+    public void setToDate(Date toDate) {
+        this.toDate = toDate;
     }
 }
