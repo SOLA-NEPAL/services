@@ -44,8 +44,8 @@ public class BaUnitSearchResult extends AbstractEntity {
     public static final String PARAM_MOTH = "moth";
     public static final String PARAM_LOC = "loc";
     public static final String PARAM_RIGHTHOLDER_ID = "rightHolderId";
-    public static final String PARAM_APROVAL_DATE_FROM="fromDate";
-    public static final String PARAM_APROVAL_DATE_TO="toDate";
+    public static final String PARAM_APROVAL_DATE_FROM = "fromDate";
+    public static final String PARAM_APROVAL_DATE_TO = "toDate";
     public static final String SELECT_PART =
             "SELECT DISTINCT b.id, b.name, b.cadastre_object_id, b.name_firstpart, b.name_lastpart, b.status_code, b.office_code, b.fy_code, "
             + "(SELECT string_agg(COALESCE(p.name, '') || ' ' || COALESCE(p.last_name, ''), '::::') "
@@ -53,7 +53,7 @@ public class BaUnitSearchResult extends AbstractEntity {
             + "INNER JOIN party.party p ON pr.party_id = p.id) ON rrr.id = pr.rrr_id "
             + "WHERE rrr.status_code = 'current' AND rrr.ba_unit_id = b.id) AS rightholders, "
             + "l.id as loc_id, m.id as moth_id, l.pana_no as pana_no, m.mothluj_no as moth_no, a.ward_no, "
-            + "a.vdc_code, co.parcel_no, msh.map_number, co.map_sheet_id, '' as action "
+            + "a.vdc_code, co.parcel_no, msh.map_number, co.map_sheet_id, co.approval_datetime, '' as action "
             + "FROM (administrative.ba_unit b LEFT JOIN ((administrative.rrr r "
             + "LEFT JOIN administrative.party_for_rrr pr ON r.id = pr.rrr_id and r.status_code='current') inner join "
             + "(administrative.loc l INNER JOIN administrative.moth m on l.moth_id=m.id) on r.loc_id=l.id) "
@@ -61,7 +61,6 @@ public class BaUnitSearchResult extends AbstractEntity {
             + "((cadastre.cadastre_object co LEFT JOIN cadastre.map_sheet msh on co.map_sheet_id=msh.id) "
             + "LEFT JOIN (address.address a INNER JOIN address.vdc vdc on a.vdc_code = vdc.code) "
             + "on co.address_id = a.id) on b.cadastre_object_id = co.id ";
-    
     public static final String PARAM_TRANSACTION_ID = "transactionId";
     public static final String QUERY_WITH_ACTION =
             "SELECT m.*, (CASE WHEN m.status_code='pending' THEN 'new' ELSE "
@@ -96,10 +95,9 @@ public class BaUnitSearchResult extends AbstractEntity {
             + "AND b.office_code = #{" + PARAM_OFFICE_CODE + "}"
             + ") m "
             + "ORDER BY action";
-    
     public static final String SEARCH_QUERY = SELECT_PART
             + "WHERE (COALESCE(a.vdc_code, '') = #{" + PARAM_VDC_CODE + "} OR #{" + PARAM_VDC_CODE + "}='') "
-            + "AND co.approval_datetime BETWEEN #{" + PARAM_APROVAL_DATE_FROM + "} AND #{" + PARAM_APROVAL_DATE_TO + "} "
+            + "AND (CASE WHEN #{" + PARAM_APROVAL_DATE_FROM + "}=date('0001-02-01 00:00:00.0') AND #{" + PARAM_APROVAL_DATE_TO + "}=date('2500-02-01 00:00:00.0') THEN co.approval_datetime is null else co.approval_datetime BETWEEN #{" + PARAM_APROVAL_DATE_FROM + "} AND #{" + PARAM_APROVAL_DATE_TO + "} END) "
             + "AND (COALESCE(a.ward_no, '') = #{" + PARAM_WARD + "} OR #{" + PARAM_WARD + "}='') "
             + "AND (COALESCE(co.map_sheet_id, '') = #{" + PARAM_MAPSHEET_CODE + "} OR "
             + "COALESCE(co.map_sheet_id2, '') = #{" + PARAM_MAPSHEET_CODE + "} OR "
@@ -113,7 +111,6 @@ public class BaUnitSearchResult extends AbstractEntity {
             + "AND b.office_code = #{" + PARAM_OFFICE_CODE + "} AND b.status_code != 'pending' "
             + "ORDER BY a.vdc_code "
             + "LIMIT 101";
-    
     public static final String SEARCH_BY_ID_QUERY = SELECT_PART
             + "WHERE b.id = #{" + PARAM_BA_UNIT_ID + "} AND b.office_code = #{" + PARAM_OFFICE_CODE + "}";
     @Id
@@ -155,7 +152,7 @@ public class BaUnitSearchResult extends AbstractEntity {
     private String mapSheetId;
     @Column(name = "action")
     private String action;
-    @Column(name="approval_datetime")
+    @Column(name = "approval_datetime")
     private Date approvalDateTime;
 
     public BaUnitSearchResult() {
@@ -321,5 +318,4 @@ public class BaUnitSearchResult extends AbstractEntity {
     public void setApprovalDateTime(Date approvalDateTime) {
         this.approvalDateTime = approvalDateTime;
     }
-
 }

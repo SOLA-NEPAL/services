@@ -83,10 +83,10 @@ public class SearchEJBIT extends AbstractEJBTest {
         }
         try {
             BaUnitSearchParams params = new BaUnitSearchParams();
-            Date dateFrom=new Date("2012-12-27");
-            Date dateTo=new Date("2012-12-30"); 
-            params.setFromDate(dateFrom);
-            params.setToDate(dateTo);
+//            Date dateFrom=new Date("2012-12-27");
+//            Date dateTo=new Date("2012-12-30"); 
+//            params.setFromDate(dateFrom);
+//            params.setToDate(dateTo);
             SearchEJBLocal instance = (SearchEJBLocal) getEJBInstance(SearchEJB.class.getSimpleName());
             List<BaUnitSearchResult> result = instance.searchBaUnits(params);
 

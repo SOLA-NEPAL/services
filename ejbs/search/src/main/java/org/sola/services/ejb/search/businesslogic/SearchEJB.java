@@ -482,6 +482,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         if (searchParams.getRightHolderId() == null) {
             searchParams.setRightHolderId("");
         }
+
         params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY);
         params.put(BaUnitSearchResult.PARAM_APROVAL_DATE_FROM,
                 searchParams.getFromDate() == null ? new GregorianCalendar(1, 1, 1).getTime() : searchParams.getFromDate());
