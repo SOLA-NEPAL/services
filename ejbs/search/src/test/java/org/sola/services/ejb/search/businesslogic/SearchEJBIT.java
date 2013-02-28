@@ -431,7 +431,7 @@ public class SearchEJBIT extends AbstractEJBTest {
             /**
      * Test loc search
      */
-    @Ignore
+    //@Ignore
     @Test
     public void testSearchLocs() throws Exception {
         if (skipIntegrationTest()) {
