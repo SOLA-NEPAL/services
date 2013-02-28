@@ -32,7 +32,6 @@ package org.sola.services.ejb.search.businesslogic;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKBWriter;
 import com.vividsolutions.jts.io.WKTReader;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -447,6 +446,26 @@ public class SearchEJBIT extends AbstractEJBTest {
 
         if (result != null && result.size() > 0) {
             System.out.println("Found " + result.size() + " Locs");
+        } else {
+            System.out.println("Can't find any parcels");
+        }
+    }
+    
+    // Test plot search
+    
+    //@Ignore
+    @Test
+    public void testPlotSearch() throws Exception {
+        if (skipIntegrationTest()) {
+            return;
+        }
+        
+        SearchEJBLocal instance = (SearchEJBLocal) getEJBInstance(SearchEJB.class.getSimpleName());
+        List<CadastreObjectSearchResultExt> result = instance.searchPlotsByWard("30");
+        assertNotNull(result);
+
+        if (result != null && result.size() > 0) {
+            System.out.println("Found " + result.size() + " Plots");
         } else {
             System.out.println("Can't find any parcels");
         }

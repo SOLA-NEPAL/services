@@ -866,4 +866,22 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
             return null;
         }
     }
+
+    @Override
+    public List<CadastreObjectSearchResultExt> searchPlotsByWard(String ward_no) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, CadastreObjectSearchResultExt.PLOT_REGISTER_SEARCH_BY_WARD);
+        params.put(CadastreObjectSearchResultExt.WARD_NO_PARAM, ward_no);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(CadastreObjectSearchResultExt.class, params);
+    }
+
+    @Override
+    public List<CadastreObjectSearchResultExt> searchPlotsBySheetNo(String sheet_no) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, CadastreObjectSearchResultExt.PLOT_REGISTER_SEARCH_BY_WARD);
+        params.put(CadastreObjectSearchResultExt.MAP_SHEET_NO_PARAM, sheet_no);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(CadastreObjectSearchResultExt.class, params);
+    }
 }

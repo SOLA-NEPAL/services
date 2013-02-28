@@ -132,7 +132,7 @@ public class PartyEJBIT extends AbstractEJBTest {
     /**
      * Test of saveParty method, of class PartyEJB.
      */
-    @Ignore
+    //@Ignore
     @Test
     public void testSaveParty() throws Exception {
         System.out.println(">>> Testing saving land owner");

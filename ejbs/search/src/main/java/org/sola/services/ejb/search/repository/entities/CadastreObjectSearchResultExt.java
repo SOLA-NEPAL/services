@@ -15,6 +15,7 @@ public class CadastreObjectSearchResultExt extends AbstractReadOnlyEntity {
     public static final String WARD_NO_PARAM = "wardNo";
     public static final String PARCEL_NO_PARAM = "parcelNo";
     public static final String LANGUAGE_CODE_PARAM = "languageCode";
+    public static final String MAP_SHEET_NO_PARAM = "";
     public static final String PARCEL_SEARCH_QUERY =
             "SELECT DISTINCT pcl.id, pcl.map_sheet_id, pcl.map_sheet_id2, pcl.map_sheet_id3, pcl.map_sheet_id4, "
             + "pcl.parcel_no, pcl.name_firstpart, pcl.name_lastpart, m1.map_number, m2.map_number as map_number2, "
@@ -37,7 +38,16 @@ public class CadastreObjectSearchResultExt extends AbstractReadOnlyEntity {
             + "AND (COALESCE(pcl.parcel_no, '') = #{" + PARCEL_NO_PARAM + "} OR #{" + PARCEL_NO_PARAM + "}='') "
             + "AND (COALESCE(pcl.office_code, '') = #{" + PARAM_OFFICE_CODE + "} OR #{" + PARAM_OFFICE_CODE + "}='') "
             + "LIMIT 101";
-    
+    public static final String PLOT_REGISTER_SEARCH_BY_WARD =
+            "SELECT co.parcel_no, mp.map_number, ad.ward_no "
+            + "from (cadastre.cadastre_object co inner join cadastre.map_sheet mp on co.map_sheet_id=mp.id) "
+            + "inner join address.address ad on co.address_id=ad.id WHERE ad.ward_no= #{" + WARD_NO_PARAM + "} order by co.parcel_no "
+            + "AND (COALESCE(pcl.office_code, '') = #{" + PARAM_OFFICE_CODE + "} OR #{" + PARAM_OFFICE_CODE + "}='') ";
+    public static final String PLOT_REGISTER_SEARCH_BY_SHEET =
+            "SELECT co.parcel_no, mp.map_number, ad.ward_no "
+            + "from (cadastre.cadastre_object co inner join cadastre.map_sheet mp on co.map_sheet_id=mp.id) "
+            + "inner join address.address ad on co.address_id=ad.id WHERE mp.map_number= #{" + MAP_SHEET_NO_PARAM + "} order by co.parcel_no "
+            + "AND (COALESCE(pcl.office_code, '') = #{" + PARAM_OFFICE_CODE + "} OR #{" + PARAM_OFFICE_CODE + "}='') ";
     @Id
     @Column(name = "id")
     private String id;
@@ -71,9 +81,9 @@ public class CadastreObjectSearchResultExt extends AbstractReadOnlyEntity {
     private String vdcName;
     @Column(name = "ba_unit_id")
     private String baUnitId;
-    @Column(name="dataset_id")
+    @Column(name = "dataset_id")
     private String datasetId;
-    
+
     public CadastreObjectSearchResultExt() {
         super();
     }
@@ -125,7 +135,6 @@ public class CadastreObjectSearchResultExt extends AbstractReadOnlyEntity {
     public void setParcelno(String parcelno) {
         this.parcelno = parcelno;
     }
-
 
     public String getMapsheetId2() {
         return mapsheetId2;

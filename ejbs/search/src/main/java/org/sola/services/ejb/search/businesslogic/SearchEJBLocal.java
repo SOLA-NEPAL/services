@@ -89,7 +89,7 @@ public interface SearchEJBLocal extends AbstractEJBLocal {
     List<DynamicQuery> getQueryListAll();
 
     List<CadastreObjectSearchResult> searchCadastreObjects(String searchBy, String searchString);
-    
+
     List<CadastreObjectSearchResult> searchCadastreObjects(List<String> ids);
 
     List<CadastreObjectSearchResultExt> searchCadastreObjects(String langCode, CadastreObjectSearchParams searchParams);
@@ -103,6 +103,10 @@ public interface SearchEJBLocal extends AbstractEJBLocal {
     List<RestrictionSearchResult> searchRestrictions(RestrictionSearchParams params);
 
     List<RestrictionInfo> searchRestrictionInfo(RestrictionInfoParams params);
+
+    List<CadastreObjectSearchResultExt> searchPlotsByWard(String ward_no);
+
+    List<CadastreObjectSearchResultExt> searchPlotsBySheetNo(String sheet_no);
 
     String getCrs(int srid);
 }
