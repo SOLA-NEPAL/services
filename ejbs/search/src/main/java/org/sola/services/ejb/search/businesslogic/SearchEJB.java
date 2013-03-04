@@ -866,4 +866,44 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
             return null;
         }
     }
+
+    @Override
+    public List<CadastreObjectSearchResultExt> searchPlotsByWard(String ward_no) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, CadastreObjectSearchResultExt.PLOT_REGISTER_SEARCH_BY_WARD);
+        params.put(CadastreObjectSearchResultExt.WARD_NO_PARAM, ward_no);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(CadastreObjectSearchResultExt.class, params);
+    }
+
+    @Override
+    public List<CadastreObjectSearchResultExt> searchPlotsBySheetNo(String sheet_no) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, CadastreObjectSearchResultExt.PLOT_REGISTER_SEARCH_BY_WARD);
+        params.put(CadastreObjectSearchResultExt.MAP_SHEET_NO_PARAM, sheet_no);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(CadastreObjectSearchResultExt.class, params);
+    }
+
+    @Override
+    public List<PartySearchResult> searchLandOwnersFromTo(Date fromDate, Date toDate, String lang) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, PartySearchResult.SEARCH_QUERY_FROM_AND_TO_DATE);
+        params.put(PartySearchResult.PARAM_LANG, lang);
+        params.put(PartySearchResult.PARAM_FROM_DATE, fromDate);
+        params.put(PartySearchResult.PARAM_TO_DATE, toDate);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(PartySearchResult.class, params);
+    }
+
+    @Override
+    public List<PartySearchResult> searchLandOwnersUpto(Date upToDate, String lang) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, PartySearchResult.SEARCH_QUERY_UPTO_DATE);
+        params.put(PartySearchResult.PARAM_LANG, lang);
+        params.put(PartySearchResult.PARAM_UPTO_DATE, upToDate);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(PartySearchResult.class, params);
+        
+    }
 }

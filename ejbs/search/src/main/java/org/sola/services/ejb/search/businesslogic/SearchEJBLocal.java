@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Local;
+import java.util.Date;
 import org.sola.services.common.ejbs.AbstractEJBLocal;
 import org.sola.services.ejb.search.repository.entities.*;
 import org.sola.services.ejb.search.spatial.QueryForNavigation;
@@ -89,7 +90,7 @@ public interface SearchEJBLocal extends AbstractEJBLocal {
     List<DynamicQuery> getQueryListAll();
 
     List<CadastreObjectSearchResult> searchCadastreObjects(String searchBy, String searchString);
-    
+
     List<CadastreObjectSearchResult> searchCadastreObjects(List<String> ids);
 
     List<CadastreObjectSearchResultExt> searchCadastreObjects(String langCode, CadastreObjectSearchParams searchParams);
@@ -104,5 +105,13 @@ public interface SearchEJBLocal extends AbstractEJBLocal {
 
     List<RestrictionInfo> searchRestrictionInfo(RestrictionInfoParams params);
 
+    List<CadastreObjectSearchResultExt> searchPlotsByWard(String ward_no);
+
+    List<CadastreObjectSearchResultExt> searchPlotsBySheetNo(String sheet_no);
+
     String getCrs(int srid);
+
+    List<PartySearchResult> searchLandOwnersFromTo(Date fromDate, Date toDate, String lang);
+
+    List<PartySearchResult> searchLandOwnersUpto(Date upToDate, String lang);
 }

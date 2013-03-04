@@ -29,11 +29,7 @@ package org.sola.services.common.test;
 
 import com.sun.appserv.security.ProgrammaticLogin;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 import javax.ejb.embeddable.EJBContainer;
 import javax.naming.NamingException;
 import javax.transaction.UserTransaction;

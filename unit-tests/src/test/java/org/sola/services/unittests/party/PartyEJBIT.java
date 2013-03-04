@@ -70,7 +70,7 @@ public class PartyEJBIT extends AbstractEJBTest {
      * Test of saveParty method, of class PartyEJB.
      */
     @Test
-    @Ignore
+    //@Ignore
     public void testSaveParty() throws Exception {
 
         System.out.println("saveParty");
