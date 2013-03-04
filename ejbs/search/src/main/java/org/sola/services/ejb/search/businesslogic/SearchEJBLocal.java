@@ -114,4 +114,8 @@ public interface SearchEJBLocal extends AbstractEJBLocal {
     List<PartySearchResult> searchLandOwnersFromTo(Date fromDate, Date toDate, String lang);
 
     List<PartySearchResult> searchLandOwnersUpto(Date upToDate, String lang);
+
+    List<PartySearchResult> searchLandOwnersFrom(Date from, String lang);
+
+    List<PartySearchResult> searchLandOwnersInFiscalYear(Date frmFiscalYear, Date toFiscalYear, String lang);
 }

@@ -453,7 +453,7 @@ public class SearchEJBIT extends AbstractEJBTest {
     
     // Test plot search
     
-    //@Ignore
+    @Ignore
     @Test
     public void testPlotSearch() throws Exception {
         if (skipIntegrationTest()) {

@@ -51,11 +51,13 @@ public class PartySearchResult extends AbstractReadOnlyEntity {
     public static final String PARAM_VDC_CODE = "vdcCode";
     public static final String PARAM_WARD = "ward";
     public static final String PARAM_STREET = "street";
-    public static final String PARAM_LANG = "lang";    
-    public static final String PARAM_UPTO_DATE="upToDate";
-    public static final String PARAM_FROM_DATE="frmDate";
-    public static final String PARAM_TO_DATE="toDate";
-    
+    public static final String PARAM_LANG = "lang";
+    public static final String PARAM_UPTO_DATE = "upToDate";
+    public static final String PARAM_FROM_DATE = "frmDate";
+    public static final String PARAM_TO_DATE = "toDate";
+    public static final String PARAM_FROM = "from";
+    public static final String PARAM_FROM_FISCAL_YEAR = "fromFiscalYear";
+    public static final String PARAM_TO_FISCAL_YEAR = "toFiscalYear";
     public static final String SEARCH_QUERY =
             "SELECT distinct p.id, p.name, p.last_name, p.ext_id, p.type_code, p.office_code, p.is_child, "
             + "p.id_office_type_code, p.id_issue_date, p.id_number, p.father_type_code, "
@@ -78,35 +80,50 @@ public class PartySearchResult extends AbstractReadOnlyEntity {
             + "AND (#{" + PARAM_TYPE_CODE + "} = '' OR LOWER(p.type_code) = LOWER(#{" + PARAM_TYPE_CODE + "})) "
             + "AND (#{" + PARAM_ROLE_TYPE_CODE + "} = '' OR LOWER(pr.type_code) = LOWER(#{" + PARAM_ROLE_TYPE_CODE + "})) "
             + "ORDER BY p.name, p.last_name "
-            + "LIMIT 101";  
-    
-    
-     public static final String SEARCH_QUERY_UPTO_DATE =             
+            + "LIMIT 101";
+    public static final String SEARCH_QUERY_UPTO_DATE =
             "SELECT distinct p.id, p.name, p.last_name, p.ext_id, p.type_code, p.office_code, "
-             + "p.is_child, p.id_office_type_code, p.id_issue_date, p.id_number, p.father_type_code, "
-             + "p.fathers_name, p.grandfather_type_code, p.parent_id, p.grandfather_name, p.gender_code, a.vdc_code, "
-             + "get_translation(vdc.display_value, #{" + PARAM_LANG + "}), a.ward_no, a.street,t.approval_datetime "
-             + "FROM ((party.party p inner JOIN administrative.party_for_rrr pr ON p.id = pr.party_id)"
-             + "inner JOIN (address.address a LEFT JOIN address.vdc vdc ON a.vdc_code=vdc.code) ON p.address_id = a.id)"
-             + "inner join(administrative.rrr r inner join transaction.transaction t on r.transaction_id=t.id)"
-             + "on r.id=pr.rrr_id where r.type_code='ownership'"             
-             + "and  t.approval_datetime >=#{" + PARAM_UPTO_DATE + "})";
-     
-     
-     public static final String SEARCH_QUERY_FROM_AND_TO_DATE =             
+            + "p.is_child, p.id_office_type_code, p.id_issue_date, p.id_number, p.father_type_code, "
+            + "p.fathers_name, p.grandfather_type_code, p.parent_id, p.grandfather_name, p.gender_code, a.vdc_code, "
+            + "get_translation(vdc.display_value, #{" + PARAM_LANG + "}), a.ward_no, a.street,t.approval_datetime "
+            + "FROM ((party.party p inner JOIN administrative.party_for_rrr pr ON p.id = pr.party_id)"
+            + "inner JOIN (address.address a LEFT JOIN address.vdc vdc ON a.vdc_code=vdc.code) ON p.address_id = a.id)"
+            + "inner join(administrative.rrr r inner join transaction.transaction t on r.transaction_id=t.id)"
+            + "on r.id=pr.rrr_id where r.type_code='ownership'"
+            + "and  t.approval_datetime <=#{" + PARAM_UPTO_DATE + "}";
+    public static final String SEARCH_QUERY_FROM_AND_TO_DATE =
             "SELECT distinct p.id, p.name, p.last_name, p.ext_id, p.type_code, p.office_code, "
-             + "p.is_child, p.id_office_type_code, p.id_issue_date, p.id_number, p.father_type_code, "
-             + "p.fathers_name, p.grandfather_type_code, p.parent_id, p.grandfather_name, p.gender_code, a.vdc_code, "
-             + "get_translation(vdc.display_value, #{" + PARAM_LANG + "}), a.ward_no, a.street,t.approval_datetime  "
-             + "FROM ((party.party p inner JOIN administrative.party_for_rrr pr ON p.id = pr.party_id) "
-             + "INNER JOIN (address.address a LEFT JOIN address.vdc vdc ON a.vdc_code=vdc.code) ON p.address_id = a.id) "
-             + "INNER join(administrative.rrr r inner join transaction.transaction t on r.transaction_id=t.id)"
-             + "ON r.id=pr.rrr_id where r.type_code='ownership'"             
-             + "AND (t.approval_datetime BETWEEN (#{" + PARAM_FROM_DATE + "} AND #{" + PARAM_TO_DATE + "})) "
-             + "AND r.office_code = #{" + PARAM_OFFICE_CODE + "}";
-     
-             
-    
+            + "p.is_child, p.id_office_type_code, p.id_issue_date, p.id_number, p.father_type_code, "
+            + "p.fathers_name, p.grandfather_type_code, p.parent_id, p.grandfather_name, p.gender_code, a.vdc_code, "
+            + "get_translation(vdc.display_value, #{" + PARAM_LANG + "}), a.ward_no, a.street,t.approval_datetime  "
+            + "FROM ((party.party p inner JOIN administrative.party_for_rrr pr ON p.id = pr.party_id) "
+            + "INNER JOIN (address.address a LEFT JOIN address.vdc vdc ON a.vdc_code=vdc.code) ON p.address_id = a.id) "
+            + "INNER join(administrative.rrr r inner join transaction.transaction t on r.transaction_id=t.id) "
+            + "ON r.id=pr.rrr_id where r.type_code='ownership' "
+            + "AND (t.approval_datetime BETWEEN #{" + PARAM_FROM_DATE + "} AND #{" + PARAM_TO_DATE + "}) "
+            + "AND r.office_code = #{" + PARAM_OFFICE_CODE + "}";
+    public static final String SEARCH_QUERY_FROM_DATE =
+            "SELECT distinct p.id, p.name, p.last_name, p.ext_id, p.type_code, p.office_code, "
+            + "p.is_child, p.id_office_type_code, p.id_issue_date, p.id_number, p.father_type_code, "
+            + "p.fathers_name, p.grandfather_type_code, p.parent_id, p.grandfather_name, p.gender_code, a.vdc_code, "
+            + "get_translation(vdc.display_value, #{" + PARAM_LANG + "}), a.ward_no, a.street,t.approval_datetime  "
+            + "FROM ((party.party p inner JOIN administrative.party_for_rrr pr ON p.id = pr.party_id) "
+            + "INNER JOIN (address.address a LEFT JOIN address.vdc vdc ON a.vdc_code=vdc.code) ON p.address_id = a.id) "
+            + "INNER join(administrative.rrr r inner join transaction.transaction t on r.transaction_id=t.id) "
+            + "ON r.id=pr.rrr_id where r.type_code='ownership' "
+            + "AND (t.approval_datetime BETWEEN #{" + PARAM_FROM + "} AND now()) "
+            + "AND r.office_code = #{" + PARAM_OFFICE_CODE + "}";
+    public static final String SEARCH_QUERY_FISCAL_YEAR =
+            "SELECT distinct p.id, p.name, p.last_name, p.ext_id, p.type_code, p.office_code, "
+            + "p.is_child, p.id_office_type_code, p.id_issue_date, p.id_number, p.father_type_code, "
+            + "p.fathers_name, p.grandfather_type_code, p.parent_id, p.grandfather_name, p.gender_code, a.vdc_code, "
+            + "get_translation(vdc.display_value, #{" + PARAM_LANG + "}), a.ward_no, a.street,t.approval_datetime  "
+            + "FROM ((party.party p inner JOIN administrative.party_for_rrr pr ON p.id = pr.party_id) "
+            + "INNER JOIN (address.address a LEFT JOIN address.vdc vdc ON a.vdc_code=vdc.code) ON p.address_id = a.id) "
+            + "INNER join(administrative.rrr r inner join transaction.transaction t on r.transaction_id=t.id) "
+            + "ON r.id=pr.rrr_id where r.type_code='ownership' "
+            + "AND t.approval_datetime >= #{" + PARAM_FROM_FISCAL_YEAR + "} AND t.approval_datetime < #{" + PARAM_TO_FISCAL_YEAR + "} "
+            + "AND r.office_code = #{" + PARAM_OFFICE_CODE + "}";
     @Id
     @Column
     private String id;
@@ -124,31 +141,31 @@ public class PartySearchResult extends AbstractReadOnlyEntity {
     private String officeCode;
     @Column(name = "is_child")
     private boolean child;
-    @Column(name="id_office_type_code")
+    @Column(name = "id_office_type_code")
     private String idOfficeTypeCode;
-    @Column(name="id_issue_date")
+    @Column(name = "id_issue_date")
     private Integer idIssueDate;
-    @Column(name="id_number")
+    @Column(name = "id_number")
     private String idNumber;
-    @Column(name="father_type_code")
+    @Column(name = "father_type_code")
     private String fatherTypeCode;
-    @Column(name="fathers_name")
+    @Column(name = "fathers_name")
     private String fatherName;
-    @Column(name="grandfather_type_code")
+    @Column(name = "grandfather_type_code")
     private String grandfatherTypeCode;
-    @Column(name="grandfather_name")
+    @Column(name = "grandfather_name")
     private String grandfatherName;
-    @Column(name="gender_code")
+    @Column(name = "gender_code")
     private String genderCode;
-    @Column(name="vdc_code")
+    @Column(name = "vdc_code")
     private String vdcCode;
-    @Column(name="vdc_name")
+    @Column(name = "vdc_name")
     private String vdcName;
-    @Column(name="ward_no")
+    @Column(name = "ward_no")
     private String wardNo;
-    @Column(name="street")
+    @Column(name = "street")
     private String street;
-    @Column(name="parent_id")
+    @Column(name = "parent_id")
     private String parentId;
 
     public PartySearchResult() {

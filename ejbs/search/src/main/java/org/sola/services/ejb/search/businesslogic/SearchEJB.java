@@ -906,4 +906,25 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         return getRepository().getEntityList(PartySearchResult.class, params);
         
     }
+
+    @Override
+    public List<PartySearchResult> searchLandOwnersFrom(Date from, String lang) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, PartySearchResult.SEARCH_QUERY_FROM_DATE);
+        params.put(PartySearchResult.PARAM_LANG, lang);
+        params.put(PartySearchResult.PARAM_FROM, from);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(PartySearchResult.class, params);
+    }
+
+    @Override
+    public List<PartySearchResult> searchLandOwnersInFiscalYear(Date frmFiscalYear, Date toFiscalYear, String lang) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, PartySearchResult.SEARCH_QUERY_FISCAL_YEAR);
+        params.put(PartySearchResult.PARAM_LANG, lang);
+        params.put(PartySearchResult.PARAM_FROM_FISCAL_YEAR, frmFiscalYear);
+        params.put(PartySearchResult.PARAM_TO_FISCAL_YEAR, toFiscalYear);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(PartySearchResult.class, params);
+    }
 }
