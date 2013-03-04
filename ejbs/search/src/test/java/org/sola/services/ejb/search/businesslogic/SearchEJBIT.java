@@ -54,8 +54,8 @@ import org.sola.services.ejb.search.spatial.ResultForSelectionInfo;
 public class SearchEJBIT extends AbstractEJBTest {
 
     private static final String LANG = "en";
-    private static final String LOGIN_USER = "test";
-    private static final String LOGIN_PASS = "test";
+    private static final String LOGIN_USER = "KumarKhadka";
+    private static final String LOGIN_PASS = "sola2012";
 
     @Before
     public void setUp() throws Exception {
