@@ -304,11 +304,17 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
         params.put(DATE_PARAM, nepaliDate);
 
         ArrayList<HashMap> list = getRepository().executeFunction(params);
-
+        Date gDate = null;
         if (list.size() > 0 && list.get(0) != null && list.get(0).size() > 0) {
-            return (Date) ((Map.Entry) list.get(0).entrySet().iterator().next()).getValue();
+            //return (Date) ((Map.Entry) list.get(0).entrySet().iterator().next()).getValue();
+            gDate = (Date) ((Map.Entry) list.get(0).entrySet().iterator().next()).getValue();
+        }// else {
+        //return null;
+        //}
+        if (gDate == null) {
+            throw new SOLAException(ServiceMessage.EXCEPTION_INVALID_NEPALI_DATE);
         } else {
-            return null;
+            return gDate;
         }
     }
 
@@ -445,16 +451,16 @@ public class AdminEJB extends AbstractEJB implements AdminEJBLocal {
         }
 
         for (UserVdc uservdc : user.getVdcs()) {
-            if(StringUtility.empty(uservdc.getVdcCode()).equals(StringUtility.empty(vdcCode))){
-                if(StringUtility.isEmpty(uservdc.getWardNumber())){
+            if (StringUtility.empty(uservdc.getVdcCode()).equals(StringUtility.empty(vdcCode))) {
+                if (StringUtility.isEmpty(uservdc.getWardNumber())) {
                     return true;
                 }
-                if(StringUtility.empty(uservdc.getWardNumber()).equals(StringUtility.empty(wardNumber))){
+                if (StringUtility.empty(uservdc.getWardNumber()).equals(StringUtility.empty(wardNumber))) {
                     return true;
                 }
             }
         }
-        
+
         if (throwException) {
             throw new SOLAException(ServiceMessage.EXCEPTION_VDC_ACCESS_DENIED);
         }

@@ -104,7 +104,7 @@ public class SearchEJBIT extends AbstractEJBTest {
     /**
      * Test searching active users
      */
-    @Ignore
+   // @Ignore
     @Test
     public void testBrSearch() throws Exception {
         if (skipIntegrationTest()) {
