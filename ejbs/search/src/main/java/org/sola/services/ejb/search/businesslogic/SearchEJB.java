@@ -482,21 +482,35 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         if (searchParams.getRightHolderId() == null) {
             searchParams.setRightHolderId("");
         }
-
-        params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY);
-        params.put(BaUnitSearchResult.PARAM_APROVAL_DATE_FROM,
-                searchParams.getFromDate() == null ? new GregorianCalendar(1, 1, 1).getTime() : searchParams.getFromDate());
-        params.put(BaUnitSearchResult.PARAM_APROVAL_DATE_TO,
-                searchParams.getToDate() == null ? new GregorianCalendar(2500, 1, 1).getTime() : searchParams.getToDate());
-        params.put(BaUnitSearchResult.PARAM_VDC_CODE, searchParams.getVdcCode());
-        params.put(BaUnitSearchResult.PARAM_WARD, searchParams.getWardNo());
-        params.put(BaUnitSearchResult.PARAM_MAPSHEET_CODE, searchParams.getMapSheetCode());
-        params.put(BaUnitSearchResult.PARAM_PARCEL_NO, searchParams.getParcelNo());
-        params.put(BaUnitSearchResult.PARAM_MOTH, searchParams.getMoth());
-        params.put(BaUnitSearchResult.PARAM_LOC, searchParams.getLoc());
-        params.put(BaUnitSearchResult.PARAM_RIGHTHOLDER_ID, searchParams.getRightHolderId());
-        params.put(BaUnitSearchResult.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
-        return getRepository().getEntityList(BaUnitSearchResult.class, params);
+        if (searchParams.getFromDate() == null || searchParams.getToDate() == null) {
+            params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY1);
+            params.put(BaUnitSearchResult.PARAM_VDC_CODE, searchParams.getVdcCode());
+            params.put(BaUnitSearchResult.PARAM_WARD, searchParams.getWardNo());
+            params.put(BaUnitSearchResult.PARAM_MAPSHEET_CODE, searchParams.getMapSheetCode());
+            params.put(BaUnitSearchResult.PARAM_PARCEL_NO, searchParams.getParcelNo());
+            params.put(BaUnitSearchResult.PARAM_MOTH, searchParams.getMoth());
+            params.put(BaUnitSearchResult.PARAM_LOC, searchParams.getLoc());
+            params.put(BaUnitSearchResult.PARAM_RIGHTHOLDER_ID, searchParams.getRightHolderId());
+            params.put(BaUnitSearchResult.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+            return getRepository().getEntityList(BaUnitSearchResult.class, params);
+        } else {
+            params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY);
+//        params.put(BaUnitSearchResult.PARAM_APROVAL_DATE_FROM,
+//                searchParams.getFromDate() == null ? new GregorianCalendar(1, 1, 1).getTime() : searchParams.getFromDate());
+//        params.put(BaUnitSearchResult.PARAM_APROVAL_DATE_TO,
+//                searchParams.getToDate() == null ? new GregorianCalendar(2500, 1, 1).getTime() : searchParams.getToDate());
+            params.put(BaUnitSearchResult.PARAM_APROVAL_DATE_FROM, searchParams.getFromDate());
+            params.put(BaUnitSearchResult.PARAM_APROVAL_DATE_TO, searchParams.getToDate());
+            params.put(BaUnitSearchResult.PARAM_VDC_CODE, searchParams.getVdcCode());
+            params.put(BaUnitSearchResult.PARAM_WARD, searchParams.getWardNo());
+            params.put(BaUnitSearchResult.PARAM_MAPSHEET_CODE, searchParams.getMapSheetCode());
+            params.put(BaUnitSearchResult.PARAM_PARCEL_NO, searchParams.getParcelNo());
+            params.put(BaUnitSearchResult.PARAM_MOTH, searchParams.getMoth());
+            params.put(BaUnitSearchResult.PARAM_LOC, searchParams.getLoc());
+            params.put(BaUnitSearchResult.PARAM_RIGHTHOLDER_ID, searchParams.getRightHolderId());
+            params.put(BaUnitSearchResult.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+            return getRepository().getEntityList(BaUnitSearchResult.class, params);
+        }
     }
 
     @Override
@@ -639,7 +653,6 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
             i++;
         }
         query = query.substring(0, query.length() - 2) + ")";
-
         params.put(CommonSqlProvider.PARAM_QUERY, query);
         params.put(BaUnitSearchResult.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntityList(BaUnitSearchResult.class, params);
@@ -868,24 +881,6 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
     }
 
     @Override
-    public List<CadastreObjectSearchResultExt> searchPlotsByWard(String ward_no) {
-        Map params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_QUERY, CadastreObjectSearchResultExt.PLOT_REGISTER_SEARCH_BY_WARD);
-        params.put(CadastreObjectSearchResultExt.WARD_NO_PARAM, ward_no);
-        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
-        return getRepository().getEntityList(CadastreObjectSearchResultExt.class, params);
-    }
-
-    @Override
-    public List<CadastreObjectSearchResultExt> searchPlotsBySheetNo(String sheet_no) {
-        Map params = new HashMap<String, Object>();
-        params.put(CommonSqlProvider.PARAM_QUERY, CadastreObjectSearchResultExt.PLOT_REGISTER_SEARCH_BY_WARD);
-        params.put(CadastreObjectSearchResultExt.MAP_SHEET_NO_PARAM, sheet_no);
-        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
-        return getRepository().getEntityList(CadastreObjectSearchResultExt.class, params);
-    }
-
-    @Override
     public List<PartySearchResult> searchLandOwnersFromTo(Date fromDate, Date toDate, String lang) {
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_QUERY, PartySearchResult.SEARCH_QUERY_FROM_AND_TO_DATE);
@@ -904,7 +899,7 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         params.put(PartySearchResult.PARAM_UPTO_DATE, upToDate);
         params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntityList(PartySearchResult.class, params);
-        
+
     }
 
     @Override
@@ -926,5 +921,254 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
         params.put(PartySearchResult.PARAM_TO_FISCAL_YEAR, toFiscalYear);
         params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
         return getRepository().getEntityList(PartySearchResult.class, params);
+    }
+
+    @Override
+    public List<BaUnitSearchResult> searchTransactionFromTo(Date fromDate, Date toDate) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY_TRANSACTION_FROM_TO);
+        params.put(BaUnitSearchResult.PARAM_APROVAL_DATE_FROM, fromDate);
+        params.put(BaUnitSearchResult.PARAM_APROVAL_DATE_TO, toDate);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(BaUnitSearchResult.class, params);
+    }
+
+    @Override
+    public List<BaUnitSearchResult> searchTransactionUpTo(Date upToDate) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY_TRANSACTION_UP_TO);
+        params.put(BaUnitSearchResult.PARAM_UPTO_DATE, upToDate);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(BaUnitSearchResult.class, params);
+
+    }
+
+    @Override
+    public List<BaUnitSearchResult> searchTransactionFrom(Date from) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY_TRANSACTION_FROM);
+        params.put(BaUnitSearchResult.PARAM_FROM, from);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(BaUnitSearchResult.class, params);
+    }
+
+    @Override
+    public List<BaUnitSearchResult> searchTransactionInFiscalYear(Date frmFiscalYear, Date toFiscalYear) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY_TRANSACTION_FISCAL_YEAR);
+        params.put(BaUnitSearchResult.PARAM_FROM_FISCAL_YEAR, frmFiscalYear);
+        params.put(BaUnitSearchResult.PARAM_TO_FISCAL_YEAR, toFiscalYear);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(BaUnitSearchResult.class, params);
+    }
+
+    @Override
+    public List<BaUnitSearchResult> searchParcelsFromTo(Date fromDate, Date toDate) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY_PARCEL_FROM_TO);
+        params.put(BaUnitSearchResult.PARAM_APROVAL_DATE_FROM, fromDate);
+        params.put(BaUnitSearchResult.PARAM_APROVAL_DATE_TO, toDate);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(BaUnitSearchResult.class, params);
+    }
+
+    @Override
+    public List<BaUnitSearchResult> searchParcelsUpTo(Date upToDate) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY_PARCEL_UP_TO);
+        params.put(BaUnitSearchResult.PARAM_UPTO_DATE, upToDate);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(BaUnitSearchResult.class, params);
+    }
+
+    @Override
+    public List<BaUnitSearchResult> searchParcelsFrom(Date from) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY_PARCEL_FROM);
+        params.put(BaUnitSearchResult.PARAM_FROM, from);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(BaUnitSearchResult.class, params);
+    }
+
+    @Override
+    public List<BaUnitSearchResult> searchParcelsInFiscalYear(Date frmFiscalYear, Date toFiscalYear) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY_PARCEL_FISCAL_YEAR);
+        params.put(BaUnitSearchResult.PARAM_FROM_FISCAL_YEAR, frmFiscalYear);
+        params.put(BaUnitSearchResult.PARAM_TO_FISCAL_YEAR, toFiscalYear);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(BaUnitSearchResult.class, params);
+    }
+
+    @Override
+    public List<BaUnitSearchResult> searchRegistrationGenderWiseFromTo(Date fromDate, Date toDate, String genderCode, String handicapped, String deprived, String martyrs) {
+        if (genderCode == null) {
+            genderCode = "";
+        }
+        if (handicapped == null) {
+            handicapped = "";
+        }
+        if (deprived == null) {
+            deprived = "";
+        }
+        if (martyrs == null) {
+            martyrs = "";
+        }
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY_REGISTRATION_FROM_TO);
+        params.put(BaUnitSearchResult.PARAM_APROVAL_DATE_FROM, fromDate);
+        params.put(BaUnitSearchResult.PARAM_APROVAL_DATE_TO, toDate);
+        params.put(BaUnitSearchResult.PARAM_GENDER_CODE, genderCode);
+        params.put(BaUnitSearchResult.PARAM_HANDICAPPED, handicapped);
+        params.put(BaUnitSearchResult.PARAM_DEPRIVED, deprived);
+        params.put(BaUnitSearchResult.PARAM_MARTYRS, martyrs);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(BaUnitSearchResult.class, params);
+    }
+
+    @Override
+    public List<BaUnitSearchResult> searchRegistrationGenderWiseUpTo(Date upToDate, String genderCode, String handicapped, String deprived, String martyrs) {
+        if (genderCode == null) {
+            genderCode = "";
+        }
+        if (handicapped == null) {
+            handicapped = "";
+        }
+        if (deprived == null) {
+            deprived = "";
+        }
+        if (martyrs == null) {
+            martyrs = "";
+        }
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY_REGISTRATION_UP_TO);
+        params.put(BaUnitSearchResult.PARAM_UPTO_DATE, upToDate);
+        params.put(BaUnitSearchResult.PARAM_GENDER_CODE, genderCode);
+        params.put(BaUnitSearchResult.PARAM_HANDICAPPED, handicapped);
+        params.put(BaUnitSearchResult.PARAM_DEPRIVED, deprived);
+        params.put(BaUnitSearchResult.PARAM_MARTYRS, martyrs);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(BaUnitSearchResult.class, params);
+    }
+
+    @Override
+    public List<BaUnitSearchResult> searchRegistrationGenderWiseFrom(Date from, String genderCode, String handicapped, String deprived, String martyrs) {
+        if (genderCode == null) {
+            genderCode = "";
+        }
+        if (handicapped == null) {
+            handicapped = "";
+        }
+        if (deprived == null) {
+            deprived = "";
+        }
+        if (martyrs == null) {
+            martyrs = "";
+        }
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY_REGISTRATION_FROM);
+        params.put(BaUnitSearchResult.PARAM_FROM, from);
+        params.put(BaUnitSearchResult.PARAM_GENDER_CODE, genderCode);
+        params.put(BaUnitSearchResult.PARAM_HANDICAPPED, handicapped);
+        params.put(BaUnitSearchResult.PARAM_DEPRIVED, deprived);
+        params.put(BaUnitSearchResult.PARAM_MARTYRS, martyrs);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(BaUnitSearchResult.class, params);
+    }
+
+    @Override
+    public List<BaUnitSearchResult> searchRegistrationGenderWiseInFiscalYear(Date frmFiscalYear, Date toFiscalYear, String genderCode, String handicapped, String deprived, String martyrs) {
+        if (genderCode == null) {
+            genderCode = "";
+        }
+        if (handicapped == null) {
+            handicapped = "";
+        }
+        if (deprived == null) {
+            deprived = "";
+        }
+        if (martyrs == null) {
+            martyrs = "";
+        }
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY_REGISTRATION_FISCAL_YEAR);
+        params.put(BaUnitSearchResult.PARAM_FROM_FISCAL_YEAR, frmFiscalYear);
+        params.put(BaUnitSearchResult.PARAM_TO_FISCAL_YEAR, toFiscalYear);
+        params.put(BaUnitSearchResult.PARAM_GENDER_CODE, genderCode);
+        params.put(BaUnitSearchResult.PARAM_HANDICAPPED, handicapped);
+        params.put(BaUnitSearchResult.PARAM_DEPRIVED, deprived);
+        params.put(BaUnitSearchResult.PARAM_MARTYRS, martyrs);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(BaUnitSearchResult.class, params);
+    }
+
+    @Override
+    public List<BaUnitSearchResult> searchParcelsSplitFromTo(Date fromDate, Date toDate) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY_PARCEL_SPLIT_FROM_TO);
+        params.put(BaUnitSearchResult.PARAM_APROVAL_DATE_FROM, fromDate);
+        params.put(BaUnitSearchResult.PARAM_APROVAL_DATE_TO, toDate);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(BaUnitSearchResult.class, params);
+
+    }
+
+    @Override
+    public List<BaUnitSearchResult> searchParcelsSplitUpTo(Date upToDate) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY_PARCEL_SPLIT_UP_TO);
+        params.put(BaUnitSearchResult.PARAM_UPTO_DATE, upToDate);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(BaUnitSearchResult.class, params);
+    }
+
+    @Override
+    public List<BaUnitSearchResult> searchParcelsSplitFrom(Date from) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY_PARCEL_SPLIT_FROM);
+        params.put(BaUnitSearchResult.PARAM_FROM, from);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(BaUnitSearchResult.class, params);
+    }
+
+    @Override
+    public List<BaUnitSearchResult> searchParcelsSplitInFiscalYear(Date frmFiscalYear, Date toFiscalYear) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SEARCH_QUERY_PARCEL_SPLIT_FISCAL_YEAR);
+        params.put(BaUnitSearchResult.PARAM_FROM_FISCAL_YEAR, frmFiscalYear);
+        params.put(BaUnitSearchResult.PARAM_TO_FISCAL_YEAR, toFiscalYear);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(BaUnitSearchResult.class, params);
+    }
+
+    @Override
+    public List<CadastreObjectSearchResultExt> searchPlotsByWard(String ward_no) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, CadastreObjectSearchResultExt.PLOT_REGISTER_SEARCH_BY_WARD);
+        params.put(CadastreObjectSearchResultExt.WARD_NO_PARAM, ward_no);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(CadastreObjectSearchResultExt.class, params);
+    }
+
+    @Override
+    public List<CadastreObjectSearchResultExt> searchPlotsBySheetNo(String sheet_no) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, CadastreObjectSearchResultExt.PLOT_REGISTER_SEARCH_BY_SHEET);
+        params.put(CadastreObjectSearchResultExt.MAP_SHEET_NO_PARAM, sheet_no);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(CadastreObjectSearchResultExt.class, params);
+    }
+
+    @Override
+    public String getRuleByDatasetId(String datasetId) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, CadastreObjectSearchResultExt.GET_RULE_BY_DATA_SET_ID);
+        params.put(CadastreObjectSearchResultExt.DATA_SET_ID_NO_PARAM, datasetId);
+        ArrayList<HashMap> list = getRepository().executeFunction(params);
+        if (list.size() > 0 && list.get(0) != null && list.get(0).size() > 0) {
+            return (String) ((Map.Entry) list.get(0).entrySet().iterator().next()).getValue();
+        } else {
+            return null;
+        }
     }
 }

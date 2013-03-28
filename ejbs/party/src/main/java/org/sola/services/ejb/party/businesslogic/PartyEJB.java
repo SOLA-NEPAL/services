@@ -142,4 +142,9 @@ public class PartyEJB extends AbstractEJB implements PartyEJBLocal {
     public List<FatherType> getFatherTypes(String languageCode) {
         return getRepository().getCodeList(FatherType.class, languageCode);
     }
+
+    @Override
+    public List<PartyCategory> getPartyCategorys(List<String> partyCategoryIds) {
+        return getRepository().getEntityListByIds(PartyCategory.class, partyCategoryIds);
+    }
 }

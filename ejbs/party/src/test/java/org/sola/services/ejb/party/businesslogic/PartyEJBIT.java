@@ -45,7 +45,6 @@ import org.sola.services.common.test.AbstractEJBTest;
 import org.sola.services.ejb.address.repository.entities.Address;
 import org.sola.services.ejb.party.repository.entities.CommunicationType;
 import org.sola.services.ejb.party.repository.entities.Party;
-import org.sola.services.ejb.party.repository.entities.PartyRole;
 
 /**
  *
@@ -132,7 +131,7 @@ public class PartyEJBIT extends AbstractEJBTest {
     /**
      * Test of saveParty method, of class PartyEJB.
      */
-    //@Ignore
+    @Ignore
     @Test
     public void testSaveParty() throws Exception {
         System.out.println(">>> Testing saving land owner");

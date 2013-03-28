@@ -29,11 +29,11 @@
  */
 package org.sola.services.ejb.search.businesslogic;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Local;
-import java.util.Date;
 import org.sola.services.common.ejbs.AbstractEJBLocal;
 import org.sola.services.ejb.search.repository.entities.*;
 import org.sola.services.ejb.search.spatial.QueryForNavigation;
@@ -105,10 +105,6 @@ public interface SearchEJBLocal extends AbstractEJBLocal {
 
     List<RestrictionInfo> searchRestrictionInfo(RestrictionInfoParams params);
 
-    List<CadastreObjectSearchResultExt> searchPlotsByWard(String ward_no);
-
-    List<CadastreObjectSearchResultExt> searchPlotsBySheetNo(String sheet_no);
-
     String getCrs(int srid);
 
     List<PartySearchResult> searchLandOwnersFromTo(Date fromDate, Date toDate, String lang);
@@ -118,4 +114,42 @@ public interface SearchEJBLocal extends AbstractEJBLocal {
     List<PartySearchResult> searchLandOwnersFrom(Date from, String lang);
 
     List<PartySearchResult> searchLandOwnersInFiscalYear(Date frmFiscalYear, Date toFiscalYear, String lang);
+
+    List<BaUnitSearchResult> searchTransactionFromTo(Date fromDate, Date toDate);
+
+    List<BaUnitSearchResult> searchTransactionUpTo(Date upToDate);
+
+    List<BaUnitSearchResult> searchTransactionFrom(Date from);
+
+    List<BaUnitSearchResult> searchTransactionInFiscalYear(Date frmFiscalYear, Date toFiscalYear);
+
+    List<BaUnitSearchResult> searchParcelsFromTo(Date fromDate, Date toDate);
+
+    List<BaUnitSearchResult> searchParcelsUpTo(Date upToDate);
+
+    List<BaUnitSearchResult> searchParcelsFrom(Date from);
+
+    List<BaUnitSearchResult> searchParcelsInFiscalYear(Date frmFiscalYear, Date toFiscalYear);
+
+    List<BaUnitSearchResult> searchRegistrationGenderWiseFromTo(Date fromDate, Date toDate, String genderCode, String handicapped, String deprived, String martyrs);
+
+    List<BaUnitSearchResult> searchRegistrationGenderWiseUpTo(Date upToDate, String genderCode, String handicapped, String deprived, String martyrs);
+
+    List<BaUnitSearchResult> searchRegistrationGenderWiseFrom(Date from, String genderCode, String handicapped, String deprived, String martyrs);
+
+    List<BaUnitSearchResult> searchRegistrationGenderWiseInFiscalYear(Date frmFiscalYear, Date toFiscalYear, String genderCode, String handicapped, String deprived, String martyrs);
+
+    List<BaUnitSearchResult> searchParcelsSplitFromTo(Date fromDate, Date toDate);
+
+    List<BaUnitSearchResult> searchParcelsSplitUpTo(Date upToDate);
+
+    List<BaUnitSearchResult> searchParcelsSplitFrom(Date from);
+
+    List<BaUnitSearchResult> searchParcelsSplitInFiscalYear(Date frmFiscalYear, Date toFiscalYear);
+
+    List<CadastreObjectSearchResultExt> searchPlotsByWard(String ward_no);
+
+    List<CadastreObjectSearchResultExt> searchPlotsBySheetNo(String sheet_no);
+
+    String getRuleByDatasetId(String datasetId);
 }

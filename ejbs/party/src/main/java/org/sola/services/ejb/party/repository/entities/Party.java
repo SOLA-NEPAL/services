@@ -34,18 +34,21 @@
 package org.sola.services.ejb.party.repository.entities;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import org.sola.services.common.repository.*;
+import org.sola.services.common.repository.ChildEntity;
+import org.sola.services.common.repository.ChildEntityList;
+import org.sola.services.common.repository.DefaultSorter;
+import org.sola.services.common.repository.ExternalEJB;
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
 import org.sola.services.digitalarchive.businesslogic.DigitalArchiveEJBLocal;
 import org.sola.services.digitalarchive.repository.entities.Document;
 import org.sola.services.ejb.address.businesslogic.AddressEJBLocal;
 import org.sola.services.ejb.address.repository.entities.Address;
+import org.sola.services.ejb.party.businesslogic.PartyEJBLocal;
 
 /**
  * Entity representing the party.party table.
@@ -64,7 +67,7 @@ public class Party extends AbstractVersionedEntity {
     private boolean child;
     @Column(name = "parent_id")
     private String parentId;
-    @ChildEntity(childIdField="parentId", readOnly=true)
+    @ChildEntity(childIdField = "parentId", readOnly = true)
     Party parent;
     @Column(name = "ext_id")
     private String extId;
@@ -151,9 +154,24 @@ public class Party extends AbstractVersionedEntity {
     saveMethod = "saveDocument")
     @ChildEntity(childIdField = "signatureId")
     private Document signatureDoc;
+    @ExternalEJB(ejbLocalClass = PartyEJBLocal.class, loadMethod = "getPartyCategorys")
+    @ChildEntityList(parentIdField = "partyId", childIdField = "categoryId",
+    manyToManyClass = CategoryForParty.class, readOnly = true)
+    private List<PartyCategory> categoryList;
+    private boolean handicapped;
+    private boolean deprived;
+    private boolean martyr;
 
     public Party() {
         super();
+    }
+
+    public List<PartyCategory> getCategoryList() {
+        return categoryList;
+    }
+
+    public void setCategoryList(List<PartyCategory> categoryList) {
+        this.categoryList = categoryList;
     }
 
     public Party getParent() {
