@@ -1171,4 +1171,13 @@ public class SearchEJB extends AbstractEJB implements SearchEJBLocal {
             return null;
         }
     }
+
+    @Override
+    public List<BaUnitSearchResult> searchBaunitsByHistoricBaunitId(String baUnitsHistoricId) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_QUERY, BaUnitSearchResult.SERCH_QUERY_USING_HISTORIC_ID);
+        params.put(BaUnitSearchResult.PARAM_BAUNIT_HISTORIC_ID, baUnitsHistoricId);
+        params.put(AbstractEntity.PARAM_OFFICE_CODE, adminEJB.getCurrentOfficeCode());
+        return getRepository().getEntityList(BaUnitSearchResult.class, params);
+    }
 }

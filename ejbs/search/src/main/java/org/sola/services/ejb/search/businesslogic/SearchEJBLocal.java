@@ -152,4 +152,6 @@ public interface SearchEJBLocal extends AbstractEJBLocal {
     List<CadastreObjectSearchResultExt> searchPlotsBySheetNo(String sheet_no);
 
     String getRuleByDatasetId(String datasetId);
+
+    List<BaUnitSearchResult> searchBaunitsByHistoricBaunitId(String baUnitsHistoricId);
 }

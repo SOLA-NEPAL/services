@@ -54,6 +54,7 @@ public class BaUnitSearchResult extends AbstractEntity {
     public static final String PARAM_HANDICAPPED = "handicapped";
     public static final String PARAM_DEPRIVED = "deprived";
     public static final String PARAM_MARTYRS = "martyrs";
+    public static final String PARAM_BAUNIT_HISTORIC_ID = "historicBaunitId";
     public static final String SELECT_PART =
             "SELECT DISTINCT b.id, b.name, b.cadastre_object_id, b.name_firstpart, b.name_lastpart, b.status_code, b.office_code, b.fy_code, "
             + "(SELECT string_agg(COALESCE(p.name, '') || ' ' || COALESCE(p.last_name, ''), '::::') "
@@ -221,6 +222,19 @@ public class BaUnitSearchResult extends AbstractEntity {
             + " AND co.approval_datetime <=#{" + PARAM_UPTO_DATE + "} ";
     public static final String SEARCH_QUERY_PARCEL_SPLIT_FISCAL_YEAR = SELECT_PART_PARCEL_SPLIT
             + " AND co.approval_datetime >= #{" + PARAM_FROM_FISCAL_YEAR + "} AND co.approval_datetime < #{" + PARAM_TO_FISCAL_YEAR + "} ";
+    public static final String SERCH_QUERY_USING_HISTORIC_ID = "SELECT distinct b.id, b.name, "
+            + "b.cadastre_object_id, b.name_firstpart, b.name_lastpart, b.status_code, b.office_code, b.fy_code, "
+            + "l.id as loc_id, m.id as moth_id, l.pana_no as pana_no, m.mothluj_no as moth_no, a.ward_no, "
+            + "a.vdc_code, co.parcel_no, msh.map_number, co.map_sheet_id,co.approval_datetime "
+            + "FROM (administrative.ba_unit b INNER JOIN (administrative.rrr r inner join "
+            + "(administrative.loc l INNER JOIN administrative.moth m on l.moth_id=m.id) on r.loc_id=l.id) "
+            + "ON b.id = r.ba_unit_id) INNER JOIN((cadastre.cadastre_object co INNER JOIN cadastre.map_sheet msh on co.map_sheet_id=msh.id) "
+            + "INNER JOIN(address.address a INNER JOIN address.vdc vdc on a.vdc_code = vdc.code)on co.address_id = a.id) "
+            + "on b.cadastre_object_id = co.id "
+            + "WHERE b.id in(SELECT rrb.to_ba_unit_id FROM administrative.required_relationship_baunit rrb "
+            + "WHERE rrb.from_ba_unit_id = #{" + PARAM_BAUNIT_HISTORIC_ID + "} AND r.office_code = #{" + PARAM_OFFICE_CODE + "}) ";
+    //+ "INNER JOIN administrative.required_relationship_baunit rrb on b.id = rrb.to_ba_unit_id "
+    //+ "WHERE rrb.from_ba_unit_id = #{" + PARAM_BAUNIT_HISTORIC_ID + "} AND r.office_code = #{" + PARAM_OFFICE_CODE + "} ";
     @Id
     @Column
     private String id;
